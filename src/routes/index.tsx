@@ -131,24 +131,6 @@ function Home() {
         </div>
       </section>
 
-      {/* STATS */}
-      <section className="border-b border-border bg-surface-low">
-        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-6 md:py-10">
-          <div className="flex justify-center gap-6 md:gap-20">
-            {[
-              { v: projectsData?.total ? `${projectsData.total}+` : "3+", l: "BUIDL Projects" },
-              { v: postsData?.total ? `${postsData.total}+` : "5+", l: "Blog Posts" },
-              { v: "12", l: "Protocol Partners" },
-            ].map((s) => (
-              <div key={s.l} className="text-center">
-                <div className="text-display-md text-foreground">{s.v}</div>
-                <div className="mt-2 text-label-bold text-outline">{s.l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ROOTED IN RESEARCH */}
       <section className="mx-auto max-w-[1400px] px-4 sm:px-6 py-10 md:py-16 grid gap-12 lg:grid-cols-2 lg:items-center">
         <ImageCarousel />

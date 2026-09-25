@@ -345,7 +345,7 @@ function JoinPage() {
                             <FormItem>
                               <FormLabel>Date of Birth</FormLabel>
                               <FormControl>
-                                <Input type="date" {...field} />
+                                <Input placeholder="DD-MM" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

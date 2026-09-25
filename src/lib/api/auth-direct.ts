@@ -74,19 +74,41 @@ export async function register(data: {
   });
 
   const profileId = randomUUID();
+  
+  // Parse DD-MM date of birth and store as ISO with dummy year 2000
+  let dobIso = null;
+  if (data.dateOfBirth) {
+    const match = data.dateOfBirth.match(/^(\d{2})-(\d{2})$/);
+    if (match) {
+      const day = match[1];
+      const month = match[2];
+      const parsed = new Date(`2000-${month}-${day}T00:00:00Z`);
+      if (!isNaN(parsed.getTime())) dobIso = parsed.toISOString();
+    }
+  }
+
+  const normalizeSocial = (value?: string, prefix?: string) => {
+    if (!value) return null;
+    const v = value.trim();
+    if (!v) return null;
+    if (/^https?:\/\//i.test(v)) return v;
+    if (prefix) return `${prefix}${encodeURIComponent(v)}`;
+    return v;
+  };
+
   const { error: profileError } = await supabase.from("profiles").insert({
     id: profileId,
     user_id: userId,
     full_name: data.fullName,
     username: data.username,
     phone: data.phone,
-    date_of_birth: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString() : null,
+    date_of_birth: dobIso,
     department: data.department,
     level: levelMap[data.level] || data.level,
     experience_level: data.experienceLevel,
     fun_fact: data.funFact || null,
-    x_link: data.xLink || null,
-    github_link: data.githubLink || null,
+    x_link: normalizeSocial(data.xLink, 'https://x.com/') || null,
+    github_link: normalizeSocial(data.githubLink, 'https://github.com/') || null,
     portfolio_link: data.portfolioLink || null,
     created_at: now,
     updated_at: now,
