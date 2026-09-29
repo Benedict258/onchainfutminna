@@ -28,9 +28,6 @@ function Page() {
           <div><span className="font-semibold">Bootcamp dates</span><br/>{scholarshipConfig.bootcampDates}</div>
           <div><span className="font-semibold">Cost</span><br/>{scholarshipConfig.cost}</div>
         </div>
-        <button onClick={scrollToForm} className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow hover:bg-primary/90">
-          APPLY NOW
-        </button>
       </section>
 
       <section className="space-y-6 text-[15px] leading-relaxed">
@@ -69,6 +66,12 @@ function Page() {
           <p>Applications close <strong>10 October 2026</strong>. Each application is scored by at least two reviewers on commitment, motivation, evidence of effort, community involvement, potential, and give-back plan. Top scorers may be invited to a short conversation. 15 scholars and a waitlist are announced on <strong>{scholarshipConfig.resultsAnnounce}</strong>.</p>
         </div>
       </section>
+
+      <div className="flex justify-center">
+        <button onClick={scrollToForm} className="inline-flex items-center justify-center rounded-md bg-primary px-10 py-5 text-xl font-bold text-primary-foreground shadow hover:bg-primary/90">
+          APPLY NOW
+        </button>
+      </div>
 
       <Dev3packScholarshipForm />
     </div>
