@@ -34,7 +34,7 @@ export function Dev3packScholarshipForm() {
   if (applicationsOpen === false) {
     return <div className="rounded-lg border p-6 text-center">Applications for this scholarship have closed.</div>;
   }
-  if (applicationsOpen === null) return <div className="p-6">Loading…</div>;
+  if (applicationsOpen === null) return <div className="p-6"><div className="h-8 w-48 bg-muted animate-pulse rounded" /></div>;
 
   const update = (k:string,v:any)=> setForm((f:any)=>({...f,[k]:v}));
 
@@ -51,7 +51,7 @@ export function Dev3packScholarshipForm() {
   };
 
   return (
-    <div className="rounded-xl border p-6 space-y-6">
+    <div id="scholarship-form" className="rounded-xl border p-6 space-y-6">
       <h2 className="text-2xl font-semibold">Apply for a seat</h2>
       <p className="text-sm text-muted-foreground">Applications close {scholarshipConfig.applicationClose}</p>
 

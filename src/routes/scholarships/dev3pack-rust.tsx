@@ -13,6 +13,10 @@ export const Route = createFileRoute("/scholarships/dev3pack-rust")({
 });
 
 function Page() {
+  const scrollToForm = () => {
+    document.getElementById('scholarship-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl space-y-10">
       <section className="space-y-4">
@@ -24,6 +28,9 @@ function Page() {
           <div><span className="font-semibold">Bootcamp dates</span><br/>{scholarshipConfig.bootcampDates}</div>
           <div><span className="font-semibold">Cost</span><br/>{scholarshipConfig.cost}</div>
         </div>
+        <button onClick={scrollToForm} className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow hover:bg-primary/90">
+          APPLY NOW
+        </button>
       </section>
 
       <section className="space-y-6 text-[15px] leading-relaxed">
