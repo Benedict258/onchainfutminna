@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+﻿import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/learn")({
   component: LearnLayout,
@@ -7,3 +7,5 @@ export const Route = createFileRoute("/learn")({
 function LearnLayout() {
   return <Outlet />;
 }
+
+

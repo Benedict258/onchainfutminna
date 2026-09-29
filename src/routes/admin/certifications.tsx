@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+﻿import { createFileRoute } from '@tanstack/react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useMemo } from 'react';
 import { useAuthStore } from '@/stores/auth-store';
@@ -354,7 +354,7 @@ function AdminCertifications() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-sm">
-                    {cert.track || <span className="text-muted-foreground">—</span>}
+                    {cert.track || <span className="text-muted-foreground"></span>}
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm">
                     {new Date(cert.issuedAt).toLocaleDateString()}
@@ -386,7 +386,7 @@ function AdminCertifications() {
                         Download
                       </a>
                     ) : (
-                      <span className="text-xs text-muted-foreground">—</span>
+                      <span className="text-xs text-muted-foreground"></span>
                     )}
                   </TableCell>
                 </TableRow>
@@ -572,3 +572,5 @@ function AdminCertifications() {
     </div>
   );
 }
+
+

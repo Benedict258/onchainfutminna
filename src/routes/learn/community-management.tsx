@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -134,7 +134,7 @@ const RESOURCE_ICONS: Record<string, typeof BookOpen> = {
 export const Route = createFileRoute("/learn/community-management")({
   head: () => ({
     meta: [
-      { title: "Learn — Community Management | BlockchainClub FUTMinna" },
+      { title: "Learn  Community Management | BlockchainClub FUTMinna" },
       {
         name: "description",
         content:
@@ -142,7 +142,7 @@ export const Route = createFileRoute("/learn/community-management")({
       },
       {
         property: "og:title",
-        content: "Community Management Learning — Blockchain Club FUTMinna",
+        content: "Community Management Learning  Blockchain Club FUTMinna",
       },
       {
         property: "og:description",
@@ -216,7 +216,7 @@ function CommunityManagementPage() {
             <div className="flex items-center justify-center gap-3">
               <GraduationCap className="h-5 w-5 text-primary" />
               <div>
-                <div className="text-headline-sm">—</div>
+                <div className="text-headline-sm"></div>
                 <div className="text-xs text-muted-foreground">
                   Quizzes Completed
                 </div>
@@ -254,7 +254,7 @@ function CommunityManagementPage() {
               <div className="p-6">
                 <div className="flex items-start justify-between">
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-surface-high text-lg">
-                    {CATEGORY_ICONS[track.category] || "●"}
+                    {CATEGORY_ICONS[track.category] || "�"}
                   </span>
                   <div className="flex items-center gap-2">
                     <Badge
@@ -377,3 +377,5 @@ function CommunityManagementPage() {
     </div>
   );
 }
+
+

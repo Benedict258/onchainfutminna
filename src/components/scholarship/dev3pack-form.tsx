@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { scholarshipConfig } from "@/lib/config/scholarship";
@@ -226,3 +226,5 @@ export function Dev3packScholarshipForm() {
     </div>
   );
 }
+
+

@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
+﻿import { createFileRoute, Link } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
@@ -678,3 +678,5 @@ function ChallengeCard({ challenge }: { challenge: any }) {
     </article>
   )
 }
+
+

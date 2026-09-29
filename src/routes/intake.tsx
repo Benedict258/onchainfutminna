@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+﻿import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
@@ -400,8 +400,8 @@ function IntakePage() {
                   <div className="bg-muted rounded-lg p-4 text-left">
                     <p className="text-sm font-medium mb-1">
                       {result.lane === "Fast Lane"
-                        ? "Fast Lane — You meet the requirements for advanced tracks."
-                        : "Foundation Lane — Start with the basics to build a strong foundation."}
+                        ? "Fast Lane  You meet the requirements for advanced tracks."
+                        : "Foundation Lane  Start with the basics to build a strong foundation."}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {result.lane === "Fast Lane"
@@ -559,3 +559,5 @@ function IntakePage() {
     </div>
   );
 }
+
+

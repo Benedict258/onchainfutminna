@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { ReactNode } from "react";
 
@@ -14,3 +14,4 @@ export function PageShell({ children, className = "" }: PageShellProps) {
     </div>
   );
 }
+

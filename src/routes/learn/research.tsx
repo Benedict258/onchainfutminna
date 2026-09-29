@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -118,7 +118,7 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 export const Route = createFileRoute("/learn/research")({
   head: () => ({
     meta: [
-      { title: "Research — Master Blockchain Research | BlockchainClub FUTMinna" },
+      { title: "Research  Master Blockchain Research | BlockchainClub FUTMinna" },
       {
         name: "description",
         content:
@@ -126,7 +126,7 @@ export const Route = createFileRoute("/learn/research")({
       },
       {
         property: "og:title",
-        content: "Master Blockchain Research — Blockchain Club FUTMinna",
+        content: "Master Blockchain Research  Blockchain Club FUTMinna",
       },
       {
         property: "og:description",
@@ -184,7 +184,7 @@ function ResearchPage() {
             <div className="flex items-center justify-center gap-3">
               <GraduationCap className="h-5 w-5 text-primary" />
               <div>
-                <div className="text-headline-sm">—</div>
+                <div className="text-headline-sm"></div>
                 <div className="text-xs text-muted-foreground">Certifications</div>
               </div>
             </div>
@@ -322,3 +322,5 @@ function ResearchPage() {
     </div>
   );
 }
+
+

@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useMemo } from "react";
@@ -69,10 +69,10 @@ const ECOSYSTEM_LABELS: Record<string, string> = {
 
 const ECOSYSTEM_ICONS: Record<string, string> = {
   EVM: "⬡",
-  SUI_MOVE: "◆",
-  APTOS_MOVE: "◎",
-  SOLANA_RUST: "◉",
-  GENERAL: "●",
+  SUI_MOVE: "�",
+  APTOS_MOVE: "�",
+  SOLANA_RUST: "�",
+  GENERAL: "�",
 };
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -92,7 +92,7 @@ const RESOURCE_TYPE_ICONS: Record<string, typeof BookOpen> = {
 export const Route = createFileRoute("/learn/")({
   head: () => ({
     meta: [
-      { title: "Learn — Master Web3 Engineering | BlockchainClub FUTMinna" },
+      { title: "Learn  Master Web3 Engineering | BlockchainClub FUTMinna" },
       {
         name: "description",
         content:
@@ -100,7 +100,7 @@ export const Route = createFileRoute("/learn/")({
       },
       {
         property: "og:title",
-        content: "Master Web3 Engineering — Blockchain Club FUTMinna",
+        content: "Master Web3 Engineering  Blockchain Club FUTMinna",
       },
       {
         property: "og:description",
@@ -225,7 +225,7 @@ function LearnPage() {
               <GraduationCap className="h-5 w-5 text-primary" />
               <div>
                 <div className="text-headline-sm">
-                  {isAuthenticated ? "—" : "—"}
+                  {isAuthenticated ? "" : ""}
                 </div>
                 <div className="text-xs text-muted-foreground">
                   Quizzes Completed
@@ -295,7 +295,7 @@ function LearnPage() {
                 <div className="p-6">
                   <div className="flex items-start justify-between">
                     <span className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-surface-high text-lg">
-                      {ECOSYSTEM_ICONS[track.ecosystem] || "●"}
+                      {ECOSYSTEM_ICONS[track.ecosystem] || "�"}
                     </span>
                     <div className="flex items-center gap-1.5">
                       <Badge
@@ -479,3 +479,5 @@ function LearnPage() {
     </div>
   );
 }
+
+

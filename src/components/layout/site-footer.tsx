@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+﻿import { Link } from "@tanstack/react-router";
 
 export function SiteFooter() {
   return (
@@ -91,3 +91,5 @@ function FooterCol({ title, links }: { title: string; links: { label: string; hr
     </div>
   );
 }
+
+

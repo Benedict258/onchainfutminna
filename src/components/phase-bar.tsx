@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
@@ -57,3 +57,5 @@ export function PhaseBar({ phaseCount, modulesPerPhase, currentPhase, size = "md
     </TooltipProvider>
   );
 }
+
+

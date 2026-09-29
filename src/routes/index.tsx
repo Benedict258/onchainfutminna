@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useEffect, useCallback } from "react";
@@ -69,7 +69,7 @@ function ImageCarousel() {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Blockchain Club FUTMinna — Home for Web3 Builders" },
+      { title: "Blockchain Club FUTMinna  Home for Web3 Builders" },
       { name: "description", content: "FUTMinna's premier hub for blockchain innovation, decentralized development, and academic excellence in West Africa." },
       { property: "og:title", content: "Blockchain Club FUTMinna" },
       { property: "og:description", content: "Home for Web3 builders. Empowering the next wave of protocol engineers." },
@@ -265,7 +265,7 @@ function Home() {
                   <Badge variant="secondary" className="text-xs mb-2">ONBOARDING</Badge>
                   <h3 className="text-headline-md">Blockchain Onboarding Session</h3>
                   <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                    Welcome session for new members — covered club structure, roadmap, and getting started with Web3 development.
+                    Welcome session for new members  covered club structure, roadmap, and getting started with Web3 development.
                   </p>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -391,3 +391,5 @@ function Home() {
     </div>
   );
 }
+
+

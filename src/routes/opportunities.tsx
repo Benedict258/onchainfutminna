@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -136,7 +136,7 @@ export const Route = createFileRoute("/opportunities")({
   head: () => ({
     meta: [
       {
-        title: "Opportunities — Hackathons, Grants & Jobs | BlockchainClub FUTMinna",
+        title: "Opportunities  Hackathons, Grants & Jobs | BlockchainClub FUTMinna",
       },
       {
         name: "description",
@@ -145,7 +145,7 @@ export const Route = createFileRoute("/opportunities")({
       },
       {
         property: "og:title",
-        content: "Onchain Opportunities — BlockchainClub FUTMinna",
+        content: "Onchain Opportunities  BlockchainClub FUTMinna",
       },
       {
         property: "og:description",
@@ -371,3 +371,5 @@ function OpportunitiesPage() {
     </div>
   );
 }
+
+

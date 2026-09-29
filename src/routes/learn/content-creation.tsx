@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -158,7 +158,7 @@ const RESOURCE_TYPE_LABELS: Record<string, string> = {
 export const Route = createFileRoute("/learn/content-creation")({
   head: () => ({
     meta: [
-      { title: "Content Creation — Learn | BlockchainClub FUTMinna" },
+      { title: "Content Creation  Learn | BlockchainClub FUTMinna" },
       {
         name: "description",
         content:
@@ -166,7 +166,7 @@ export const Route = createFileRoute("/learn/content-creation")({
       },
       {
         property: "og:title",
-        content: "Master Content Creation — Blockchain Club FUTMinna",
+        content: "Master Content Creation  Blockchain Club FUTMinna",
       },
       {
         property: "og:description",
@@ -399,3 +399,5 @@ function ContentCreationPage() {
     </div>
   );
 }
+
+

@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +44,7 @@ const DESIGN_TRACKS = [
     icon: Figma,
     modules: 6,
     description:
-      "Become proficient in Figma — from basic tools to advanced components, auto-layout, and design systems.",
+      "Become proficient in Figma  from basic tools to advanced components, auto-layout, and design systems.",
   },
   {
     id: "prototyping-interactions",
@@ -84,7 +84,7 @@ const DESIGN_TRACKS = [
     icon: Sparkles,
     modules: 5,
     description:
-      "Design for wallets, dApps, and decentralized protocols — tackle the unique UX challenges of crypto.",
+      "Design for wallets, dApps, and decentralized protocols  tackle the unique UX challenges of crypto.",
   },
   {
     id: "typography-color",
@@ -104,14 +104,14 @@ const DESIGN_TRACKS = [
     icon: Palette,
     modules: 7,
     description:
-      "Craft cohesive brand identities — logos, guidelines, and visual language that resonates.",
+      "Craft cohesive brand identities  logos, guidelines, and visual language that resonates.",
   },
 ];
 
 const DESIGN_RESOURCES = [
   {
     id: "r1",
-    title: "Figma for Beginners — Official Guide",
+    title: "Figma for Beginners  Official Guide",
     type: "Docs",
     url: "https://help.figma.com",
     icon: BookOpen,
@@ -132,14 +132,14 @@ const DESIGN_RESOURCES = [
   },
   {
     id: "r4",
-    title: "Refactoring UI — Design Tips",
+    title: "Refactoring UI  Design Tips",
     type: "Article",
     url: "https://refactoringui.com",
     icon: BookOpen,
   },
   {
     id: "r5",
-    title: "Dribbble — Design Inspiration",
+    title: "Dribbble  Design Inspiration",
     type: "Tool",
     url: "https://dribbble.com",
     icon: BookOpen,
@@ -162,7 +162,7 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 export const Route = createFileRoute("/learn/design")({
   head: () => ({
     meta: [
-      { title: "Learn Design — UI/UX for Web3 | BlockchainClub FUTMinna" },
+      { title: "Learn Design  UI/UX for Web3 | BlockchainClub FUTMinna" },
       {
         name: "description",
         content:
@@ -170,7 +170,7 @@ export const Route = createFileRoute("/learn/design")({
       },
       {
         property: "og:title",
-        content: "Master Design — Blockchain Club FUTMinna",
+        content: "Master Design  Blockchain Club FUTMinna",
       },
       {
         property: "og:description",
@@ -411,3 +411,5 @@ function DesignLearnPage() {
     </div>
   );
 }
+
+

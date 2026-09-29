@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+﻿import { createFileRoute, Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -72,7 +72,7 @@ function JoinBranding() {
       </Link>
       <h2 className="text-headline-lg text-foreground">Join the Club</h2>
       <p className="mt-3 text-muted-foreground">
-        FUTMinna's premier Web3 community — learn, build, and connect.
+        FUTMinna's premier Web3 community  learn, build, and connect.
       </p>
     </div>
   );
@@ -553,3 +553,5 @@ function JoinPage() {
     </div>
   );
 }
+
+

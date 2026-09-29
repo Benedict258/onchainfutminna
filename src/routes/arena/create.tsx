@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router"
+﻿import { createFileRoute, useRouter } from "@tanstack/react-router"
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -370,7 +370,7 @@ function CreateChallengePage() {
               <p className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
                 <Info className="h-3 w-3" />
                 Each participant stakes {stakePoints} points. Total pool ={" "}
-                {stakePoints} × participants. Winner(s) split the pool.
+                {stakePoints} � participants. Winner(s) split the pool.
               </p>
             </div>
 
@@ -428,3 +428,5 @@ function CreateChallengePage() {
     </div>
   )
 }
+
+

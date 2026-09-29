@@ -1,4 +1,4 @@
-import { createFileRoute, useSearch, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, useSearch, Link } from "@tanstack/react-router";
 import { useState, useRef, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -279,3 +279,5 @@ function VerifyEmailPage() {
     </div>
   );
 }
+
+

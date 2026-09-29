@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -112,7 +112,7 @@ export const Route = createFileRoute("/leaderboard")({
   head: () => ({
     meta: [
       {
-        title: "Club Rankings — Leaderboard | BlockchainClub FUTMinna",
+        title: "Club Rankings  Leaderboard | BlockchainClub FUTMinna",
       },
       {
         name: "description",
@@ -121,7 +121,7 @@ export const Route = createFileRoute("/leaderboard")({
       },
       {
         property: "og:title",
-        content: "Club Rankings — BlockchainClub FUTMinna Leaderboard",
+        content: "Club Rankings  BlockchainClub FUTMinna Leaderboard",
       },
       {
         property: "og:description",
@@ -345,3 +345,5 @@ function LeaderboardPage() {
     </div>
   );
 }
+
+

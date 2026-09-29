@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+﻿import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/auth-store';
 import { apiAnalytics } from '@/lib/api-client';
@@ -327,3 +327,5 @@ function AdminAnalytics() {
     </div>
   );
 }
+
+

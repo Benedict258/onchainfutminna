@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +29,7 @@ import { useAuthStore } from "@/stores/auth-store";
 export const Route = createFileRoute("/learn/marketing")({
   head: () => ({
     meta: [
-      { title: "Learn Marketing — Growth & Brand Strategy | BlockchainClub FUTMinna" },
+      { title: "Learn Marketing  Growth & Brand Strategy | BlockchainClub FUTMinna" },
       {
         name: "description",
         content:
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/learn/marketing")({
       },
       {
         property: "og:title",
-        content: "Master Marketing — Blockchain Club FUTMinna",
+        content: "Master Marketing  Blockchain Club FUTMinna",
       },
       {
         property: "og:description",
@@ -221,7 +221,7 @@ function MarketingPage() {
             <div className="flex items-center justify-center gap-3">
               <GraduationCap className="h-5 w-5 text-primary" />
               <div>
-                <div className="text-headline-sm">—</div>
+                <div className="text-headline-sm"></div>
                 <div className="text-xs text-muted-foreground">
                   Quizzes Completed
                 </div>
@@ -371,3 +371,5 @@ function MarketingPage() {
     </div>
   );
 }
+
+

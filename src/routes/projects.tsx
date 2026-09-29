@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+﻿import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -52,13 +52,13 @@ const ECOSYSTEM_COLORS: Record<string, string> = {
 export const Route = createFileRoute("/projects")({
   head: () => ({
     meta: [
-      { title: "Projects — Build the Future | BlockchainClub FUTMinna" },
+      { title: "Projects  Build the Future | BlockchainClub FUTMinna" },
       {
         name: "description",
         content:
           "Showcasing the next generation of decentralized applications, protocols, and tooling built by the FUTMinna blockchain community.",
       },
-      { property: "og:title", content: "Projects — Build the Future" },
+      { property: "og:title", content: "Projects  Build the Future" },
       {
         property: "og:description",
         content: "Decentralized applications built by FUTMinna members.",
@@ -550,3 +550,5 @@ function ProjectsPage() {
     </div>
   );
 }
+
+

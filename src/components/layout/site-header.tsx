@@ -1,4 +1,4 @@
-import { Link, useRouter } from "@tanstack/react-router";
+﻿import { Link, useRouter } from "@tanstack/react-router";
 import { Moon, Sun, Menu, X, LogOut, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/auth-store";
@@ -80,7 +80,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 sm:gap-6 sm:px-6">
-        {/* Logo — flush left in dark mode */}
+        {/* Logo  flush left in dark mode */}
         <Link
           to="/"
           className="flex items-center gap-2.5 shrink-0"
@@ -298,3 +298,5 @@ export function SiteHeader() {
     </header>
   );
 }
+
+

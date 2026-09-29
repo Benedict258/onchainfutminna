@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -63,7 +63,7 @@ function ForgotPasswordPage() {
             </Link>
             <h2 className="text-headline-lg text-foreground">Forgot Password?</h2>
             <p className="mt-3 text-muted-foreground">
-              No worries — enter your email and we'll send you a reset link.
+              No worries  enter your email and we'll send you a reset link.
             </p>
           </div>
         </div>
@@ -118,3 +118,5 @@ function ForgotPasswordPage() {
     </div>
   );
 }
+
+

@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+﻿import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Blockchain Club FUTMinna — Home for Web3 Builders" },
+        { title: "Blockchain Club FUTMinna  Home for Web3 Builders" },
         {
           name: "description",
           content:
@@ -94,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { property: "og:title", content: "Blockchain Club FUTMinna" },
         {
           property: "og:description",
-          content: "Home for Web3 builders — empowering the next wave of protocol engineers.",
+          content: "Home for Web3 builders  empowering the next wave of protocol engineers.",
         },
         { property: "og:type", content: "website" },
         { property: "og:site_name", content: "Blockchain Club FUTMinna" },
@@ -169,3 +169,5 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
+
+

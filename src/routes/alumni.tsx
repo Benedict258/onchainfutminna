@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
@@ -97,7 +97,7 @@ export const Route = createFileRoute("/alumni")({
   head: () => ({
     meta: [
       {
-        title: "Alumni Directory — BlockchainClub FUTMinna",
+        title: "Alumni Directory  BlockchainClub FUTMinna",
       },
       {
         name: "description",
@@ -106,7 +106,7 @@ export const Route = createFileRoute("/alumni")({
       },
       {
         property: "og:title",
-        content: "Alumni — Where Builders Become Legends | BlockchainClub FUTMinna",
+        content: "Alumni  Where Builders Become Legends | BlockchainClub FUTMinna",
       },
       {
         property: "og:description",
@@ -602,3 +602,5 @@ function AlumniPage() {
     </div>
   );
 }
+
+

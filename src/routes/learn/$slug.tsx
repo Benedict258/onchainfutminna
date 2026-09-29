@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -76,7 +76,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 export const Route = createFileRoute("/learn/$slug")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.slug.replace(/-/g, " ")} — Learn | BlockchainClub FUTMinna` },
+      { title: `${params.slug.replace(/-/g, " ")}  Learn | BlockchainClub FUTMinna` },
       { name: "description", content: "Interactive learning track from Blockchain Club FUTMinna." },
     ],
   }),
@@ -344,7 +344,7 @@ function TrackDetailPage() {
           <div className="grid lg:grid-cols-[1fr_280px] gap-8">
             <div id={`phase-${activePhase}`}>
               <h2 className="text-headline-sm mb-4">
-                {PHASE_NAMES[activePhase] || `Phase ${activePhase}`} — Modules
+                {PHASE_NAMES[activePhase] || `Phase ${activePhase}`}  Modules
               </h2>
 
               {currentPhaseModules.length === 0 ? (
@@ -576,3 +576,5 @@ function TrackDetailPage() {
     </TooltipProvider>
   );
 }
+
+

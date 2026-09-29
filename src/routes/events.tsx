@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
+﻿import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -40,7 +40,7 @@ const TYPE_COLORS: Record<string, string> = {
 export const Route = createFileRoute("/events")({
   head: () => ({
     meta: [
-      { title: "Events — Workshops, Hackathons & Talks | BlockchainClub FUTMinna" },
+      { title: "Events  Workshops, Hackathons & Talks | BlockchainClub FUTMinna" },
       {
         name: "description",
         content:
@@ -373,3 +373,5 @@ function EventsPage() {
     </div>
   );
 }
+
+

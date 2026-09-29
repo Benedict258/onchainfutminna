@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet } from '@tanstack/react-router';
+﻿import { createFileRoute, Link, Outlet } from '@tanstack/react-router';
 import { AdminGuard } from '@/components/auth-guard';
 import { useAuthStore } from '@/stores/auth-store';
 import { Button } from '@/components/ui/button';
@@ -125,3 +125,5 @@ function AdminLayout() {
     </AdminGuard>
   );
 }
+
+
