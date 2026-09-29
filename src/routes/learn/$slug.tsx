@@ -297,7 +297,7 @@ function TrackDetailPage() {
 
           <div className="mb-12">
             <h2 className="text-headline-sm mb-4">Phases</h2>
-            <div className="grid grid-cols-5 gap-3">
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {phases.map((phase: any) => {
                 const locked = isPhaseLocked(phase.phase);
                 const isActive = activePhase === phase.phase;
