@@ -11,7 +11,7 @@ export const scholarshipConfig = {
   contactEmail: 'onchainfutminna@gmail.com',
   hero: {
     headline: 'Learn Rust. Build on Solana. Fully sponsored.',
-    subheadline: 'Blockchain Club FUTMinna has 15 scholarship seats in the Dev3pack Solana Rust Bootcamp. Apply below, and our team will select the members most ready to make the most of it.',
+    subheadline: 'Blockchain Club FUTMinna has 15 scholarship seats in the Dev3pack Solana Rust Bootcamp. Apply Now',
   },
   whatYouGet: [
     'A sponsored seat in the Dev3pack Solana Rust Bootcamp',
