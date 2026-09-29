@@ -16,7 +16,11 @@ export function Dev3packScholarshipForm() {
 
   useEffect(() => {
     const checkOpen = async () => {
-      const { data, error } = await supabase.from('scholarship_settings').select('opens_at,closes_at').eq('id',1).single();
+      const { data, error } = await supabase.query('scholarship_settings', {
+        select: 'opens_at,closes_at',
+        filters: { id: 1 },
+        single: true,
+      });
       if (!error && data) {
         const now = new Date();
         const open = new Date(data.opens_at) <= now && now <= new Date(data.closes_at);
