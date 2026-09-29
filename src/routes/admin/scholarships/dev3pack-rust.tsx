@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PageShell } from "@/components/layout/page-shell";
 
 export const Route = createFileRoute("/admin/scholarships/dev3pack-rust")({
   component: AdminPage,
@@ -49,7 +50,7 @@ function AdminPage() {
   const selectedCount = data?.filter(d=>d.status==='selected').length||0;
 
   return (
-    <div className="container mx-auto p-6 space-y-4">
+    <PageShell className="p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Dev3pack Rust Scholarship Admin</h1>
         <div className="flex gap-2">
@@ -90,6 +91,6 @@ function AdminPage() {
         </table>
       </div>
       {selectedCount>15 && <div className="text-red-500">Warning: more than 15 selected</div>}
-    </div>
+    </PageShell>
   );
 }

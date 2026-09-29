@@ -19,7 +19,7 @@ export function PhaseBar({ phaseCount, modulesPerPhase, currentPhase, size = "md
   return (
     <TooltipProvider delayDuration={200}>
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar">
           {Array.from({ length: phaseCount }, (_, i) => {
             const hasModules = (modulesPerPhase[i] || 0) > 0;
             const isCurrent = currentPhase !== undefined && i === currentPhase;
@@ -48,7 +48,7 @@ export function PhaseBar({ phaseCount, modulesPerPhase, currentPhase, size = "md
         </div>
         <div className={cn("flex justify-between text-muted-foreground", labelClass)}>
           {Array.from({ length: phaseCount }, (_, i) => (
-            <span key={i} className="min-w-0 truncate">
+            <span key={i} className="min-w-[3rem] text-center">
               {modulesPerPhase[i] || 0}
             </span>
           ))}

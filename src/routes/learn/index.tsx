@@ -198,7 +198,7 @@ function LearnPage() {
       {/* STATS BAR */}
       <section className="border-b border-border bg-surface-low">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-4 md:py-6">
-          <div className="grid grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
             <div className="flex items-center justify-center gap-3">
               <Layers className="h-5 w-5 text-primary" />
               <div>

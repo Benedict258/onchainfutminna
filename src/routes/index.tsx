@@ -13,6 +13,7 @@ import slide2 from "@/assets/slide2.jpg";
 import { getProjects } from "@/lib/api/projects.server";
 import { getBlogPosts } from "@/lib/api/blog.server";
 import { getEvents } from "@/lib/api/events.server";
+import { PageShell } from "@/components/layout/page-shell";
 
 const heroImages = [
   { src: slide1, alt: "Blockchain Club FUTMinna" },
@@ -105,9 +106,10 @@ function Home() {
 
   return (
     <div className="bg-background">
-      {/* HERO */}
-      <section className="border-b border-border">
-         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-12 md:py-24 text-center">
+      <PageShell>
+        {/* HERO */}
+        <section className="border-b border-border">
+           <div className="py-12 md:py-24 text-center">
           <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/5 px-3 py-1 text-label-bold text-primary">
             Blockchain Club FUTMinna
           </span>
@@ -370,7 +372,7 @@ function Home() {
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-[1400px] px-4 sm:px-6 py-10 md:py-16">
+      <section className="py-10 md:py-16">
         <div className="relative overflow-hidden rounded-xl border border-border bg-surface-low p-6 md:p-12 text-center">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
           <h2 className="text-headline-lg">READY TO BUILD THE<br />PERMITTED FUTURE?</h2>
@@ -385,6 +387,7 @@ function Home() {
           </div>
         </div>
       </section>
+    </PageShell>
     </div>
   );
 }
