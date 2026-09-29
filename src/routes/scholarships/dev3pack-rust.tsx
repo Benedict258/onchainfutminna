@@ -19,6 +19,7 @@ function Page() {
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl space-y-10">
+      <img src="/dev3pack.jpg" alt="Dev3pack Rust Scholarship" className="w-full max-w-2xl mx-auto rounded-xl mb-8 object-cover" />
       <section className="space-y-4">
         <h1 className="text-4xl font-bold">{scholarshipConfig.hero.headline}</h1>
         <p className="text-lg text-muted-foreground">{scholarshipConfig.hero.subheadline}</p>
