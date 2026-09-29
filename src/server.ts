@@ -1484,6 +1484,50 @@ async function handleDevlogCreate(request: Request): Promise<Response> {
     try {
       const { awardPoints } = await import("./lib/auto-awards");
       await awardPoints(payload.userId, "community", 5);
+
+      const { query } = await import("./lib/supabase");
+      const { data: allEntries } = await query("devlog_entries", {
+        select: "week_number,is_published",
+        filters: { user_id: payload.userId, is_published: true },
+        order: { column: "week_number", ascending: true },
+      });
+
+      if (allEntries && allEntries.length >= 4) {
+        const weeks = allEntries.map((e: any) => e.week_number).sort((a: number, b: number) => a - b);
+        let longestStreak = 1;
+        let currentRun = 1;
+        for (let i = 1; i < weeks.length; i++) {
+          if (weeks[i] === weeks[i - 1] + 1) {
+            currentRun++;
+            if (currentRun > longestStreak) longestStreak = currentRun;
+          } else {
+            currentRun = 1;
+          }
+        }
+
+        if (longestStreak >= 4) {
+          const { data: existingBadge } = await query("user_badges", {
+            select: "id",
+            filters: { user_id: payload.userId },
+            single: true,
+          });
+
+          if (!existingBadge) {
+            const { data: streakBadge } = await query("badges", {
+              select: "id",
+              filters: { name: "streak-master" },
+              single: true,
+            });
+
+            if (streakBadge) {
+              await supabase.from("user_badges").insert({
+                user_id: payload.userId,
+                badge_id: streakBadge.id,
+              });
+            }
+          }
+        }
+      }
     } catch {}
 
     return new Response(JSON.stringify(entry), {
@@ -1492,6 +1536,91 @@ async function handleDevlogCreate(request: Request): Promise<Response> {
     });
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message || "Failed to create entry" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+
+async function handleIntakeSubmit(request: Request): Promise<Response> {
+  try {
+    const { checkRateLimit, getClientIp } = await import("./lib/rate-limit");
+    const ip = getClientIp(request);
+    const rateLimitConfig = { windowMs: 60 * 1000, maxRequests: 10, keyPrefix: "api_write" };
+    const { allowed, headers: rateLimitHeaders } = checkRateLimit(ip, rateLimitConfig);
+    if (!allowed) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded. Try again later." }), {
+        status: 429,
+        headers: { "Content-Type": "application/json", ...rateLimitHeaders },
+      });
+    }
+
+    const { verifyAccessToken } = await import("./lib/auth");
+    const { supabase } = await import("./lib/supabase");
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    const token = authHeader.slice(7);
+    const payload = verifyAccessToken(token);
+    if (!payload) {
+      return new Response(JSON.stringify({ error: "Invalid token" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const { query } = await import("./lib/supabase");
+    const { data: existing } = await query("intake_assessments", {
+      select: "id,lane,total_score",
+      filters: { user_id: payload.userId },
+      single: true,
+    });
+
+    if (existing) {
+      return new Response(JSON.stringify({ 
+        error: "Assessment already submitted",
+        result: existing
+      }), {
+        status: 409,
+        headers: { "Content-Type": "application/json", ...rateLimitHeaders },
+      });
+    }
+
+    const body = await request.json();
+    const { error, data } = await supabase.from("intake_assessments").insert({
+      user_id: payload.userId,
+      swe_score: body.swe_score ?? 0,
+      blockchain_score: body.blockchain_score ?? 0,
+      total_score: body.total_score ?? 0,
+      practical_completed: body.practical_completed ?? false,
+      fork_url: body.fork_url || null,
+      lane: body.lane || "Foundation Lane",
+    });
+
+    if (error) {
+      return new Response(JSON.stringify({ error: error.message || "Insert failed" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const assessment = Array.isArray(data) ? data[0] : data;
+
+    try {
+      const { awardPoints } = await import("./lib/auto-awards");
+      await awardPoints(payload.userId, "community", 3);
+    } catch {}
+
+    return new Response(JSON.stringify(assessment), {
+      status: 200,
+      headers: { "Content-Type": "application/json", ...rateLimitHeaders },
+    });
+  } catch (error: any) {
+    return new Response(JSON.stringify({ error: error.message || "Failed to submit assessment" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
@@ -1583,6 +1712,9 @@ export default {
   }
   if (url.pathname === "/api/devlog" && request.method === "POST") {
     return handleDevlogCreate(request);
+  }
+  if (url.pathname === "/api/intake/submit" && request.method === "POST") {
+    return handleIntakeSubmit(request);
   }
 
     try {

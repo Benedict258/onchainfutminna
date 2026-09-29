@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { apiInsert } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/auth-store";
 import { LoginPrompt } from "@/components/login-prompt";
 import { ChevronLeft, ChevronRight, CheckCircle2, Trophy } from "lucide-react";
@@ -182,6 +181,7 @@ type LaneResult = "Fast Lane" | "Foundation Lane";
 function IntakePage() {
   const isHydrated = useAuthStore((s) => s.isHydrated);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const accessToken = useAuthStore((s) => s.accessToken);
 
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState<"forward" | "back">("forward");
@@ -190,6 +190,11 @@ function IntakePage() {
   const [forkUrl, setForkUrl] = useState("");
   const [practicalDone, setPracticalDone] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [existingResult, setExistingResult] = useState<{
+    lane: string;
+    total_score: number;
+  } | null>(null);
+  const [checkingExisting, setCheckingExisting] = useState(true);
   const [result, setResult] = useState<{
     sweScore: number;
     blockchainScore: number;
@@ -198,8 +203,82 @@ function IntakePage() {
     lane: LaneResult;
   } | null>(null);
 
+  useEffect(() => {
+    if (!isAuthenticated || !accessToken) {
+      setCheckingExisting(false);
+      return;
+    }
+    const checkExisting = async () => {
+      try {
+        const res = await fetch("/api/supabase/query/intake_assessments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ single: true }),
+        });
+        const json = await res.json();
+        if (res.ok && json.data) {
+          setExistingResult(json.data);
+        }
+      } catch {}
+      setCheckingExisting(false);
+    };
+    checkExisting();
+  }, [isAuthenticated, accessToken]);
+
   if (!isHydrated) return null;
   if (!isAuthenticated) return <LoginPrompt />;
+
+  if (checkingExisting) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (existingResult) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)]">
+        <div className="grid lg:grid-cols-2 lg:min-h-[calc(100vh-4rem)]">
+          <div className="hidden lg:flex bg-surface-low border-r border-border">
+            <IntakeBranding />
+          </div>
+          <div className="flex items-start justify-center px-6 py-12 lg:py-16 lg:overflow-y-auto">
+            <Card className="w-full max-w-xl border-border bg-card">
+              <CardContent className="pt-8">
+                <div className="text-center space-y-6 py-8">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                    <Trophy className="h-8 w-8 text-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <h2 className="text-headline-md">Assessment Already Completed</h2>
+                    <p className="text-muted-foreground">
+                      You have been placed in the{" "}
+                      <span className="font-bold text-foreground">{existingResult.lane}</span>
+                    </p>
+                  </div>
+                  <div className="bg-muted rounded-lg p-4 text-left">
+                    <p className="text-sm font-medium mb-1">Your Score: {existingResult.total_score} / 10</p>
+                    <p className="text-xs text-muted-foreground">
+                      {existingResult.lane === "Fast Lane"
+                        ? "You meet the requirements for advanced tracks."
+                        : "Start with the basics to build a strong foundation."}
+                    </p>
+                  </div>
+                  <Button asChild variant="outline" className="mt-4">
+                    <a href="/learn">Browse Learning Tracks</a>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   function handleAnswerChange(questionIndex: number, value: string, category: "swe" | "blockchain") {
     if (category === "swe") {
@@ -236,14 +315,30 @@ function IntakePage() {
       const practicalCompleted = practicalDone && forkUrl.trim().length > 0;
       const lane: LaneResult = totalScore >= 6 && practicalCompleted ? "Fast Lane" : "Foundation Lane";
 
-      await apiInsert("intake_assessments", {
-        swe_score: sweScore,
-        blockchain_score: blockchainScore,
-        total_score: totalScore,
-        practical_completed: practicalCompleted,
-        fork_url: forkUrl.trim() || null,
-        lane,
+      const res = await fetch("/api/intake/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          swe_score: sweScore,
+          blockchain_score: blockchainScore,
+          total_score: totalScore,
+          practical_completed: practicalCompleted,
+          fork_url: forkUrl.trim() || null,
+          lane,
+        }),
       });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 409 && data.result) {
+          setExistingResult(data.result);
+          return;
+        }
+        throw new Error(data.error || "Failed to submit assessment");
+      }
 
       setResult({ sweScore, blockchainScore, totalScore, practicalCompleted, lane });
     } catch (error) {

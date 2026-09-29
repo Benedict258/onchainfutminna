@@ -509,7 +509,7 @@ export const getTrackBySlug = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ slug: z.string() }))
   .handler(async ({ data }) => {
     const { data: tracks, error } = await query('tracks', {
-      select: '*, modules(id, title, description, content, phase, order, is_published)',
+      select: '*, modules(id, title, description, content, phase, order, is_published, quizzes(id, pass_mark, quiz_questions(id, question_text)))',
       filters: { is_published: true },
     });
 

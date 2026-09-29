@@ -523,3 +523,112 @@ ALTER TABLE "user_badges" ADD CONSTRAINT "user_badges_user_id_fkey" FOREIGN KEY 
 -- AddForeignKey
 ALTER TABLE "user_badges" ADD CONSTRAINT "user_badges_badge_id_fkey" FOREIGN KEY ("badge_id") REFERENCES "badges"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- CreateTable
+CREATE TABLE "user_module_progress" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "module_id" TEXT NOT NULL,
+    "completed_at" TIMESTAMP(3),
+    "points_earned" INTEGER NOT NULL DEFAULT 0,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "user_module_progress_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "intake_assessments" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "swe_score" INTEGER NOT NULL DEFAULT 0,
+    "blockchain_score" INTEGER NOT NULL DEFAULT 0,
+    "total_score" INTEGER NOT NULL DEFAULT 0,
+    "practical_completed" BOOLEAN NOT NULL DEFAULT false,
+    "fork_url" TEXT,
+    "lane" TEXT NOT NULL DEFAULT 'Foundation Lane',
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "intake_assessments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "devlog_entries" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "week_number" INTEGER NOT NULL,
+    "content" TEXT NOT NULL,
+    "is_published" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "devlog_entries_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "gate_checks" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "gate_number" INTEGER NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'not_started',
+    "checked_at" TIMESTAMP(3),
+    "notes" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "gate_checks_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "certifications" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "tier" INTEGER NOT NULL DEFAULT 1,
+    "track" TEXT NOT NULL,
+    "cohort_year" INTEGER NOT NULL,
+    "portfolio_url" TEXT,
+    "sui_tx_hash" TEXT,
+    "issued_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "certifications_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_module_progress_user_id_module_id_key" ON "user_module_progress"("user_id", "module_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "intake_assessments_user_id_key" ON "intake_assessments"("user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "devlog_entries_user_id_week_number_key" ON "devlog_entries"("user_id", "week_number");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "gate_checks_user_id_gate_number_key" ON "gate_checks"("user_id", "gate_number");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "certifications_user_id_track_cohort_year_key" ON "certifications"("user_id", "track", "cohort_year");
+
+-- CreateIndex
+CREATE INDEX "idx_devlog_user" ON "devlog_entries"("user_id");
+
+-- CreateIndex
+CREATE INDEX "idx_gate_checks_user" ON "gate_checks"("user_id");
+
+-- CreateIndex
+CREATE INDEX "idx_certifications_user" ON "certifications"("user_id");
+
+-- AddForeignKey
+ALTER TABLE "user_module_progress" ADD CONSTRAINT "user_module_progress_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_module_progress" ADD CONSTRAINT "user_module_progress_module_id_fkey" FOREIGN KEY ("module_id") REFERENCES "modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "intake_assessments" ADD CONSTRAINT "intake_assessments_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "devlog_entries" ADD CONSTRAINT "devlog_entries_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "gate_checks" ADD CONSTRAINT "gate_checks_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "certifications" ADD CONSTRAINT "certifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

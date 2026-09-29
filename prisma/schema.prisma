@@ -104,6 +104,11 @@ model User {
   leaderboardEntry LeaderboardEntry?
   blogPosts        BlogPost[]
   userBadges       UserBadge[]
+  moduleProgress   UserModuleProgress[]
+  intakeAssessment IntakeAssessment?
+  devlogEntries    DevlogEntry[]
+  gateChecks       GateCheck[]
+  certifications   Certification[]
 
   @@map("users")
 }
@@ -245,6 +250,7 @@ model Module {
   track          Track           @relation(fields: [trackId], references: [id], onDelete: Cascade)
   quiz           Quiz?
   courseProgress CourseProgress[]
+  moduleProgress UserModuleProgress[]
 
   @@map("modules")
 }
@@ -508,4 +514,81 @@ model SiteSettings {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")
+}
+
+model UserModuleProgress {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  moduleId     String    @map("module_id")
+  completedAt  DateTime? @map("completed_at")
+  pointsEarned Int       @default(0) @map("points_earned")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+  @@map("user_module_progress")
+}
+
+model IntakeAssessment {
+  id                   String   @id @default(uuid())
+  userId               String   @unique @map("user_id")
+  sweScore             Int      @default(0) @map("swe_score")
+  blockchainScore      Int      @default(0) @map("blockchain_score")
+  totalScore           Int      @default(0) @map("total_score")
+  practicalCompleted   Boolean  @default(false) @map("practical_completed")
+  forkUrl              String?  @map("fork_url")
+  lane                 String   @default("Foundation Lane")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("intake_assessments")
+}
+
+model DevlogEntry {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  weekNumber  Int      @map("week_number")
+  content     String
+  isPublished Boolean  @default(false) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekNumber])
+  @@map("devlog_entries")
+}
+
+model GateCheck {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  gateNumber  Int       @map("gate_number")
+  status      String    @default("not_started")
+  checkedAt   DateTime? @map("checked_at")
+  notes       String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gateNumber])
+  @@map("gate_checks")
+}
+
+model Certification {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  tier         Int      @default(1)
+  track        String
+  cohortYear   Int      @map("cohort_year")
+  portfolioUrl String?  @map("portfolio_url")
+  suiTxHash    String?  @map("sui_tx_hash")
+  issuedAt     DateTime @default(now()) @map("issued_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, track, cohortYear])
+  @@map("certifications")
 }
