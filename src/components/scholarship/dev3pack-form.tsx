@@ -81,22 +81,22 @@ export function Dev3packScholarshipForm() {
   };
 
   return (
-    <div id="scholarship-form" className="rounded-xl border p-6 space-y-6">
+    <div id="scholarship-form" className="rounded-xl border p-6 space-y-6 max-w-3xl mx-auto">
       <h2 className="text-2xl font-semibold">Apply for a seat</h2>
       <p className="text-sm text-muted-foreground">Applications close {scholarshipConfig.applicationClose}</p>
 
       {step===1 && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <label>Full name</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">As on your student ID</p>
+          <p className="text-xs text-muted-foreground mb-1">As on your student ID</p>
           <Input value={form.full_name||''} onChange={e=>update('full_name',e.target.value)} />
           <label>Email</label>
           <Input type="email" value={form.email||''} onChange={e=>update('email',e.target.value)} />
           <label>WhatsApp</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Include country code</p>
+          <p className="text-xs text-muted-foreground mb-1">Include country code</p>
           <Input value={form.phone_whatsapp||''} onChange={e=>update('phone_whatsapp',e.target.value)} />
           <label>Telegram handle</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Username without @</p>
+          <p className="text-xs text-muted-foreground mb-1">Username without @</p>
           <Input value={form.telegram_handle||''} onChange={e=>update('telegram_handle',e.target.value)} />
           <label>Department</label>
           <Input value={form.department||''} onChange={e=>update('department',e.target.value)} />
@@ -119,15 +119,15 @@ export function Dev3packScholarshipForm() {
       )}
 
       {step===2 && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <label>GitHub username</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Your GitHub handle without @</p>
+          <p className="text-xs text-muted-foreground mb-1">Your GitHub handle without @</p>
           <Input placeholder="username" value={form.github_url||''} onChange={e=>update('github_url',e.target.value)} />
           <label>X / Twitter username</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Your X handle without @</p>
+          <p className="text-xs text-muted-foreground mb-1">Your X handle without @</p>
           <Input placeholder="username" value={form.social_url||''} onChange={e=>update('social_url',e.target.value)} />
           <label>Club member?</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Are you a member of Blockchain Club FUTMinna?</p>
+          <p className="text-xs text-muted-foreground mb-1">Are you a member of Blockchain Club FUTMinna?</p>
           <Select value={form.club_member} onValueChange={v=>update('club_member',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
@@ -136,7 +136,7 @@ export function Dev3packScholarshipForm() {
             </SelectContent>
           </Select>
           <label>Programming experience</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Overall coding experience</p>
+          <p className="text-xs text-muted-foreground mb-1">Overall coding experience</p>
           <Select value={form.programming_experience} onValueChange={v=>update('programming_experience',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
@@ -144,7 +144,7 @@ export function Dev3packScholarshipForm() {
             </SelectContent>
           </Select>
           <label>Rust experience</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">How familiar are you with Rust?</p>
+          <p className="text-xs text-muted-foreground mb-1">How familiar are you with Rust?</p>
           <Select value={form.rust_experience} onValueChange={v=>update('rust_experience',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
@@ -155,23 +155,23 @@ export function Dev3packScholarshipForm() {
       )}
 
       {step===3 && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <label>Motivation <span className="text-xs text-muted-foreground">max 800</span></label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Why do you want this scholarship and what will you do with it?</p>
+          <p className="text-xs text-muted-foreground mb-1">Why do you want this scholarship and what will you do with it?</p>
           <Textarea maxLength={800} value={form.motivation||''} onChange={e=>update('motivation',e.target.value)} />
           <label>Hard learning experience <span className="text-xs">max 600</span></label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Describe a time you learned something difficult independently.</p>
+          <p className="text-xs text-muted-foreground mb-1">Describe a time you learned something difficult independently.</p>
           <Textarea maxLength={600} value={form.hard_learning||''} onChange={e=>update('hard_learning',e.target.value)} />
           <label>Goal by end Nov <span className="text-xs">max 500</span></label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">What do you want to be able to build by 27 November 2026?</p>
+          <p className="text-xs text-muted-foreground mb-1">What do you want to be able to build by 27 November 2026?</p>
           <Textarea maxLength={500} value={form.goal_by_end_nov||''} onChange={e=>update('goal_by_end_nov',e.target.value)} />
         </div>
       )}
 
       {step===4 && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <label>Can attend full bootcamp?</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Commitment from 2–27 November 2026</p>
+          <p className="text-xs text-muted-foreground mb-1">Commitment from 2–27 November 2026</p>
           <Select value={form.can_attend_full} onValueChange={v=>update('can_attend_full',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
@@ -181,7 +181,7 @@ export function Dev3packScholarshipForm() {
             </SelectContent>
           </Select>
           <label>Weekly hours</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">How many hours can you dedicate weekly?</p>
+          <p className="text-xs text-muted-foreground mb-1">How many hours can you dedicate weekly?</p>
           <Select value={form.weekly_hours} onValueChange={v=>update('weekly_hours',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
@@ -189,7 +189,7 @@ export function Dev3packScholarshipForm() {
             </SelectContent>
           </Select>
           <label>Has laptop</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Do you have a laptop for development?</p>
+          <p className="text-xs text-muted-foreground mb-1">Do you have a laptop for development?</p>
           <Select value={form.has_laptop} onValueChange={v=>update('has_laptop',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
@@ -197,7 +197,7 @@ export function Dev3packScholarshipForm() {
             </SelectContent>
           </Select>
           <label>Internet quality</label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">Typical internet reliability</p>
+          <p className="text-xs text-muted-foreground mb-1">Typical internet reliability</p>
           <Select value={form.internet_quality} onValueChange={v=>update('internet_quality',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
@@ -208,9 +208,9 @@ export function Dev3packScholarshipForm() {
       )}
 
       {step===5 && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <label>Giveback plan <span className="text-xs">max 500</span></label>
-          <p className="text-xs text-muted-foreground -mt-2 mb-1">How will you give back to the community after the bootcamp?</p>
+          <p className="text-xs text-muted-foreground mb-1">How will you give back to the community after the bootcamp?</p>
           <Textarea maxLength={500} value={form.giveback_plan||''} onChange={e=>update('giveback_plan',e.target.value)} />
           <label>Declarations</label>
           <div className="flex items-center gap-2"><Checkbox checked={!!form.accuracy_confirmed} onCheckedChange={v=>update('accuracy_confirmed',!!v)} /><span>I confirm info is accurate</span></div>
