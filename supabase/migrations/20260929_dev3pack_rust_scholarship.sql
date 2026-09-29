@@ -168,7 +168,7 @@ with check (public.is_scholarship_admin());
 
 -- Seed settings
 insert into public.scholarship_settings (id, opens_at, closes_at)
-values (1, now(), '2026-10-10 23:59:00+01')
+values (1, now(), '2027-01-01 23:59:00+01')
 on conflict (id) do update set closes_at = excluded.closes_at;
 
 -- Seed admin
