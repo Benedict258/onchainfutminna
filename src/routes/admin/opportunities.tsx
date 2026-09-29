@@ -334,7 +334,7 @@ function AdminOpportunities() {
                     {opp.image_url ? (
                       <img src={opp.image_url as string} alt="" className="h-8 w-8 rounded object-cover border border-border" />
                     ) : (
-                      <span className="text-muted-foreground text-xs">--</span>
+                      <span className="text-muted-foreground text-xs">—</span>
                     )}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
