@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { scholarshipConfig } from "@/lib/config/scholarship";
@@ -14,9 +14,20 @@ export function Dev3packScholarshipForm() {
   const [form, setForm] = useState<any>({});
   const [applicationsOpen, setApplicationsOpen] = useState<boolean | null>(null);
 
-  useState(() => {
-    supabase.rpc('applications_open').then(({ data }) => setApplicationsOpen(!!data));
-  });
+  useEffect(() => {
+    const checkOpen = async () => {
+      const { data, error } = await supabase.from('scholarship_settings').select('opens_at,closes_at').eq('id',1).single();
+      if (!error && data) {
+        const now = new Date();
+        const open = new Date(data.opens_at) <= now && now <= new Date(data.closes_at);
+        setApplicationsOpen(open);
+      } else {
+        // fallback to open if check fails
+        setApplicationsOpen(true);
+      }
+    };
+    checkOpen();
+  }, []);
 
   const mutation = useMutation({
     mutationFn: async (payload:any) => {
