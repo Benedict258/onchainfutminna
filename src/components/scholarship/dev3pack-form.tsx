@@ -39,6 +39,18 @@ type Rule = { key: string; message: string; test?: (v: any) => boolean };
 
 const filled = (v: any) => (typeof v === "string" ? v.trim().length > 0 : !!v);
 
+// Accepts "github.com/me/app" as well as full URLs; normalizeLink adds the scheme.
+const normalizeLink = (v: string) =>
+  /^https?:\/\//i.test(v.trim()) ? v.trim() : `https://${v.trim()}`;
+const isLink = (v: string) => {
+  try {
+    const url = new URL(normalizeLink(v));
+    return url.hostname.includes(".") && !/\s/.test(v.trim());
+  } catch {
+    return false;
+  }
+};
+
 // Required fields per step. Anything not listed here is optional.
 const STEP_RULES: Record<number, Rule[]> = {
   1: [
@@ -68,11 +80,18 @@ const STEP_RULES: Record<number, Rule[]> = {
     { key: "club_member", message: "Tell us if you are a club member." },
     { key: "programming_experience", message: "Select your programming experience." },
     { key: "rust_experience", message: "Select your Rust experience." },
+    // optional, but must be a real link when given
+    {
+      key: "built_link",
+      message: "Enter a valid link, e.g. https://github.com/you/project",
+      test: (v) => !v?.trim() || isLink(v),
+    },
   ],
   3: [
     { key: "motivation", message: "Tell us why you want this scholarship." },
     { key: "hard_learning", message: "Tell us about something hard you learned." },
     { key: "goal_by_end_nov", message: "Tell us your goal for the end of November." },
+    { key: "want_to_build", message: "Tell us something you would like to build." },
   ],
   4: [
     { key: "can_attend_full", message: "Select whether you can attend." },
@@ -283,10 +302,11 @@ export function Dev3packScholarshipForm() {
       social_url: social,
       club_member: form.club_member === "yes",
       languages_tools: form.languages_tools || [],
-      built_description: "",
+      built_description: form.built_description?.trim() || "",
+      built_link: form.built_link?.trim() ? normalizeLink(form.built_link) : null,
+      want_to_build: form.want_to_build.trim(),
       rust_reasoning: form.rust_reasoning || "",
       club_activity: "",
-      built_link: "",
       clashes: "",
       support_needed: "",
       how_heard: "",
@@ -456,6 +476,19 @@ export function Dev3packScholarshipForm() {
               { value: "comfortable", label: "Comfortable" },
             ])}
           </Field>
+          <Field
+            label="Something you have built"
+            hint="Anything you have built, fixed, or shipped: code, a website, a design, a bot. Skip this if you are just starting out."
+          >
+            {longText("built_description", 800)}
+          </Field>
+          <Field
+            label="Link to what you built"
+            hint="GitHub repo, live site, or demo"
+            error={errors.built_link}
+          >
+            {text("built_link", { type: "url", placeholder: "https://github.com/you/project" })}
+          </Field>
         </div>
       )}
 
@@ -484,6 +517,14 @@ export function Dev3packScholarshipForm() {
             error={errors.goal_by_end_nov}
           >
             {longText("goal_by_end_nov", 500)}
+          </Field>
+          <Field
+            label="Something you would like to build"
+            required
+            hint="A project idea you would love to build someday, big or small."
+            error={errors.want_to_build}
+          >
+            {longText("want_to_build", 500)}
           </Field>
         </div>
       )}

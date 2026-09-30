@@ -54,9 +54,7 @@ const SECTIONS: { title: string; fields: [key: string, label: string][] }[] = [
       ["github_url", "GitHub"],
       ["social_url", "X / Twitter"],
       ["club_member", "Club member"],
-      ["club_activity", "Club activity"],
       ["programming_experience", "Programming experience"],
-      ["languages_tools", "Languages & tools"],
       ["rust_experience", "Rust experience"],
       ["built_description", "Something they built"],
       ["built_link", "Link to what they built"],
@@ -66,9 +64,9 @@ const SECTIONS: { title: string; fields: [key: string, label: string][] }[] = [
     title: "Motivation",
     fields: [
       ["motivation", "Why this scholarship"],
-      ["rust_reasoning", "Why Rust for blockchain"],
       ["hard_learning", "Learning something hard"],
       ["goal_by_end_nov", "Goal by end of November"],
+      ["want_to_build", "Something they would like to build"],
     ],
   },
   {
@@ -76,17 +74,14 @@ const SECTIONS: { title: string; fields: [key: string, label: string][] }[] = [
     fields: [
       ["can_attend_full", "Can attend full bootcamp"],
       ["weekly_hours", "Weekly hours"],
-      ["clashes", "Clashes"],
       ["has_laptop", "Has laptop"],
       ["internet_quality", "Internet quality"],
-      ["support_needed", "Support needed"],
     ],
   },
   {
     title: "Give back & declarations",
     fields: [
       ["giveback_plan", "Give-back plan"],
-      ["how_heard", "How they heard"],
       ["accuracy_confirmed", "Info is accurate"],
       ["seat_forfeit_ack", "Understands seat forfeit"],
       ["data_consent", "Data consent"],
