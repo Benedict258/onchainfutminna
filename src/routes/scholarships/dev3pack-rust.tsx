@@ -1,6 +1,7 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { scholarshipConfig } from "@/lib/config/scholarship";
 import { Dev3packScholarshipForm } from "@/components/scholarship/dev3pack-form";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/scholarships/dev3pack-rust")({
   head: () => ({
@@ -23,11 +24,16 @@ function Page() {
       <section className="space-y-4">
         <h1 className="text-4xl font-bold">{scholarshipConfig.hero.headline}</h1>
         <p className="text-lg text-muted-foreground">{scholarshipConfig.hero.subheadline}</p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm rounded-lg border p-4">
+<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-sm rounded-lg border p-4">
           <div><span className="font-semibold">Seats</span><br/>{scholarshipConfig.seats}</div>
           <div><span className="font-semibold">Format</span><br/>{scholarshipConfig.format}</div>
           <div><span className="font-semibold">Bootcamp dates</span><br/>{scholarshipConfig.bootcampDates}</div>
           <div><span className="font-semibold">Cost</span><br/>{scholarshipConfig.cost}</div>
+          <div className="flex items-center justify-center">
+            <Button onClick={scrollToForm} size="sm" className="font-semibold">
+              APPLY NOW
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -68,13 +74,7 @@ function Page() {
         </div>
       </section>
 
-      <div className="flex justify-center">
-        <button onClick={scrollToForm} className="inline-flex items-center justify-center rounded-md bg-primary px-10 py-5 text-xl font-bold text-primary-foreground shadow hover:bg-primary/90">
-          APPLY NOW
-        </button>
-      </div>
-
-      <Dev3packScholarshipForm />
+<Dev3packScholarshipForm />
     </div>
   );
 }
