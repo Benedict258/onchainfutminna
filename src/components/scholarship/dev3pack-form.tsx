@@ -68,7 +68,7 @@ export function Dev3packScholarshipForm() {
 
   const update = (k:string,v:any)=> setForm((f:any)=>({...f,[k]:v}));
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
     // normalize usernames to URLs
     const github = form.github_url?.startsWith('http') ? form.github_url : form.github_url ? `https://github.com/${form.github_url}` : null;
     const social = form.social_url?.startsWith('http') ? form.social_url : form.social_url ? `https://x.com/${form.social_url}` : null;
@@ -86,6 +86,19 @@ const handleSubmit = () => {
       support_needed: "",
       how_heard: "",
     };
+
+    // check duplicate email
+    const { data: existing } = await supabase
+      .from('rust_scholarship_applications')
+      .select('id')
+      .ilike('email', payload.email)
+      .maybeSingle();
+
+    if (existing) {
+      toast.error("An application with this email already exists.");
+      return;
+    }
+
     mutation.mutate(payload);
   };
 
