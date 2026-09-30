@@ -1,5 +1,5 @@
 ﻿import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -50,6 +50,16 @@ function SignInPage() {
   const router = useRouter();
   const { redirect } = Route.useSearch();
   const authLogin = useAuthStore((s) => s.login);
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const justLoggedIn = useRef(false);
+
+  // Already signed in (e.g. followed a sign-in link in another tab): skip the form.
+  useEffect(() => {
+    if (isHydrated && isAuthenticated && !justLoggedIn.current) {
+      router.history.replace(redirect ?? takeReturnTo() ?? "/");
+    }
+  }, [isHydrated, isAuthenticated, redirect, router]);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -79,6 +89,7 @@ function SignInPage() {
         }
         throw new Error(msg);
       }
+      justLoggedIn.current = true;
       authLogin(result.user, result.accessToken);
       toast.success("Welcome back!");
       const remembered = takeReturnTo();

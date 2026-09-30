@@ -1,7 +1,7 @@
 ﻿import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import { rememberReturnTo } from "@/lib/auth-redirect";
+import { isAuthPage, rememberReturnTo } from "@/lib/auth-redirect";
 
 export const getRouter = () => {
   const queryClient = new QueryClient();
@@ -13,10 +13,10 @@ export const getRouter = () => {
     defaultPreloadStaleTime: 0,
   });
 
-  // Any in-app navigation to the sign-in page remembers where the user came from.
+  // Any in-app navigation to sign in / sign up remembers where the user came from.
   if (typeof window !== "undefined") {
     router.subscribe("onBeforeNavigate", ({ fromLocation, toLocation }) => {
-      if (toLocation.pathname === "/auth" && fromLocation) rememberReturnTo(fromLocation.href);
+      if (isAuthPage(toLocation.pathname) && fromLocation) rememberReturnTo(fromLocation.href);
     });
   }
 
