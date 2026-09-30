@@ -52,14 +52,19 @@ export function from(table: string) {
       return { params, _table: table, _method: 'GET' as const };
     },
 
-    async insert(rows: any) {
+    // returning: 'minimal' skips reading the row back, so it works for roles
+    // that can insert but have no SELECT policy (e.g. anon on public forms).
+    async insert(rows: any, opts?: { returning?: 'minimal' | 'representation' }) {
+      const h = baseHeaders();
+      if (opts?.returning === 'minimal') h.Prefer = 'return=minimal';
       const res = await fetchWithRetry(`${supabaseUrl}/rest/v1/${table}`, {
         method: 'POST',
-        headers: baseHeaders(),
+        headers: h,
         body: JSON.stringify(rows),
       });
-      const json = await res.json();
-      if (!res.ok) return { data: null, error: { message: json.message || json.hint || 'Insert failed', code: res.status } };
+      const text = await res.text();
+      const json = text ? JSON.parse(text) : null;
+      if (!res.ok) return { data: null, error: { message: json?.message || json?.hint || 'Insert failed', code: res.status, pgCode: json?.code as string | undefined } };
       return { data: json, error: null };
     },
 

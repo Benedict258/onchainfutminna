@@ -10,23 +10,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
+const initialForm = {
+  level: '',
+  gender: '',
+  club_member: '',
+  programming_experience: '',
+  rust_experience: '',
+  can_attend_full: '',
+  weekly_hours: '',
+  has_laptop: '',
+  internet_quality: '',
+  accuracy_confirmed: false,
+  seat_forfeit_ack: false,
+  data_consent: false,
+  rust_reasoning: '',
+};
+
 export function Dev3packScholarshipForm() {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState<any>({
-    level: '',
-    gender: '',
-    club_member: '',
-    programming_experience: '',
-    rust_experience: '',
-    can_attend_full: '',
-    weekly_hours: '',
-    has_laptop: '',
-    internet_quality: '',
-    accuracy_confirmed: false,
-    seat_forfeit_ack: false,
-    data_consent: false,
-    rust_reasoning: '',
-  });
+  const [form, setForm] = useState<any>(initialForm);
+  const [submitted, setSubmitted] = useState(false);
   const [applicationsOpen, setApplicationsOpen] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -50,11 +53,20 @@ export function Dev3packScholarshipForm() {
 
   const mutation = useMutation({
     mutationFn: async (payload:any) => {
-      const { error } = await supabase.from('rust_scholarship_applications').insert(payload);
-      if (error) throw error;
+      // anon has no SELECT policy on this table, so duplicates can't be checked up front;
+      // the unique index on lower(email) rejects them and we translate the error here.
+      const { error } = await supabase.from('rust_scholarship_applications').insert(payload, { returning: 'minimal' });
+      if (error) {
+        if (error.pgCode === '23505' || error.code === 409) throw new Error("An application with this email already exists.");
+        throw error;
+      }
     },
     onSuccess: () => {
-      toast.success("Application submitted. We will announce results on " + scholarshipConfig.resultsAnnounce);
+      toast.success("Application submitted.");
+      setSubmitted(true);
+      setForm(initialForm);
+      setStep(1);
+      document.getElementById('scholarship-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     },
     onError: (err:any) => {
       toast.error(err.message || "Submission failed");
@@ -68,11 +80,26 @@ export function Dev3packScholarshipForm() {
 
   const update = (k:string,v:any)=> setForm((f:any)=>({...f,[k]:v}));
 
-const handleSubmit = async () => {
+  if (submitted) {
+    return (
+      <div id="scholarship-form" className="rounded-xl border p-6 space-y-3 max-w-3xl mx-auto text-center">
+        <h2 className="text-2xl font-semibold">Application received</h2>
+        <p className="text-muted-foreground">
+          Thanks for applying to the Dev3pack Rust Scholarship. Results will be announced on {scholarshipConfig.resultsAnnounce}.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Questions? Email <a className="underline" href={`mailto:${scholarshipConfig.contactEmail}`}>{scholarshipConfig.contactEmail}</a>.
+        </p>
+      </div>
+    );
+  }
+
+const handleSubmit = () => {
     // client‑side validation
-    if (!form.full_name?.trim()) { toast.error("Full name is required."); return; }
-    if (!form.email?.trim()) { toast.error("Email is required."); return; }
-    if (!form.phone_whatsapp?.trim()) { toast.error("Phone number is required."); return; }
+    if ((form.full_name?.trim().length ?? 0) < 2) { toast.error("Full name is required."); return; }
+    if (!/^\S+@\S+\.\S+$/.test(form.email?.trim() ?? '')) { toast.error("Enter a valid email."); return; }
+    const phoneLen = form.phone_whatsapp?.trim().length ?? 0;
+    if (phoneLen < 7 || phoneLen > 20) { toast.error("Enter a valid phone number."); return; }
     if (!form.department?.trim()) { toast.error("Department is required."); return; }
     if (!form.level) { toast.error("Select your level."); return; }
     if (!form.gender) { toast.error("Select gender."); return; }
@@ -96,6 +123,9 @@ const handleSubmit = async () => {
     const social = form.social_url?.startsWith('http') ? form.social_url : form.social_url ? `https://x.com/${form.social_url}` : null;
     const payload = {
       ...form,
+      full_name: form.full_name.trim(),
+      email: form.email.trim().toLowerCase(),
+      phone_whatsapp: form.phone_whatsapp.trim(),
       github_url: github,
       social_url: social,
       club_member: form.club_member === 'yes',
@@ -108,18 +138,6 @@ const handleSubmit = async () => {
       support_needed: "",
       how_heard: "",
     };
-
-    // check duplicate email
-    const { data: existing } = await supabase
-      .from('rust_scholarship_applications')
-      .select('id')
-      .ilike('email', payload.email)
-      .maybeSingle();
-
-    if (existing) {
-      toast.error("An application with this email already exists.");
-      return;
-    }
 
     mutation.mutate(payload);
   };
