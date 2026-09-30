@@ -67,7 +67,7 @@ export function Dev3packScholarshipForm() {
 
   const update = (k:string,v:any)=> setForm((f:any)=>({...f,[k]:v}));
 
-  const handleSubmit = () => {
+const handleSubmit = () => {
     // normalize usernames to URLs
     const github = form.github_url?.startsWith('http') ? form.github_url : form.github_url ? `https://github.com/${form.github_url}` : null;
     const social = form.social_url?.startsWith('http') ? form.social_url : form.social_url ? `https://x.com/${form.social_url}` : null;
@@ -77,6 +77,7 @@ export function Dev3packScholarshipForm() {
       social_url: social,
       club_member: form.club_member === 'yes',
       languages_tools: form.languages_tools || [],
+      built_description: "",
     };
     mutation.mutate(payload);
   };
