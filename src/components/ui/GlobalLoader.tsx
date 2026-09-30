@@ -7,10 +7,20 @@ export function GlobalLoader({ show = true }: { show?: boolean }) {
     if (!show) return;
     const style = document.createElement("style");
     style.textContent = `
+      :root {
+        --loader-border: #7c3aed;
+        --loader-bg: rgba(124,58,237,0.2);
+        --loader-wrapper-bg: #ffffff;
+      }
+      .dark {
+        --loader-border: #ffffff;
+        --loader-bg: rgba(255,255,255,0.2);
+        --loader-wrapper-bg: #0f0f0f;
+      }
       .global-loader-wrapper {
         position: fixed;
         inset: 0;
-        background: white;
+        background: var(--loader-wrapper-bg);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -23,11 +33,11 @@ export function GlobalLoader({ show = true }: { show?: boolean }) {
         transform-style: preserve-3d;
       }
       .spinner > div {
-        background-color: rgba(0,77,255,0.2);
+        background-color: var(--loader-bg);
         height: 100%;
         position: absolute;
         width: 100%;
-        border: 2px solid #004dff;
+        border: 2px solid var(--loader-border);
       }
       .spinner div:nth-of-type(1) { transform: translateZ(-22px) rotateY(180deg); }
       .spinner div:nth-of-type(2) { transform: rotateY(-270deg) translateX(50%); transform-origin: top right; }
