@@ -2,13 +2,14 @@
 """Seed 20 technical track modules for 'Solidity & EVM' via Supabase REST API."""
 
 import json
+import os
 import uuid
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
-SUPABASE_URL = "https://lsfctypeldlkpqemtwfj.supabase.co"
-SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzZmN0eXBlbGRsa3BxZW10d2ZqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTA3NzUxNywiZXhwIjoyMDk2NjUzNTE3fQ.77KsuSaN6497R09l-CfDaBaKGfe5-4pO_U3IFuknr60"
+SUPABASE_URL = os.environ["SUPABASE_URL"]
+SERVICE_KEY = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
 TRACK_ID = "54f8f48c-e485-422c-aea6-dfe63c3437c7"
 
 HEADERS = {
