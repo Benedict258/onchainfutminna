@@ -69,6 +69,28 @@ export function Dev3packScholarshipForm() {
   const update = (k:string,v:any)=> setForm((f:any)=>({...f,[k]:v}));
 
 const handleSubmit = async () => {
+    // client‑side validation
+    if (!form.full_name?.trim()) { toast.error("Full name is required."); return; }
+    if (!form.email?.trim()) { toast.error("Email is required."); return; }
+    if (!form.phone_whatsapp?.trim()) { toast.error("Phone number is required."); return; }
+    if (!form.department?.trim()) { toast.error("Department is required."); return; }
+    if (!form.level) { toast.error("Select your level."); return; }
+    if (!form.gender) { toast.error("Select gender."); return; }
+    if (!form.club_member) { toast.error("Indicate club membership."); return; }
+    if (!form.programming_experience) { toast.error("Select programming experience."); return; }
+    if (!form.rust_experience) { toast.error("Select Rust experience."); return; }
+    if (!form.motivation?.trim()) { toast.error("Motivation is required."); return; }
+    if (!form.hard_learning?.trim()) { toast.error("Hard learning experience is required."); return; }
+    if (!form.goal_by_end_nov?.trim()) { toast.error("Goal by end of November is required."); return; }
+    if (!form.can_attend_full) { toast.error("Select attendance option."); return; }
+    if (!form.weekly_hours) { toast.error("Select weekly hours."); return; }
+    if (!form.has_laptop) { toast.error("Select laptop availability."); return; }
+    if (!form.internet_quality) { toast.error("Select internet quality."); return; }
+    if (!form.giveback_plan?.trim()) { toast.error("Giveback plan is required."); return; }
+    if (!form.accuracy_confirmed || !form.seat_forfeit_ack || !form.data_consent) {
+      toast.error("Please confirm all declarations."); return;
+    }
+
     // normalize usernames to URLs
     const github = form.github_url?.startsWith('http') ? form.github_url : form.github_url ? `https://github.com/${form.github_url}` : null;
     const social = form.social_url?.startsWith('http') ? form.social_url : form.social_url ? `https://x.com/${form.social_url}` : null;
