@@ -1,79 +1,18 @@
-"use client";
+import { useEffect, useState } from "react";
+import { useIsFetching } from "@tanstack/react-query";
+import { useRouterState } from "@tanstack/react-router";
 
-import { useEffect } from "react";
+// Styles live in src/styles.css (.bcf-loader-overlay / .bcf-spinner) so the loader is
+// visible on first paint, before any JavaScript runs.
 
-interface GlobalLoaderProps {
-  show?: boolean;
-  /** full-screen overlay (default). When false, renders only the spinner inline. */
-  inline?: boolean;
-}
+// A query that starts just after a page mounts shouldn't make the loader flicker off/on.
+const SETTLE_MS = 150;
+// Never block the page for longer than this, even if a request hangs.
+const MAX_WAIT_MS = 8000;
 
-let stylesInjected = false;
-
-// Primary brand colour (matches the "Apply Now" button)
-const PRIMARY = "#7c3aed";
-
-export function GlobalLoader({ show = true, inline = false }: GlobalLoaderProps) {
-  useEffect(() => {
-    if (stylesInjected) return;
-    stylesInjected = true;
-    const style = document.createElement("style");
-    style.textContent = `
-      :root {
-        --loader-border: ${PRIMARY};
-        --loader-bg: ${PRIMARY}33;   /* 20% opacity */
-        --loader-wrapper-bg: rgba(255,255,255,0.6);
-      }
-      .dark {
-        --loader-border: ${PRIMARY};
-        --loader-bg: ${PRIMARY}33;
-        --loader-wrapper-bg: rgba(15,15,15,0.6);
-      }
-      .global-loader-wrapper {
-        position: fixed;
-        inset: 0;
-        background: var(--loader-wrapper-bg);
-        backdrop-filter: blur(2px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-      }
-      .spinner {
-        width: 44px;
-        height: 44px;
-        animation: spinner-y0fdc1 2s infinite ease;
-        transform-style: preserve-3d;
-      }
-      .spinner > div {
-        background-color: var(--loader-bg);
-        height: 100%;
-        position: absolute;
-        width: 100%;
-        border: 2px solid var(--loader-border);
-      }
-      .spinner div:nth-of-type(1) { transform: translateZ(-22px) rotateY(180deg); }
-      .spinner div:nth-of-type(2) { transform: rotateY(-270deg) translateX(50%); transform-origin: top right; }
-      .spinner div:nth-of-type(3) { transform: rotateY(270deg) translateX(-50%); transform-origin: center left; }
-      .spinner div:nth-of-type(4) { transform: rotateX(90deg) translateY(-50%); transform-origin: top center; }
-      .spinner div:nth-of-type(5) { transform: rotateX(-90deg) translateY(50%); transform-origin: bottom center; }
-      .spinner div:nth-of-type(6) { transform: translateZ(22px); }
-      @keyframes spinner-y0fdc1 {
-        0% { transform: rotate(45deg) rotateX(-25deg) rotateY(25deg); }
-        50% { transform: rotate(45deg) rotateX(-385deg) rotateY(25deg); }
-        100% { transform: rotate(45deg) rotateX(-385deg) rotateY(385deg); }
-      }
-    `;
-    document.head.appendChild(style);
-    return () => {
-      // keep styles for other loaders
-    };
-  }, []);
-
-  if (!show) return null;
-
-  const spinner = (
-    <div className="spinner" aria-busy="true" aria-label="Loading">
+function Spinner() {
+  return (
+    <div className="bcf-spinner" aria-hidden="true">
       <div />
       <div />
       <div />
@@ -82,8 +21,65 @@ export function GlobalLoader({ show = true, inline = false }: GlobalLoaderProps)
       <div />
     </div>
   );
+}
 
-  if (inline) return spinner;
+interface GlobalLoaderProps {
+  show?: boolean;
+  /** Render only the spinner, in place, instead of the full-screen overlay. */
+  inline?: boolean;
+}
 
-  return <div className="global-loader-wrapper">{spinner}</div>;
+export function GlobalLoader({ show = true, inline = false }: GlobalLoaderProps) {
+  if (inline) {
+    if (!show) return null;
+    return (
+      <div className="flex justify-center py-10" role="status" aria-label="Loading">
+        <Spinner />
+      </div>
+    );
+  }
+  return (
+    <div
+      className="bcf-loader-overlay"
+      data-hidden={!show}
+      role="status"
+      aria-live="polite"
+      aria-label="Loading"
+      aria-hidden={!show}
+    >
+      <Spinner />
+    </div>
+  );
+}
+
+/**
+ * Site-wide loader. Server-rendered visible, so it is the first thing on screen; the page
+ * shows faintly underneath. It stays up until the app has started and the current page's
+ * data has loaded, and comes back on every page change.
+ */
+export function PageLoader() {
+  const [hydrated, setHydrated] = useState(false);
+  const [waiting, setWaiting] = useState(true);
+  const fetching = useIsFetching();
+  const routePending = useRouterState({ select: (s) => s.status === "pending" });
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => setHydrated(true), []);
+
+  // New page: wait for its data again. (Search-param changes like filters don't count.)
+  useEffect(() => setWaiting(true), [pathname]);
+
+  useEffect(() => {
+    if (!hydrated || !waiting || fetching > 0) return;
+    const t = setTimeout(() => setWaiting(false), SETTLE_MS);
+    return () => clearTimeout(t);
+  }, [hydrated, waiting, fetching]);
+
+  useEffect(() => {
+    if (!waiting) return;
+    const t = setTimeout(() => setWaiting(false), MAX_WAIT_MS);
+    return () => clearTimeout(t);
+  }, [waiting]);
+
+  return <GlobalLoader show={!hydrated || routePending || waiting} />;
 }

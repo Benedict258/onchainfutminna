@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { GlobalLoader } from "@/components/ui/GlobalLoader";
 import { scholarshipConfig } from "@/lib/config/scholarship";
@@ -164,26 +164,22 @@ export function Dev3packScholarshipForm() {
   const [form, setForm] = useState<any>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
-  const [applicationsOpen, setApplicationsOpen] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    const checkOpen = async () => {
+  // A react-query query, so the site-wide page loader waits for it.
+  const { data: applicationsOpen } = useQuery({
+    queryKey: ["scholarship-settings"],
+    queryFn: async () => {
       const { data, error } = await supabase.query("scholarship_settings", {
         select: "opens_at,closes_at",
         filters: { id: 1 },
         single: true,
       });
-      if (!error && data) {
-        const now = new Date();
-        const open = new Date(data.opens_at) <= now && now <= new Date(data.closes_at);
-        setApplicationsOpen(open);
-      } else {
-        // fallback to open if check fails
-        setApplicationsOpen(true);
-      }
-    };
-    checkOpen();
-  }, []);
+      // fallback to open if check fails
+      if (error || !data) return true;
+      const now = new Date();
+      return new Date(data.opens_at) <= now && now <= new Date(data.closes_at);
+    },
+  });
 
   const mutation = useMutation({
     mutationFn: async (payload: any) => {
@@ -217,7 +213,7 @@ export function Dev3packScholarshipForm() {
       </div>
     );
   }
-  if (applicationsOpen === null) return <GlobalLoader inline />;
+  if (applicationsOpen === undefined) return <GlobalLoader inline />;
 
   const update = (k: string, v: any) => {
     setForm((f: any) => ({ ...f, [k]: v }));

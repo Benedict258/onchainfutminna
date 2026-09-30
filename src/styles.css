@@ -228,3 +228,79 @@
 @utility chain-h {
   border-top: 2px dashed var(--color-outline-variant);
 }
+
+/* ─── PAGE LOADER ─────────────────────────────── */
+/* Lives in the main stylesheet (not injected by JS) so it paints before anything else. */
+/* --ring is the brand dark purple (#1a031b) in light mode and violet-white (#c4a8f0) in dark. */
+.bcf-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--background) 55%, transparent);
+  transition:
+    opacity 250ms ease,
+    visibility 0s linear 0s;
+}
+.bcf-loader-overlay[data-hidden="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 250ms ease,
+    visibility 0s linear 250ms;
+}
+.bcf-spinner {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  animation: bcf-spinner-turn 2s infinite ease;
+  transform-style: preserve-3d;
+}
+.bcf-spinner > div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: color-mix(in srgb, var(--ring) 20%, transparent);
+  border: 2px solid var(--ring);
+}
+.bcf-spinner div:nth-of-type(1) {
+  transform: translateZ(-22px) rotateY(180deg);
+}
+.bcf-spinner div:nth-of-type(2) {
+  transform: rotateY(-270deg) translateX(50%);
+  transform-origin: top right;
+}
+.bcf-spinner div:nth-of-type(3) {
+  transform: rotateY(270deg) translateX(-50%);
+  transform-origin: center left;
+}
+.bcf-spinner div:nth-of-type(4) {
+  transform: rotateX(90deg) translateY(-50%);
+  transform-origin: top center;
+}
+.bcf-spinner div:nth-of-type(5) {
+  transform: rotateX(-90deg) translateY(50%);
+  transform-origin: bottom center;
+}
+.bcf-spinner div:nth-of-type(6) {
+  transform: translateZ(22px);
+}
+@keyframes bcf-spinner-turn {
+  0% {
+    transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
+  }
+  50% {
+    transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+  }
+  100% {
+    transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bcf-spinner {
+    animation-duration: 6s;
+  }
+}
