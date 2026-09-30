@@ -10,6 +10,9 @@ interface GlobalLoaderProps {
 
 let stylesInjected = false;
 
+// Primary brand colour (matches the "Apply Now" button)
+const PRIMARY = "#7c3aed";
+
 export function GlobalLoader({ show = true, inline = false }: GlobalLoaderProps) {
   useEffect(() => {
     if (stylesInjected) return;
@@ -17,13 +20,13 @@ export function GlobalLoader({ show = true, inline = false }: GlobalLoaderProps)
     const style = document.createElement("style");
     style.textContent = `
       :root {
-        --loader-border: #7c3aed;
-        --loader-bg: rgba(124,58,237,0.2);
+        --loader-border: ${PRIMARY};
+        --loader-bg: ${PRIMARY}33;   /* 20% opacity */
         --loader-wrapper-bg: rgba(255,255,255,0.6);
       }
       .dark {
-        --loader-border: #ffffff;
-        --loader-bg: rgba(255,255,255,0.2);
+        --loader-border: ${PRIMARY};
+        --loader-bg: ${PRIMARY}33;
         --loader-wrapper-bg: rgba(15,15,15,0.6);
       }
       .global-loader-wrapper {
