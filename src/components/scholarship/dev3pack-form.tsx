@@ -62,7 +62,7 @@ export function Dev3packScholarshipForm() {
   if (applicationsOpen === false) {
     return <div className="rounded-lg border p-6 text-center">Applications for this scholarship have closed.</div>;
   }
-  if (applicationsOpen === null) return <GlobalLoader />;
+  if (applicationsOpen === null) return <GlobalLoader inline />;
 
   const update = (k:string,v:any)=> setForm((f:any)=>({...f,[k]:v}));
 

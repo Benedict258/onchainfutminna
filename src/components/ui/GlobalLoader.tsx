@@ -2,25 +2,35 @@
 
 import { useEffect } from "react";
 
-export function GlobalLoader({ show = true }: { show?: boolean }) {
+interface GlobalLoaderProps {
+  show?: boolean;
+  /** full-screen overlay (default). When false, renders only the spinner inline. */
+  inline?: boolean;
+}
+
+let stylesInjected = false;
+
+export function GlobalLoader({ show = true, inline = false }: GlobalLoaderProps) {
   useEffect(() => {
-    if (!show) return;
+    if (stylesInjected) return;
+    stylesInjected = true;
     const style = document.createElement("style");
     style.textContent = `
       :root {
         --loader-border: #7c3aed;
         --loader-bg: rgba(124,58,237,0.2);
-        --loader-wrapper-bg: #ffffff;
+        --loader-wrapper-bg: rgba(255,255,255,0.6);
       }
       .dark {
         --loader-border: #ffffff;
         --loader-bg: rgba(255,255,255,0.2);
-        --loader-wrapper-bg: #0f0f0f;
+        --loader-wrapper-bg: rgba(15,15,15,0.6);
       }
       .global-loader-wrapper {
         position: fixed;
         inset: 0;
         background: var(--loader-wrapper-bg);
+        backdrop-filter: blur(2px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -52,16 +62,24 @@ export function GlobalLoader({ show = true }: { show?: boolean }) {
       }
     `;
     document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, [show]);
+    return () => {
+      // keep styles for other loaders
+    };
+  }, []);
 
   if (!show) return null;
 
+  const spinner = (
+    <div className="spinner" aria-busy="true" aria-label="Loading">
+      <div /><div /><div /><div /><div /><div />
+    </div>
+  );
+
+  if (inline) return spinner;
+
   return (
-    <div className="global-loader-wrapper" aria-busy="true" aria-label="Loading">
-      <div className="spinner">
-        <div /><div /><div /><div /><div /><div />
-      </div>
+    <div className="global-loader-wrapper">
+      {spinner}
     </div>
   );
 }
