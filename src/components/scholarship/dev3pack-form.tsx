@@ -25,6 +25,7 @@ export function Dev3packScholarshipForm() {
     accuracy_confirmed: false,
     seat_forfeit_ack: false,
     data_consent: false,
+    rust_reasoning: '',
   });
   const [applicationsOpen, setApplicationsOpen] = useState<boolean | null>(null);
 
@@ -78,6 +79,12 @@ const handleSubmit = () => {
       club_member: form.club_member === 'yes',
       languages_tools: form.languages_tools || [],
       built_description: "",
+      rust_reasoning: form.rust_reasoning || "",
+      club_activity: "",
+      built_link: "",
+      clashes: "",
+      support_needed: "",
+      how_heard: "",
     };
     mutation.mutate(payload);
   };
@@ -94,8 +101,7 @@ const handleSubmit = () => {
           <Input value={form.full_name||''} onChange={e=>update('full_name',e.target.value)} />
           <label>Email</label>
           <Input type="email" value={form.email||''} onChange={e=>update('email',e.target.value)} />
-          <label>WhatsApp</label>
-          <p className="text-xs text-muted-foreground mb-1">Include country code</p>
+<label>Phone Number (WhatsApp Preferred)</label>
           <Input value={form.phone_whatsapp||''} onChange={e=>update('phone_whatsapp',e.target.value)} />
           <label>Telegram handle</label>
           <p className="text-xs text-muted-foreground mb-1">Username without @</p>
@@ -139,18 +145,27 @@ const handleSubmit = () => {
           </Select>
           <label>Programming experience</label>
           <p className="text-xs text-muted-foreground mb-1">Overall coding experience</p>
-          <Select value={form.programming_experience} onValueChange={v=>update('programming_experience',v)}>
+<Select value={form.programming_experience} onValueChange={v=>update('programming_experience',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
-              {['never','beginner','intermediate','advanced'].map(v=> <SelectItem key={v} value={v}>{v}</SelectItem>)}
+              {[
+                {value:'never', label:'Never'},
+                {value:'beginner', label:'Beginner'},
+                {value:'intermediate', label:'Intermediate'},
+                {value:'advanced', label:'Advanced'},
+              ].map(o=> <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
             </SelectContent>
           </Select>
           <label>Rust experience</label>
           <p className="text-xs text-muted-foreground mb-1">How familiar are you with Rust?</p>
-          <Select value={form.rust_experience} onValueChange={v=>update('rust_experience',v)}>
+<Select value={form.rust_experience} onValueChange={v=>update('rust_experience',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
-              {['none','a_little','comfortable'].map(v=> <SelectItem key={v} value={v}>{v}</SelectItem>)}
+              {[
+                {value:'none', label:'None'},
+                {value:'a_little', label:'A little'},
+                {value:'comfortable', label:'Comfortable'},
+              ].map(o=> <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
@@ -184,26 +199,39 @@ const handleSubmit = () => {
           </Select>
           <label>Weekly hours</label>
           <p className="text-xs text-muted-foreground mb-1">How many hours can you dedicate weekly?</p>
-          <Select value={form.weekly_hours} onValueChange={v=>update('weekly_hours',v)}>
+<Select value={form.weekly_hours} onValueChange={v=>update('weekly_hours',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
-              {['under_5','5_10','10_15','15_plus'].map(v=> <SelectItem key={v} value={v}>{v}</SelectItem>)}
+              {[
+                {value:'under_5', label:'Under 5 hrs'},
+                {value:'5_10', label:'5–10 hrs'},
+                {value:'10_15', label:'10–15 hrs'},
+                {value:'15_plus', label:'15+ hrs'},
+              ].map(o=> <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
             </SelectContent>
           </Select>
           <label>Has laptop</label>
           <p className="text-xs text-muted-foreground mb-1">Do you have a laptop for development?</p>
-          <Select value={form.has_laptop} onValueChange={v=>update('has_laptop',v)}>
+<Select value={form.has_laptop} onValueChange={v=>update('has_laptop',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
-              {['yes','shared','no'].map(v=> <SelectItem key={v} value={v}>{v}</SelectItem>)}
+              {[
+                {value:'yes', label:'Yes'},
+                {value:'shared', label:'Shared'},
+                {value:'no', label:'No'},
+              ].map(o=> <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
             </SelectContent>
           </Select>
           <label>Internet quality</label>
           <p className="text-xs text-muted-foreground mb-1">Typical internet reliability</p>
-          <Select value={form.internet_quality} onValueChange={v=>update('internet_quality',v)}>
+<Select value={form.internet_quality} onValueChange={v=>update('internet_quality',v)}>
             <SelectTrigger><SelectValue placeholder="Select"/></SelectTrigger>
             <SelectContent>
-              {['reliable','sometimes','poor'].map(v=> <SelectItem key={v} value={v}>{v}</SelectItem>)}
+              {[
+                {value:'reliable', label:'Reliable'},
+                {value:'sometimes', label:'Sometimes'},
+                {value:'poor', label:'Poor'},
+              ].map(o=> <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
