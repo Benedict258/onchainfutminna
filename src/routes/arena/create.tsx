@@ -1,4 +1,4 @@
-﻿import { createFileRoute, useRouter } from "@tanstack/react-router";
+﻿import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -168,7 +168,7 @@ function CreateChallengePage() {
             You need to be logged in to create a challenge.
           </p>
           <Button asChild className="mt-6">
-            <a href="/auth">Login</a>
+            <Link to="/auth">Login</Link>
           </Button>
         </div>
       </div>

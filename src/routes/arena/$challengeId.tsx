@@ -774,7 +774,7 @@ function ChallengeDetailPage() {
             {/* Login prompt */}
             {!user && (
               <Button asChild className="w-full">
-                <a href="/auth">Login to Participate</a>
+                <Link to="/auth">Login to Participate</Link>
               </Button>
             )}
           </div>

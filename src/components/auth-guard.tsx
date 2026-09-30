@@ -2,6 +2,8 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/auth-store";
 
+const currentHref = () => window.location.pathname + window.location.search;
+
 interface AuthGuardProps {
   children: React.ReactNode;
 }
@@ -12,7 +14,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   useEffect(() => {
     if (isHydrated && !isAuthenticated) {
-      router.navigate({ to: "/auth" });
+      router.navigate({ to: "/auth", search: { redirect: currentHref() } });
     }
   }, [isHydrated, isAuthenticated, router]);
 
@@ -29,7 +31,7 @@ export function AdminGuard({ children }: AuthGuardProps) {
   useEffect(() => {
     if (!isHydrated) return;
     if (!isAuthenticated) {
-      router.navigate({ to: "/auth" });
+      router.navigate({ to: "/auth", search: { redirect: currentHref() } });
     } else if (user && user.role !== "ADMIN" && user.role !== "SUPER_ADMIN") {
       router.navigate({ to: "/" });
     }

@@ -16,8 +16,12 @@ import {
 } from "@/components/ui/form";
 import { loginSchema, type LoginInput } from "@/lib/validators/auth";
 import { useAuthStore } from "@/stores/auth-store";
+import { safeRedirect, takeReturnTo } from "@/lib/auth-redirect";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
+    redirect: safeRedirect(search.redirect),
+  }),
   head: () => ({
     meta: [
       { title: "Sign In | BlockchainClub FUTMinna" },
@@ -44,6 +48,7 @@ function AuthBranding() {
 function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { redirect } = Route.useSearch();
   const authLogin = useAuthStore((s) => s.login);
 
   const form = useForm<LoginInput>({
@@ -76,8 +81,10 @@ function SignInPage() {
       }
       authLogin(result.user, result.accessToken);
       toast.success("Welcome back!");
+      const remembered = takeReturnTo();
+      const target = redirect ?? remembered ?? "/";
       setTimeout(() => {
-        router.navigate({ to: "/" });
+        router.history.push(target);
       }, 300);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Login failed");
