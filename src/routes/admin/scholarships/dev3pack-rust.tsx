@@ -57,7 +57,7 @@ const SECTIONS: { title: string; fields: [key: string, label: string][] }[] = [
       ["programming_experience", "Programming experience"],
       ["rust_experience", "Rust experience"],
       ["built_description", "Something they built"],
-      ["built_link", "Link to what they built"],
+      ["built_link", "Link (taken from their answer)"],
     ],
   },
   {
@@ -65,8 +65,7 @@ const SECTIONS: { title: string; fields: [key: string, label: string][] }[] = [
     fields: [
       ["motivation", "Why this scholarship"],
       ["hard_learning", "Learning something hard"],
-      ["goal_by_end_nov", "Goal by end of November"],
-      ["want_to_build", "Something they would like to build"],
+      ["goal_by_end_nov", "What they want to build"],
     ],
   },
   {
