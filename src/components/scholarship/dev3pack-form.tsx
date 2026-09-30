@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { GlobalLoader } from "@/components/ui/GlobalLoader";
 import { scholarshipConfig } from "@/lib/config/scholarship";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,7 +62,7 @@ export function Dev3packScholarshipForm() {
   if (applicationsOpen === false) {
     return <div className="rounded-lg border p-6 text-center">Applications for this scholarship have closed.</div>;
   }
-  if (applicationsOpen === null) return <div className="p-6"><div className="h-8 w-48 bg-muted animate-pulse rounded" /></div>;
+  if (applicationsOpen === null) return <GlobalLoader />;
 
   const update = (k:string,v:any)=> setForm((f:any)=>({...f,[k]:v}));
 

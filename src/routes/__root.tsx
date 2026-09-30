@@ -7,8 +7,9 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useAuthStore } from "@/stores/auth-store";
+import { GlobalLoader } from "@/components/ui/GlobalLoader";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -151,22 +152,29 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const hydrate = useAuthStore((s) => s.hydrate);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     hydrate();
+    // hide loader after first paint
+    const timer = setTimeout(() => setLoading(false), 0);
+    return () => clearTimeout(timer);
   }, [hydrate]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col bg-background text-foreground">
-        <SiteHeader />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <SiteFooter />
-        <Toaster />
-      </div>
-    </QueryClientProvider>
+    <>
+      <GlobalLoader show={loading} />
+      <QueryClientProvider client={queryClient}>
+        <div className="flex min-h-screen flex-col bg-background text-foreground">
+          <SiteHeader />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <SiteFooter />
+          <Toaster />
+        </div>
+      </QueryClientProvider>
+    </>
   );
 }
 
