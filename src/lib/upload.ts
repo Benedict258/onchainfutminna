@@ -21,7 +21,7 @@ export async function uploadToSupabase(
     method: "POST",
     headers: {
       apikey: serviceKey,
-      Authorization: `Bearer ${serviceKey}`,
+      ...(serviceKey.startsWith("eyJ") ? { Authorization: `Bearer ${serviceKey}` } : {}),
     },
     body: formData,
   });
@@ -39,7 +39,7 @@ export async function deleteFromSupabase(bucket: string, path: string): Promise<
     method: "DELETE",
     headers: {
       apikey: serviceKey,
-      Authorization: `Bearer ${serviceKey}`,
+      ...(serviceKey.startsWith("eyJ") ? { Authorization: `Bearer ${serviceKey}` } : {}),
     },
   });
 

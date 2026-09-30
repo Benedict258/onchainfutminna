@@ -22,7 +22,7 @@ async function serviceFetch(path: string, init: RequestInit = {}) {
     ...init,
     headers: {
       apikey: key,
-      Authorization: `Bearer ${key}`,
+      ...(key.startsWith("eyJ") ? { Authorization: `Bearer ${key}` } : {}),
       "Content-Type": "application/json",
       ...init.headers,
     },

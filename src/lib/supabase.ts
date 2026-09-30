@@ -1,5 +1,10 @@
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY!;
+// Server code uses the secret key; the browser bundle only ever gets the publishable key.
+const supabaseUrl = import.meta.env.SSR
+  ? (process.env.SUPABASE_URL ?? import.meta.env.VITE_SUPABASE_URL)!
+  : import.meta.env.VITE_SUPABASE_URL!;
+const supabaseAnonKey = import.meta.env.SSR
+  ? process.env.SUPABASE_SERVICE_ROLE_KEY!
+  : import.meta.env.VITE_SUPABASE_ANON_KEY!;
 
 const _nativeFetch = fetch;
 
@@ -19,13 +24,16 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = 2): P
   throw new Error("Max retries exceeded");
 }
 
-function baseHeaders() {
-  return {
+function baseHeaders(): Record<string, string> {
+  const h: Record<string, string> = {
     apikey: supabaseAnonKey,
-    Authorization: `Bearer ${supabaseAnonKey}`,
     "Content-Type": "application/json",
     Prefer: "return=representation",
   };
+  // Legacy keys are JWTs and go in Authorization too; new sb_publishable_/sb_secret_ keys
+  // are not JWTs and are sent via the apikey header only.
+  if (supabaseAnonKey?.startsWith("eyJ")) h.Authorization = `Bearer ${supabaseAnonKey}`;
+  return h;
 }
 
 function buildFilterString(filters: Record<string, any>): string {
