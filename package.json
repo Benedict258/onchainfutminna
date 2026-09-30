@@ -3,11 +3,16 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "packageManager": "npm@10.9.3",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
