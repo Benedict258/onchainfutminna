@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 import { GlobalLoader } from "@/components/ui/GlobalLoader";
 import { scholarshipConfig } from "@/lib/config/scholarship";
 import { Button } from "@/components/ui/button";
