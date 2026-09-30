@@ -185,9 +185,7 @@ function ContentCreationPage() {
   const [resourceType, setResourceType] = useState<string>("all");
 
   const filteredResources =
-    resourceType === "all"
-      ? RESOURCES
-      : RESOURCES.filter((r) => r.type === resourceType);
+    resourceType === "all" ? RESOURCES : RESOURCES.filter((r) => r.type === resourceType);
 
   return (
     <div className="bg-background">
@@ -203,9 +201,8 @@ function ContentCreationPage() {
             Creation
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Simplifying complex technical concepts into accessible educational
-            assets. From documentation to video production, build the content
-            skills that power Web3 adoption.
+            Simplifying complex technical concepts into accessible educational assets. From
+            documentation to video production, build the content skills that power Web3 adoption.
           </p>
         </div>
       </section>
@@ -218,9 +215,7 @@ function ContentCreationPage() {
               <Layers className="h-5 w-5 text-primary" />
               <div>
                 <div className="text-headline-sm">{TRACK_CARDS.length}</div>
-                <div className="text-xs text-muted-foreground">
-                  Learning Tracks
-                </div>
+                <div className="text-xs text-muted-foreground">Learning Tracks</div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-3">
@@ -276,9 +271,7 @@ function ContentCreationPage() {
                     </div>
                   </div>
                   <h3 className="mt-4 text-headline-md">{track.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {track.category}
-                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">{track.category}</p>
                   <p className="mt-3 text-sm text-muted-foreground leading-relaxed line-clamp-2">
                     {track.description}
                   </p>
@@ -295,8 +288,7 @@ function ContentCreationPage() {
                     className="mt-5 w-full font-semibold tracking-wide text-xs group-hover:border-primary/40"
                   >
                     <Link to="/learn">
-                      Start Learning{" "}
-                      <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                      Start Learning <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                     </Link>
                   </Button>
                 </div>
@@ -326,15 +318,12 @@ function ContentCreationPage() {
               {filteredResources.length === 0 ? (
                 <div className="text-center py-12">
                   <FileText className="mx-auto h-10 w-10 text-muted-foreground/40" />
-                  <p className="mt-3 text-muted-foreground">
-                    No resources found.
-                  </p>
+                  <p className="mt-3 text-muted-foreground">No resources found.</p>
                 </div>
               ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {filteredResources.map((resource) => {
-                    const IconComp =
-                      RESOURCE_TYPE_ICONS[resource.type || ""] || FileText;
+                    const IconComp = RESOURCE_TYPE_ICONS[resource.type || ""] || FileText;
                     return (
                       <a
                         key={resource.id}
@@ -352,8 +341,7 @@ function ContentCreationPage() {
                               {resource.title}
                             </p>
                             <p className="mt-1 text-xs text-muted-foreground">
-                              {RESOURCE_TYPE_LABELS[resource.type] ||
-                                resource.type}
+                              {RESOURCE_TYPE_LABELS[resource.type] || resource.type}
                             </p>
                           </div>
                         </div>
@@ -378,19 +366,14 @@ function ContentCreationPage() {
             CONTENT JOURNEY?
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Join the community and get access to all content creation tracks,
-            mentorship, and project opportunities.
+            Join the community and get access to all content creation tracks, mentorship, and
+            project opportunities.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" className="font-semibold tracking-wide">
               <Link to="/join">Join BlockchainClub FUTMinna</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="font-semibold tracking-wide"
-            >
+            <Button asChild size="lg" variant="outline" className="font-semibold tracking-wide">
               <Link to="/learn">Back to Learn</Link>
             </Button>
           </div>
@@ -399,5 +382,3 @@ function ContentCreationPage() {
     </div>
   );
 }
-
-

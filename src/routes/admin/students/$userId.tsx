@@ -4,13 +4,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/stores/auth-store";
 import { apiQuery, apiInsert, apiUpdate, apiDelete } from "@/lib/api-client";
 import { BADGE_CONFIG } from "@/lib/badges";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -153,7 +147,8 @@ function StudentDrillDown() {
     queryKey: ["admin-student-profile", userId],
     queryFn: async () => {
       const res = await apiQuery("profiles", {
-        select: "user_id,full_name,avatar_url,username,department,level,experience_level,bio,github_link,twitter_link,portfolio_link",
+        select:
+          "user_id,full_name,avatar_url,username,department,level,experience_level,bio,github_link,twitter_link,portfolio_link",
         filters: { user_id: userId },
         single: true,
       });
@@ -357,9 +352,7 @@ function StudentDrillDown() {
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Student not found</AlertTitle>
-          <AlertDescription>
-            The requested student could not be found.
-          </AlertDescription>
+          <AlertDescription>The requested student could not be found.</AlertDescription>
         </Alert>
       </div>
     );
@@ -515,9 +508,7 @@ function StudentDrillDown() {
             <CardContent>
               <div className="grid gap-3 sm:grid-cols-3">
                 {[1, 2, 3].map((gateNum) => {
-                  const check = gateChecks.find(
-                    (g) => (g.gate_number as number) === gateNum,
-                  );
+                  const check = gateChecks.find((g) => (g.gate_number as number) === gateNum);
                   const status = (check?.status as string) || "not_started";
                   return (
                     <div
@@ -529,9 +520,7 @@ function StudentDrillDown() {
                         <span className="text-sm font-medium">Gate {gateNum}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge className={getGateBadgeClass(status)}>
-                          {getGateLabel(status)}
-                        </Badge>
+                        <Badge className={getGateBadgeClass(status)}>{getGateLabel(status)}</Badge>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -555,9 +544,7 @@ function StudentDrillDown() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Streaks
-              </CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Streaks</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 sm:grid-cols-3">
@@ -620,9 +607,7 @@ function StudentDrillDown() {
                   })}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-4">
-                  No recent activity
-                </p>
+                <p className="text-sm text-muted-foreground text-center py-4">No recent activity</p>
               )}
             </CardContent>
           </Card>
@@ -635,29 +620,22 @@ function StudentDrillDown() {
           {tracksData && tracksData.length > 0 ? (
             tracksData.map((track) => {
               const trackId = track.id as string;
-              const trackModules = (modulesData || []).filter(
-                (m) => m.track_id === trackId,
-              );
+              const trackModules = (modulesData || []).filter((m) => m.track_id === trackId);
               const completedInTrack = trackModules.filter((m) =>
                 completedModuleIds.has(m.id as string),
               ).length;
               const totalInTrack = trackModules.length;
               const progressPct =
-                totalInTrack > 0
-                  ? Math.round((completedInTrack / totalInTrack) * 100)
-                  : 0;
+                totalInTrack > 0 ? Math.round((completedInTrack / totalInTrack) * 100) : 0;
 
               return (
                 <Card key={trackId}>
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="text-base">
-                          {track.title as string}
-                        </CardTitle>
+                        <CardTitle className="text-base">{track.title as string}</CardTitle>
                         <CardDescription>
-                          {track.ecosystem as string} &middot;{" "}
-                          {track.difficulty as string}
+                          {track.ecosystem as string} &middot; {track.difficulty as string}
                         </CardDescription>
                       </div>
                       <Badge variant={progressPct === 100 ? "default" : "secondary"}>
@@ -681,9 +659,7 @@ function StudentDrillDown() {
                                 : "bg-muted text-muted-foreground border border-border"
                             }`}
                           >
-                            {isDone ? (
-                              <CheckCircle2 className="h-3 w-3 mr-1" />
-                            ) : null}
+                            {isDone ? <CheckCircle2 className="h-3 w-3 mr-1" /> : null}
                             {(mod.phase as string) || "M"}
                             {(mod.order as number) || ""}
                           </div>
@@ -716,9 +692,7 @@ function StudentDrillDown() {
                       className="flex items-center justify-between rounded-lg border border-border p-3"
                     >
                       <div>
-                        <p className="text-sm font-medium">
-                          Gate {check.gate_number as number}
-                        </p>
+                        <p className="text-sm font-medium">Gate {check.gate_number as number}</p>
                         <p className="text-xs text-muted-foreground">
                           {(check.admin_notes as string) || "No admin notes"}
                         </p>
@@ -761,9 +735,7 @@ function StudentDrillDown() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-base">DEVLOG Entries</CardTitle>
-                  <CardDescription>
-                    All published and draft entries
-                  </CardDescription>
+                  <CardDescription>All published and draft entries</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
                   <Flame className="h-4 w-4 text-orange-400" />
@@ -864,9 +836,7 @@ function StudentDrillDown() {
             <DialogContent className="max-w-lg">
               <DialogHeader>
                 <DialogTitle>Award Badge</DialogTitle>
-                <DialogDescription>
-                  Select a badge to award to {fullName}
-                </DialogDescription>
+                <DialogDescription>Select a badge to award to {fullName}</DialogDescription>
               </DialogHeader>
               <div className="space-y-3 max-h-80 overflow-y-auto">
                 {Object.entries(BADGE_CONFIG).map(([badgeId, config]) => {
@@ -885,9 +855,7 @@ function StudentDrillDown() {
                         </div>
                         <div>
                           <p className="text-sm font-medium">{config.label}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {config.description}
-                          </p>
+                          <p className="text-xs text-muted-foreground">{config.description}</p>
                         </div>
                       </div>
                       <Button
@@ -900,9 +868,7 @@ function StudentDrillDown() {
                             grantBadgeMutation.mutate(badgeId);
                           }
                         }}
-                        disabled={
-                          grantBadgeMutation.isPending || revokeBadgeMutation.isPending
-                        }
+                        disabled={grantBadgeMutation.isPending || revokeBadgeMutation.isPending}
                       >
                         {isGranted ? (
                           <>
@@ -982,25 +948,18 @@ function StudentDrillDown() {
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Module Completions</CardTitle>
-              <CardDescription>
-                {(progressData || []).length} modules completed
-              </CardDescription>
+              <CardDescription>{(progressData || []).length} modules completed</CardDescription>
             </CardHeader>
             <CardContent>
               {progressData && progressData.length > 0 ? (
                 <div className="space-y-2">
                   {progressData.slice(0, 20).map((p, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center justify-between text-sm"
-                    >
+                    <div key={i} className="flex items-center justify-between text-sm">
                       <span className="font-mono text-muted-foreground">
                         {p.module_id as string}
                       </span>
                       <span className="text-muted-foreground">
-                        {p.completed_at
-                          ? new Date(p.completed_at as string).toLocaleString()
-                          : ""}
+                        {p.completed_at ? new Date(p.completed_at as string).toLocaleString() : ""}
                       </span>
                     </div>
                   ))}
@@ -1026,9 +985,7 @@ function StudentDrillDown() {
                       className="flex items-center justify-between text-sm border-b border-border pb-2 last:border-0 last:pb-0"
                     >
                       <div>
-                        <span className="font-medium">
-                          Gate {check.gate_number as number}
-                        </span>
+                        <span className="font-medium">Gate {check.gate_number as number}</span>
                         <span className="mx-2 text-muted-foreground">&rarr;</span>
                         <Badge className={getGateBadgeClass(check.status as string)}>
                           {getGateLabel(check.status as string)}
@@ -1057,17 +1014,12 @@ function StudentDrillDown() {
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Gate {gateDialogGate} Status</DialogTitle>
-            <DialogDescription>
-              Override the gate check status for {fullName}
-            </DialogDescription>
+            <DialogDescription>Override the gate check status for {fullName}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
               <Label>Status</Label>
-              <Select
-                value={gateDialogStatus}
-                onValueChange={setGateDialogStatus}
-              >
+              <Select value={gateDialogStatus} onValueChange={setGateDialogStatus}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -1112,5 +1064,3 @@ function StudentDrillDown() {
     </div>
   );
 }
-
-

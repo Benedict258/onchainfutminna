@@ -44,7 +44,8 @@ const TRACKS = [
     id: 1,
     title: "Community Building Foundations",
     category: "growth",
-    description: "Learn the principles of building vibrant, self-sustaining communities from the ground up.",
+    description:
+      "Learn the principles of building vibrant, self-sustaining communities from the ground up.",
     modules: 12,
     difficulty: "BEGINNER",
   },
@@ -52,7 +53,8 @@ const TRACKS = [
     id: 2,
     title: "Moderation & Conflict Resolution",
     category: "moderation",
-    description: "Master techniques for maintaining healthy discussions and resolving disputes constructively.",
+    description:
+      "Master techniques for maintaining healthy discussions and resolving disputes constructively.",
     modules: 8,
     difficulty: "INTERMEDIATE",
   },
@@ -60,7 +62,8 @@ const TRACKS = [
     id: 3,
     title: "Engagement Strategies",
     category: "engagement",
-    description: "Design programs and initiatives that keep members active and invested in the community.",
+    description:
+      "Design programs and initiatives that keep members active and invested in the community.",
     modules: 10,
     difficulty: "BEGINNER",
   },
@@ -68,7 +71,8 @@ const TRACKS = [
     id: 4,
     title: "DAO Governance & Decision Making",
     category: "governance",
-    description: "Understand decentralized governance models, voting mechanisms, and proposal frameworks.",
+    description:
+      "Understand decentralized governance models, voting mechanisms, and proposal frameworks.",
     modules: 14,
     difficulty: "ADVANCED",
   },
@@ -84,7 +88,8 @@ const TRACKS = [
     id: 6,
     title: "Content Curation & Knowledge Management",
     category: "engagement",
-    description: "Organize and surface valuable content to maximize community learning and retention.",
+    description:
+      "Organize and surface valuable content to maximize community learning and retention.",
     modules: 7,
     difficulty: "BEGINNER",
   },
@@ -100,7 +105,8 @@ const TRACKS = [
     id: 8,
     title: "Token-Gated Community Design",
     category: "governance",
-    description: "Create exclusive community tiers and access models using blockchain-based credentials.",
+    description:
+      "Create exclusive community tiers and access models using blockchain-based credentials.",
     modules: 11,
     difficulty: "INTERMEDIATE",
   },
@@ -161,14 +167,10 @@ function CommunityManagementPage() {
   const [resourceType, setResourceType] = useState<string>("all");
 
   const filteredTracks =
-    categoryFilter === "all"
-      ? TRACKS
-      : TRACKS.filter((t) => t.category === categoryFilter);
+    categoryFilter === "all" ? TRACKS : TRACKS.filter((t) => t.category === categoryFilter);
 
   const filteredResources =
-    resourceType === "all"
-      ? RESOURCES
-      : RESOURCES.filter((r) => r.type === resourceType);
+    resourceType === "all" ? RESOURCES : RESOURCES.filter((r) => r.type === resourceType);
 
   return (
     <div className="bg-background">
@@ -184,9 +186,8 @@ function CommunityManagementPage() {
             Management
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Comprehensive learning tracks designed to help you nurture and scale
-            global blockchain communities. From governance frameworks to
-            engagement strategies.
+            Comprehensive learning tracks designed to help you nurture and scale global blockchain
+            communities. From governance frameworks to engagement strategies.
           </p>
         </div>
       </section>
@@ -199,9 +200,7 @@ function CommunityManagementPage() {
               <Layers className="h-5 w-5 text-primary" />
               <div>
                 <div className="text-headline-sm">{TRACKS.length}</div>
-                <div className="text-xs text-muted-foreground">
-                  Learning Tracks
-                </div>
+                <div className="text-xs text-muted-foreground">Learning Tracks</div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-3">
@@ -217,9 +216,7 @@ function CommunityManagementPage() {
               <GraduationCap className="h-5 w-5 text-primary" />
               <div>
                 <div className="text-headline-sm"></div>
-                <div className="text-xs text-muted-foreground">
-                  Quizzes Completed
-                </div>
+                <div className="text-xs text-muted-foreground">Quizzes Completed</div>
               </div>
             </div>
           </div>
@@ -288,8 +285,7 @@ function CommunityManagementPage() {
                   className="mt-5 w-full font-semibold tracking-wide text-xs group-hover:border-primary/40"
                 >
                   <Link to="/learn">
-                    Start Learning{" "}
-                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                    Start Learning <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Link>
                 </Button>
               </div>
@@ -303,10 +299,7 @@ function CommunityManagementPage() {
         <div className="mx-auto max-w-[1400px] px-6 py-16">
           <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
             <h2 className="text-headline-lg">Resources Library</h2>
-            <Tabs
-              value={resourceType}
-              onValueChange={setResourceType}
-            >
+            <Tabs value={resourceType} onValueChange={setResourceType}>
               <TabsList className="bg-background/50">
                 <TabsTrigger value="all">All Types</TabsTrigger>
                 <TabsTrigger value="Article">Articles</TabsTrigger>
@@ -356,19 +349,14 @@ function CommunityManagementPage() {
             THRIVING COMMUNITIES?
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Join the community and get access to all learning tracks, mentorship,
-            and hands-on community management experience.
+            Join the community and get access to all learning tracks, mentorship, and hands-on
+            community management experience.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" className="font-semibold tracking-wide">
               <Link to="/join">Join BlockchainClub FUTMinna</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="font-semibold tracking-wide"
-            >
+            <Button asChild size="lg" variant="outline" className="font-semibold tracking-wide">
               <Link to="/about">Learn More</Link>
             </Button>
           </div>
@@ -377,5 +365,3 @@ function CommunityManagementPage() {
     </div>
   );
 }
-
-

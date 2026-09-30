@@ -1,8 +1,8 @@
-import { createServerFn } from '@tanstack/react-start';
-import { z } from 'zod';
-import { supabase, query } from '@/lib/supabase';
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { supabase, query } from "@/lib/supabase";
 
-export const getAnalytics = createServerFn({ method: 'GET' })
+export const getAnalytics = createServerFn({ method: "GET" })
   .inputValidator(z.object({ accessToken: z.string() }))
   .handler(async ({ data }) => {
     const now = new Date().toISOString();
@@ -23,29 +23,49 @@ export const getAnalytics = createServerFn({ method: 'GET' })
       { count: openOpportunities },
       { count: totalPartners },
     ] = await Promise.all([
-      query('users', { select: 'id', count: 'exact', head: true }),
-      query('users', { select: 'id', count: 'exact', head: true, filters: { is_active: true } }),
-      query('users', { select: 'id', count: 'exact', head: true, filters: { is_approved: true } }),
-      query('events', { select: 'id', count: 'exact', head: true }),
-      query('events', { select: 'id', count: 'exact', head: true, filters: { start_date: { __op: 'gte', value: now } } }),
-      query('projects', { select: 'id', count: 'exact', head: true }),
-      query('projects', { select: 'id', count: 'exact', head: true, filters: { status: 'APPROVED' } }),
-      query('tracks', { select: 'id', count: 'exact', head: true }),
-      query('modules', { select: 'id', count: 'exact', head: true }),
-      query('blog_posts', { select: 'id', count: 'exact', head: true }),
-      query('blog_posts', { select: 'id', count: 'exact', head: true, filters: { status: 'PUBLISHED' } }),
-      query('opportunities', { select: 'id', count: 'exact', head: true }),
-      query('opportunities', { select: 'id', count: 'exact', head: true, filters: { status: 'OPEN' } }),
-      query('partners', { select: 'id', count: 'exact', head: true, filters: { is_active: true } }),
+      query("users", { select: "id", count: "exact", head: true }),
+      query("users", { select: "id", count: "exact", head: true, filters: { is_active: true } }),
+      query("users", { select: "id", count: "exact", head: true, filters: { is_approved: true } }),
+      query("events", { select: "id", count: "exact", head: true }),
+      query("events", {
+        select: "id",
+        count: "exact",
+        head: true,
+        filters: { start_date: { __op: "gte", value: now } },
+      }),
+      query("projects", { select: "id", count: "exact", head: true }),
+      query("projects", {
+        select: "id",
+        count: "exact",
+        head: true,
+        filters: { status: "APPROVED" },
+      }),
+      query("tracks", { select: "id", count: "exact", head: true }),
+      query("modules", { select: "id", count: "exact", head: true }),
+      query("blog_posts", { select: "id", count: "exact", head: true }),
+      query("blog_posts", {
+        select: "id",
+        count: "exact",
+        head: true,
+        filters: { status: "PUBLISHED" },
+      }),
+      query("opportunities", { select: "id", count: "exact", head: true }),
+      query("opportunities", {
+        select: "id",
+        count: "exact",
+        head: true,
+        filters: { status: "OPEN" },
+      }),
+      query("partners", { select: "id", count: "exact", head: true, filters: { is_active: true } }),
     ]);
 
-    const { data: recentMembers } = await query('users', {
-      select: 'id, email, created_at, profiles(full_name, avatar_url)',
-      order: { column: 'created_at', ascending: false },
+    const { data: recentMembers } = await query("users", {
+      select: "id, email, created_at, profiles(full_name, avatar_url)",
+      order: { column: "created_at", ascending: false },
       limit: 5,
     });
 
-    const { data: roleRows } = await query('users', { select: 'role' });
+    const { data: roleRows } = await query("users", { select: "role" });
 
     const roleMap = new Map<string, number>();
     if (roleRows) {
@@ -53,7 +73,10 @@ export const getAnalytics = createServerFn({ method: 'GET' })
         roleMap.set(row.role, (roleMap.get(row.role) || 0) + 1);
       }
     }
-    const roleDistribution = Array.from(roleMap.entries()).map(([role, _count]) => ({ role, _count }));
+    const roleDistribution = Array.from(roleMap.entries()).map(([role, _count]) => ({
+      role,
+      _count,
+    }));
 
     return {
       totalMembers: totalMembers || 0,
@@ -75,17 +98,17 @@ export const getAnalytics = createServerFn({ method: 'GET' })
     };
   });
 
-export const getAdminMembers = createServerFn({ method: 'GET' })
+export const getAdminMembers = createServerFn({ method: "GET" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       page: z.number().min(1).default(1),
       limit: z.number().min(1).max(100).default(20),
       search: z.string().optional(),
-      role: z.enum(['GUEST', 'MEMBER', 'ADMIN', 'SUPER_ADMIN']).optional(),
+      role: z.enum(["GUEST", "MEMBER", "ADMIN", "SUPER_ADMIN"]).optional(),
       isActive: z.boolean().optional(),
       isApproved: z.boolean().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { page, limit, search, role, isActive, isApproved } = data;
@@ -97,11 +120,16 @@ export const getAdminMembers = createServerFn({ method: 'GET' })
     if (isActive !== undefined) filters.is_active = isActive;
     if (isApproved !== undefined) filters.is_approved = isApproved;
 
-    const { data: members, count, error } = await query('users', {
-      select: 'id, email, role, is_active, is_approved, created_at, profiles(full_name, avatar_url, department, level), leaderboard_entries(total_points)',
-      count: 'exact',
+    const {
+      data: members,
+      count,
+      error,
+    } = await query("users", {
+      select:
+        "id, email, role, is_active, is_approved, created_at, profiles(full_name, avatar_url, department, level), leaderboard_entries(total_points)",
+      count: "exact",
       filters,
-      order: { column: 'created_at', ascending: false },
+      order: { column: "created_at", ascending: false },
       range: [from, to],
     });
 
@@ -114,7 +142,7 @@ export const getAdminMembers = createServerFn({ method: 'GET' })
       filteredMembers = filteredMembers.filter(
         (m: any) =>
           m.email?.toLowerCase().includes(lowerSearch) ||
-          m.profiles?.full_name?.toLowerCase().includes(lowerSearch)
+          m.profiles?.full_name?.toLowerCase().includes(lowerSearch),
       );
     }
 
@@ -127,39 +155,37 @@ export const getAdminMembers = createServerFn({ method: 'GET' })
     };
   });
 
-export const assignRole = createServerFn({ method: 'POST' })
+export const assignRole = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       userId: z.string().uuid(),
-      role: z.enum(['GUEST', 'MEMBER', 'ADMIN', 'SUPER_ADMIN']),
-    })
+      role: z.enum(["GUEST", "MEMBER", "ADMIN", "SUPER_ADMIN"]),
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, userId, role } = data;
 
-    const { data: users, error } = await supabase
-      .from('users')
-      .update({ role }, { id: userId });
+    const { data: users, error } = await supabase.from("users").update({ role }, { id: userId });
 
     if (error) throw error;
 
     return users?.[0] ?? null;
   });
 
-export const approveMember = createServerFn({ method: 'POST' })
+export const approveMember = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       userId: z.string().uuid(),
       isApproved: z.boolean(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, userId, isApproved } = data;
 
     const { data: users, error } = await supabase
-      .from('users')
+      .from("users")
       .update({ is_approved: isApproved }, { id: userId });
 
     if (error) throw error;
@@ -167,17 +193,17 @@ export const approveMember = createServerFn({ method: 'POST' })
     return users?.[0] ?? null;
   });
 
-export const getSiteSettings = createServerFn({ method: 'GET' })
+export const getSiteSettings = createServerFn({ method: "GET" })
   .inputValidator(z.object({ accessToken: z.string() }))
   .handler(async ({ data }) => {
-    const { data: settings, error } = await query('site_settings', { select: '*' });
+    const { data: settings, error } = await query("site_settings", { select: "*" });
 
     if (error) throw error;
 
     return settings || [];
   });
 
-export const updateSiteSettings = createServerFn({ method: 'POST' })
+export const updateSiteSettings = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
@@ -185,17 +211,17 @@ export const updateSiteSettings = createServerFn({ method: 'POST' })
         z.object({
           key: z.string().min(1),
           value: z.string(),
-        })
+        }),
       ),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, settings } = data;
 
     const results = [];
     for (const setting of settings) {
-      const { data: existing } = await query('site_settings', {
-        select: 'id',
+      const { data: existing } = await query("site_settings", {
+        select: "id",
         filters: { key: setting.key },
         single: true,
       });
@@ -204,14 +230,14 @@ export const updateSiteSettings = createServerFn({ method: 'POST' })
 
       if (existing) {
         const { data: updated, error } = await supabase
-          .from('site_settings')
+          .from("site_settings")
           .update({ value: setting.value }, { key: setting.key });
 
         if (error) throw error;
         result = updated?.[0] ?? null;
       } else {
         const { data: created, error } = await supabase
-          .from('site_settings')
+          .from("site_settings")
           .insert({ key: setting.key, value: setting.value });
 
         if (error) throw error;

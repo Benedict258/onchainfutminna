@@ -6,15 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Calendar,
-  MapPin,
-  Users,
-  Send,
-  Clock,
-  Lightbulb,
-  Tag,
-} from "lucide-react";
+import { Calendar, MapPin, Users, Send, Clock, Lightbulb, Tag } from "lucide-react";
 import { getEvents } from "@/lib/api/events.server";
 
 type EventFilter = "all" | "upcoming" | "past";
@@ -76,10 +68,7 @@ function EventsSkeleton() {
   return (
     <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-lg border border-border bg-card overflow-hidden"
-        >
+        <div key={i} className="rounded-lg border border-border bg-card overflow-hidden">
           <Skeleton className="aspect-[16/9] w-full rounded-none" />
           <div className="p-5 space-y-3">
             <Skeleton className="h-4 w-20" />
@@ -115,12 +104,8 @@ function EventsPage() {
   });
 
   const events = data?.events ?? [];
-  const featuredEvents = events.filter(
-    (e: any) => e.is_featured
-  );
-  const regularEvents = events.filter(
-    (e: any) => !e.is_featured
-  );
+  const featuredEvents = events.filter((e: any) => e.is_featured);
+  const regularEvents = events.filter((e: any) => !e.is_featured);
 
   if (!isIndex) {
     return <Outlet />;
@@ -139,8 +124,8 @@ function EventsPage() {
             <span className="text-primary">More</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Join hands-on sessions that push the boundaries of decentralized
-            technology. From beginner workshops to competitive hackathons.
+            Join hands-on sessions that push the boundaries of decentralized technology. From
+            beginner workshops to competitive hackathons.
           </p>
         </div>
       </section>
@@ -148,10 +133,7 @@ function EventsPage() {
       {/* FILTER TABS */}
       <section className="border-b border-border bg-surface-low">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-4">
-          <Tabs
-            value={filter}
-            onValueChange={(v) => setFilter(v as EventFilter)}
-          >
+          <Tabs value={filter} onValueChange={(v) => setFilter(v as EventFilter)}>
             <TabsList className="bg-background/50">
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
@@ -168,9 +150,7 @@ function EventsPage() {
         ) : events.length === 0 ? (
           <div className="text-center py-16">
             <Calendar className="mx-auto h-12 w-12 text-muted-foreground/40" />
-            <p className="mt-4 text-lg text-muted-foreground">
-              No events found.
-            </p>
+            <p className="mt-4 text-lg text-muted-foreground">No events found.</p>
             <p className="mt-2 text-sm text-muted-foreground/60">
               Check back soon for upcoming events!
             </p>
@@ -202,9 +182,7 @@ function EventsPage() {
                         <div className="flex items-center gap-2">
                           <Badge
                             variant="outline"
-                            className={
-                              TYPE_COLORS[event.type] || TYPE_COLORS.OTHER
-                            }
+                            className={TYPE_COLORS[event.type] || TYPE_COLORS.OTHER}
                           >
                             {TYPE_LABELS[event.type] || event.type}
                           </Badge>
@@ -215,9 +193,7 @@ function EventsPage() {
                             Featured
                           </Badge>
                         </div>
-                        <h3 className="mt-4 text-headline-lg">
-                          {event.title}
-                        </h3>
+                        <h3 className="mt-4 text-headline-lg">{event.title}</h3>
                         {event.description && (
                           <p className="mt-3 text-muted-foreground leading-relaxed">
                             {event.description.length > 150
@@ -253,7 +229,9 @@ function EventsPage() {
                             {event.event_rsvps?.length || 0} RSVPs
                           </span>
                           <Button asChild size="sm" className="ml-auto">
-                            <Link to="/events/$eventId" params={{ eventId: event.id }}>View Details</Link>
+                            <Link to="/events/$eventId" params={{ eventId: event.id }}>
+                              View Details
+                            </Link>
                           </Button>
                         </div>
                       </div>
@@ -278,12 +256,12 @@ function EventsPage() {
                   className="group rounded-lg border border-border bg-card transition-all hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-sm"
                 >
                   <div className="bg-gradient-to-br from-surface-high to-surface-low flex items-center justify-center">
-                        {event.cover_image ? (
-                          <img
-                            src={event.cover_image}
-                            alt={event.title}
-                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                          />
+                    {event.cover_image ? (
+                      <img
+                        src={event.cover_image}
+                        alt={event.title}
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      />
                     ) : (
                       <Calendar className="h-10 w-10 text-muted-foreground/30" />
                     )}
@@ -320,23 +298,17 @@ function EventsPage() {
                         </span>
                       </div>
                       {filter === "upcoming" && (
-                        <Button
-                          asChild
-                          variant="outline"
-                          size="sm"
-                          className="text-xs"
-                        >
-                          <Link to="/events/$eventId" params={{ eventId: event.id }}>RSVP</Link>
+                        <Button asChild variant="outline" size="sm" className="text-xs">
+                          <Link to="/events/$eventId" params={{ eventId: event.id }}>
+                            RSVP
+                          </Link>
                         </Button>
                       )}
                       {filter === "past" && (
-                        <Button
-                          asChild
-                          variant="ghost"
-                          size="sm"
-                          className="text-xs"
-                        >
-                          <Link to="/events/$eventId" params={{ eventId: event.id }}>Recap</Link>
+                        <Button asChild variant="ghost" size="sm" className="text-xs">
+                          <Link to="/events/$eventId" params={{ eventId: event.id }}>
+                            Recap
+                          </Link>
                         </Button>
                       )}
                     </div>
@@ -355,14 +327,9 @@ function EventsPage() {
             <Lightbulb className="mx-auto h-10 w-10 text-primary" />
             <h2 className="mt-6 text-headline-lg">Have an Event Idea?</h2>
             <p className="mt-3 text-muted-foreground">
-              Propose a workshop, talk, or hackathon. We'll help you bring it to
-              life.
+              Propose a workshop, talk, or hackathon. We'll help you bring it to life.
             </p>
-            <Button
-              asChild
-              size="lg"
-              className="mt-8 font-semibold tracking-wide"
-            >
+            <Button asChild size="lg" className="mt-8 font-semibold tracking-wide">
               <Link to="/events/request">
                 Submit Event Request <Send className="ml-2 h-4 w-4" />
               </Link>
@@ -373,5 +340,3 @@ function EventsPage() {
     </div>
   );
 }
-
-

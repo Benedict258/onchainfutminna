@@ -7,8 +7,16 @@ export const COMMUNITY_ACTIVITY_TYPES = {
   discussion: { label: "Discussion", points: 2, description: "Meaningful discussion contribution" },
   "peer-review": { label: "Peer Review", points: 3, description: "Code review for a peer" },
   "help-desk": { label: "Help Desk", points: 2, description: "Answering questions in community" },
-  "content-sharing": { label: "Content Sharing", points: 2, description: "Sharing useful resources" },
-  "event-organizing": { label: "Event Organizing", points: 5, description: "Helping organize an event" },
+  "content-sharing": {
+    label: "Content Sharing",
+    points: 2,
+    description: "Sharing useful resources",
+  },
+  "event-organizing": {
+    label: "Event Organizing",
+    points: 5,
+    description: "Helping organize an event",
+  },
   "open-source-contribution": {
     label: "Open Source Contribution",
     points: 5,

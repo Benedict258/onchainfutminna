@@ -1,7 +1,8 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Blockchain Club FUTMinna <noreply@futminna.club>";
+const FROM_EMAIL =
+  process.env.RESEND_FROM_EMAIL || "Blockchain Club FUTMinna <noreply@futminna.club>";
 const SITE_URL = process.env.SITE_URL || "https://futminna.club";
 
 const EMAIL_wrapper = (content: string) => `
@@ -50,10 +51,7 @@ const EMAIL_wrapper = (content: string) => `
 </html>
 </html>`;
 
-export async function sendVerificationEmail(
-  email: string,
-  code: string
-): Promise<void> {
+export async function sendVerificationEmail(email: string, code: string): Promise<void> {
   const digits = code.split("");
 
   await resend.emails.send({
@@ -72,7 +70,7 @@ export async function sendVerificationEmail(
               (d) => `
           <td style="width:52px;height:64px;text-align:center;background:rgba(124,58,237,0.1);border:2px solid rgba(124,58,237,0.3);border-radius:8px;margin:0 4px;">
             <span style="color:#C084FC;font-size:28px;font-weight:800;letter-spacing:2px;font-family:'Courier New',monospace;">${d}</span>
-          </td>`
+          </td>`,
             )
             .join("")}
         </tr>
@@ -84,10 +82,7 @@ export async function sendVerificationEmail(
   });
 }
 
-export async function sendWelcomeEmail(
-  email: string,
-  name: string
-): Promise<void> {
+export async function sendWelcomeEmail(email: string, name: string): Promise<void> {
   await resend.emails.send({
     from: FROM_EMAIL,
     to: email,
@@ -117,10 +112,7 @@ export async function sendWelcomeEmail(
   });
 }
 
-export async function sendPasswordResetEmail(
-  email: string,
-  token: string
-): Promise<void> {
+export async function sendPasswordResetEmail(email: string, token: string): Promise<void> {
   const resetUrl = `${SITE_URL}/auth/reset-password?token=${token}`;
 
   await resend.emails.send({

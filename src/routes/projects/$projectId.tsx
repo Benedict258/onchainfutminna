@@ -6,16 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  ArrowLeft,
-  Github,
-  ExternalLink,
-  Globe,
-  Twitter,
-  Users,
-  Star,
-  Layers,
-} from "lucide-react";
+import { ArrowLeft, Github, ExternalLink, Globe, Twitter, Users, Star, Layers } from "lucide-react";
 import { getProjectById } from "@/lib/api/projects.server";
 import { useAuthStore } from "@/stores/auth-store";
 import { Edit3 } from "lucide-react";
@@ -123,34 +114,24 @@ function ProjectDetailPage() {
 
         {bannerImage && (
           <div className="aspect-[4/1] w-full rounded-xl overflow-hidden mb-8">
-            <img
-              src={bannerImage}
-              alt={project.name}
-              className="w-full h-full object-cover"
-            />
+            <img src={bannerImage} alt={project.name} className="w-full h-full object-cover" />
           </div>
         )}
 
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <Badge
             variant="outline"
-            className={
-              ECOSYSTEM_COLORS[project.ecosystem] || ECOSYSTEM_COLORS.GENERAL
-            }
+            className={ECOSYSTEM_COLORS[project.ecosystem] || ECOSYSTEM_COLORS.GENERAL}
           >
             {ECOSYSTEM_LABELS[project.ecosystem] || project.ecosystem}
           </Badge>
           {project.is_featured && (
-            <Badge
-              variant="outline"
-              className="bg-primary/10 text-primary border-primary/20"
-            >
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
               <Star className="mr-1 h-3 w-3" />
               Featured
             </Badge>
           )}
         </div>
-
 
         <div className="flex items-start gap-5 mb-6">
           {project.logo_url && (
@@ -177,14 +158,10 @@ function ProjectDetailPage() {
               )}
             </h1>
             {project.headline && (
-              <p className="mt-2 text-body-lg text-muted-foreground">
-                {project.headline}
-              </p>
+              <p className="mt-2 text-body-lg text-muted-foreground">{project.headline}</p>
             )}
             {project.team_name && (
-              <p className="mt-1 text-sm text-muted-foreground/70">
-                by {project.team_name}
-              </p>
+              <p className="mt-1 text-sm text-muted-foreground/70">by {project.team_name}</p>
             )}
           </div>
         </div>
@@ -203,17 +180,11 @@ function ProjectDetailPage() {
                 <div>
                   <h2 className="text-headline-sm mb-3">Tags</h2>
                   <div className="flex flex-wrap gap-2">
-                    {tags.map(
-                      (t: { tag: { id: string; name: string } }) => (
-                        <Badge
-                          key={t.tag.id}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {t.tag.name}
-                        </Badge>
-                      )
-                    )}
+                    {tags.map((t: { tag: { id: string; name: string } }) => (
+                      <Badge key={t.tag.id} variant="secondary" className="text-xs">
+                        {t.tag.name}
+                      </Badge>
+                    ))}
                   </div>
                 </div>
               )}
@@ -294,9 +265,7 @@ function ProjectDetailPage() {
                     !project.demo_url &&
                     !project.website_url &&
                     !project.x_link && (
-                      <p className="text-sm text-muted-foreground/60">
-                        No links added yet.
-                      </p>
+                      <p className="text-sm text-muted-foreground/60">No links added yet.</p>
                     )}
                 </div>
               </CardContent>
@@ -332,9 +301,7 @@ function ProjectDetailPage() {
                       className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-surface-low transition-all"
                     >
                       <Avatar className="h-10 w-10 shrink-0">
-                        <AvatarImage
-                          src={m.user.profile?.avatarUrl || undefined}
-                        />
+                        <AvatarImage src={m.user.profile?.avatarUrl || undefined} />
                         <AvatarFallback className="text-xs">
                           {m.user.profile?.fullName
                             ?.split(" ")
@@ -347,13 +314,11 @@ function ProjectDetailPage() {
                           {m.user.profile?.fullName || m.user.email || "Unknown"}
                         </p>
                         <p className="text-xs text-muted-foreground truncate">
-                          {m.user.profile?.department ||
-                            m.user.profile?.level ||
-                            "Member"}
+                          {m.user.profile?.department || m.user.profile?.level || "Member"}
                         </p>
                       </div>
                     </Link>
-                  )
+                  ),
                 )}
               </div>
             </CardContent>
@@ -363,5 +328,3 @@ function ProjectDetailPage() {
     </div>
   );
 }
-
-

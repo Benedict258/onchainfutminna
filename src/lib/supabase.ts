@@ -23,8 +23,8 @@ function baseHeaders() {
   return {
     apikey: supabaseAnonKey,
     Authorization: `Bearer ${supabaseAnonKey}`,
-    'Content-Type': 'application/json',
-    Prefer: 'return=representation',
+    "Content-Type": "application/json",
+    Prefer: "return=representation",
   };
 }
 
@@ -32,8 +32,8 @@ function buildFilterString(filters: Record<string, any>): string {
   const params = new URLSearchParams();
   for (const [key, val] of Object.entries(filters)) {
     if (val === null) {
-      params.set(key, 'is.null');
-    } else if (typeof val === 'object' && val.__op) {
+      params.set(key, "is.null");
+    } else if (typeof val === "object" && val.__op) {
       params.set(key, `${val.__op}.${val.value}`);
     } else {
       params.set(key, `eq.${val}`);
@@ -44,40 +44,52 @@ function buildFilterString(filters: Record<string, any>): string {
 
 export function from(table: string) {
   return {
-    async select(cols = '*', opts?: { count?: string; head?: boolean }) {
+    async select(cols = "*", opts?: { count?: string; head?: boolean }) {
       const params = new URLSearchParams();
-      params.set('select', cols);
-      if (opts?.count) params.set('count', opts.count);
-      if (opts?.head) params.set('head', 'true');
-      return { params, _table: table, _method: 'GET' as const };
+      params.set("select", cols);
+      if (opts?.count) params.set("count", opts.count);
+      if (opts?.head) params.set("head", "true");
+      return { params, _table: table, _method: "GET" as const };
     },
 
     // returning: 'minimal' skips reading the row back, so it works for roles
     // that can insert but have no SELECT policy (e.g. anon on public forms).
-    async insert(rows: any, opts?: { returning?: 'minimal' | 'representation' }) {
+    async insert(rows: any, opts?: { returning?: "minimal" | "representation" }) {
       const h = baseHeaders();
-      if (opts?.returning === 'minimal') h.Prefer = 'return=minimal';
+      if (opts?.returning === "minimal") h.Prefer = "return=minimal";
       const res = await fetchWithRetry(`${supabaseUrl}/rest/v1/${table}`, {
-        method: 'POST',
+        method: "POST",
         headers: h,
         body: JSON.stringify(rows),
       });
       const text = await res.text();
       const json = text ? JSON.parse(text) : null;
-      if (!res.ok) return { data: null, error: { message: json?.message || json?.hint || 'Insert failed', code: res.status, pgCode: json?.code as string | undefined } };
+      if (!res.ok)
+        return {
+          data: null,
+          error: {
+            message: json?.message || json?.hint || "Insert failed",
+            code: res.status,
+            pgCode: json?.code as string | undefined,
+          },
+        };
       return { data: json, error: null };
     },
 
     async upsert(rows: any) {
       const h = baseHeaders();
-      h.Prefer = 'return=representation,resolution=merge-duplicates';
+      h.Prefer = "return=representation,resolution=merge-duplicates";
       const res = await fetchWithRetry(`${supabaseUrl}/rest/v1/${table}`, {
-        method: 'POST',
+        method: "POST",
         headers: h,
         body: JSON.stringify(rows),
       });
       const json = await res.json();
-      if (!res.ok) return { data: null, error: { message: json.message || 'Upsert failed', code: res.status } };
+      if (!res.ok)
+        return {
+          data: null,
+          error: { message: json.message || "Upsert failed", code: res.status },
+        };
       return { data: json, error: null };
     },
 
@@ -85,12 +97,16 @@ export function from(table: string) {
       const qs = buildFilterString(filters);
       const url = `${supabaseUrl}/rest/v1/${table}?${qs}`;
       const res = await fetchWithRetry(url, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: baseHeaders(),
         body: JSON.stringify(data),
       });
       const json = await res.json();
-      if (!res.ok) return { data: null, error: { message: json.message || 'Update failed', code: res.status } };
+      if (!res.ok)
+        return {
+          data: null,
+          error: { message: json.message || "Update failed", code: res.status },
+        };
       return { data: json, error: null };
     },
 
@@ -98,24 +114,25 @@ export function from(table: string) {
       const qs = buildFilterString(filters);
       const url = `${supabaseUrl}/rest/v1/${table}?${qs}`;
       const res = await fetchWithRetry(url, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: baseHeaders(),
       });
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
-        return { error: { message: json.message || 'Delete failed', code: res.status } };
+        return { error: { message: json.message || "Delete failed", code: res.status } };
       }
       return { error: null };
     },
 
     async rpc(fn: string, params?: Record<string, any>) {
       const res = await fetchWithRetry(`${supabaseUrl}/rest/v1/rpc/${fn}`, {
-        method: 'POST',
+        method: "POST",
         headers: baseHeaders(),
         body: JSON.stringify(params || {}),
       });
       const json = await res.json();
-      if (!res.ok) return { data: null, error: { message: json.message || 'RPC failed', code: res.status } };
+      if (!res.ok)
+        return { data: null, error: { message: json.message || "RPC failed", code: res.status } };
       return { data: json, error: null };
     },
   };
@@ -136,14 +153,14 @@ export async function query(
   } = {},
 ): Promise<{ data: any; error: any; count?: number }> {
   const params = new URLSearchParams();
-  const select = opts.select || '*';
-  params.set('select', select);
+  const select = opts.select || "*";
+  params.set("select", select);
 
   if (opts.filters) {
     for (const [key, val] of Object.entries(opts.filters)) {
       if (val === null) {
-        params.set(key, 'is.null');
-      } else if (typeof val === 'object' && val.__op) {
+        params.set(key, "is.null");
+      } else if (typeof val === "object" && val.__op) {
         params.set(key, `${val.__op}.${val.value}`);
       } else {
         params.set(key, `eq.${val}`);
@@ -152,11 +169,11 @@ export async function query(
   }
 
   if (opts.order) {
-    params.set('order', `${opts.order.column}.${opts.order.ascending !== false ? 'asc' : 'desc'}`);
+    params.set("order", `${opts.order.column}.${opts.order.ascending !== false ? "asc" : "desc"}`);
   }
 
   if (opts.limit) {
-    params.set('limit', String(opts.limit));
+    params.set("limit", String(opts.limit));
   }
 
   let url = `${supabaseUrl}/rest/v1/${table}`;
@@ -183,7 +200,10 @@ export async function query(
     const json = await res.json();
 
     if (!res.ok) {
-      return { data: null, error: { message: json.message || json.hint || 'Query failed', code: res.status } };
+      return {
+        data: null,
+        error: { message: json.message || json.hint || "Query failed", code: res.status },
+      };
     }
 
     if (opts.single) {
@@ -191,8 +211,8 @@ export async function query(
       return { data: row || null, error: null };
     }
 
-    const countHeader = res.headers.get('content-range');
-    const count = countHeader ? parseInt(countHeader.split('/')[1]) : undefined;
+    const countHeader = res.headers.get("content-range");
+    const count = countHeader ? parseInt(countHeader.split("/")[1]) : undefined;
 
     return { data: json, error: null, count };
   } catch (error) {
@@ -202,12 +222,13 @@ export async function query(
 
 async function rpc(fn: string, params?: Record<string, any>) {
   const res = await fetchWithRetry(`${supabaseUrl}/rest/v1/rpc/${fn}`, {
-    method: 'POST',
+    method: "POST",
     headers: baseHeaders(),
     body: JSON.stringify(params || {}),
   });
   const json = await res.json();
-  if (!res.ok) return { data: null, error: { message: json.message || 'RPC failed', code: res.status } };
+  if (!res.ok)
+    return { data: null, error: { message: json.message || "RPC failed", code: res.status } };
   return { data: json, error: null };
 }
 

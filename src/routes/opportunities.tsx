@@ -24,13 +24,7 @@ import {
 import { getOpportunities } from "@/lib/api/opportunities.server";
 import { useAuthStore } from "@/stores/auth-store";
 
-type TypeFilter =
-  | "all"
-  | "HACKATHON"
-  | "GRANT"
-  | "JOB"
-  | "INTERNSHIP"
-  | "PROGRAM";
+type TypeFilter = "all" | "HACKATHON" | "GRANT" | "JOB" | "INTERNSHIP" | "PROGRAM";
 
 const TYPE_LABELS: Record<string, string> = {
   HACKATHON: "Hackathon",
@@ -70,10 +64,7 @@ const ECOSYSTEM_LABELS: Record<string, string> = {
   GENERAL: "General",
 };
 
-const STATUS_CONFIG: Record<
-  string,
-  { label: string; className: string }
-> = {
+const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
   OPEN: {
     label: "Open",
     className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
@@ -92,14 +83,10 @@ function getDeadlineUrgency(deadline: Date | string | null) {
   if (!deadline) return null;
   const now = new Date();
   const d = new Date(deadline);
-  const diffDays = Math.ceil(
-    (d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  const diffDays = Math.ceil((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
   if (diffDays < 0) return { label: "Expired", className: "text-red-400" };
-  if (diffDays <= 7)
-    return { label: `${diffDays}d left`, className: "text-red-400" };
-  if (diffDays <= 30)
-    return { label: `${diffDays}d left`, className: "text-amber-400" };
+  if (diffDays <= 7) return { label: `${diffDays}d left`, className: "text-red-400" };
+  if (diffDays <= 30) return { label: `${diffDays}d left`, className: "text-amber-400" };
   return { label: `${diffDays}d left`, className: "text-emerald-400" };
 }
 
@@ -115,10 +102,7 @@ function OpportunitiesSkeleton() {
   return (
     <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-lg border border-border bg-card p-6 space-y-4"
-        >
+        <div key={i} className="rounded-lg border border-border bg-card p-6 space-y-4">
           <div className="flex items-center gap-2">
             <Skeleton className="h-8 w-8 rounded" />
             <Skeleton className="h-5 w-20 rounded-full" />
@@ -191,8 +175,8 @@ function OpportunitiesPage() {
             <span className="text-primary">Jobs</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Unlock the next phase of your Web3 journey. From global hackathons
-            to exclusive grants and ecosystem programs.
+            Unlock the next phase of your Web3 journey. From global hackathons to exclusive grants
+            and ecosystem programs.
           </p>
         </div>
       </section>
@@ -200,10 +184,7 @@ function OpportunitiesPage() {
       {/* FILTER TABS */}
       <section className="border-b border-border bg-surface-low">
         <div className="mx-auto max-w-[1400px] px-6 py-4">
-          <Tabs
-            value={typeFilter}
-            onValueChange={(v) => setTypeFilter(v as TypeFilter)}
-          >
+          <Tabs value={typeFilter} onValueChange={(v) => setTypeFilter(v as TypeFilter)}>
             <TabsList className="bg-background/50">
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="HACKATHON">Hackathons</TabsTrigger>
@@ -222,9 +203,7 @@ function OpportunitiesPage() {
         ) : opportunities.length === 0 ? (
           <div className="text-center py-16">
             <Briefcase className="mx-auto h-12 w-12 text-muted-foreground/40" />
-            <p className="mt-4 text-lg text-muted-foreground">
-              No opportunities found.
-            </p>
+            <p className="mt-4 text-lg text-muted-foreground">No opportunities found.</p>
             <p className="mt-2 text-sm text-muted-foreground/60">
               Check back soon for new opportunities!
             </p>
@@ -268,9 +247,7 @@ function OpportunitiesPage() {
                     </h3>
 
                     {opp.organizer && (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        by {opp.organizer}
-                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">by {opp.organizer}</p>
                     )}
 
                     {opp.description && (
@@ -312,28 +289,13 @@ function OpportunitiesPage() {
                         )}
                       </div>
                       {opp.apply_url ? (
-                        <Button
-                          asChild
-                          variant="outline"
-                          size="sm"
-                          className="text-xs"
-                        >
-                          <a
-                            href={opp.apply_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Apply{" "}
-                            <ExternalLink className="ml-1 h-3 w-3" />
+                        <Button asChild variant="outline" size="sm" className="text-xs">
+                          <a href={opp.apply_url} target="_blank" rel="noopener noreferrer">
+                            Apply <ExternalLink className="ml-1 h-3 w-3" />
                           </a>
                         </Button>
                       ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-xs"
-                          disabled
-                        >
+                        <Button variant="outline" size="sm" className="text-xs" disabled>
                           Coming Soon
                         </Button>
                       )}
@@ -352,15 +314,10 @@ function OpportunitiesPage() {
           <Trophy className="mx-auto h-10 w-10 text-primary" />
           <h2 className="mt-6 text-headline-lg">DON&apos;T MISS OUT</h2>
           <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
-            Stay updated on the latest hackathons, grants, and programs across
-            all ecosystems.
+            Stay updated on the latest hackathons, grants, and programs across all ecosystems.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button
-              asChild
-              size="lg"
-              className="font-semibold tracking-wide"
-            >
+            <Button asChild size="lg" className="font-semibold tracking-wide">
               <Link to="/join">
                 Join BlockchainClub FUTMinna <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -371,5 +328,3 @@ function OpportunitiesPage() {
     </div>
   );
 }
-
-

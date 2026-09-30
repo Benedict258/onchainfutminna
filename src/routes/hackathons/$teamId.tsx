@@ -41,13 +41,7 @@ import {
   Crown,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
-import {
-  apiQueryAll,
-  apiQuerySingle,
-  apiInsert,
-  apiUpdate,
-  apiDelete,
-} from "@/lib/api-client";
+import { apiQueryAll, apiQuerySingle, apiInsert, apiUpdate, apiDelete } from "@/lib/api-client";
 
 export const Route = createFileRoute("/hackathons/$teamId")({
   head: () => ({
@@ -62,7 +56,10 @@ export const Route = createFileRoute("/hackathons/$teamId")({
 const TEAM_STATUS_CONFIG: Record<string, { label: string; className: string }> = {
   forming: { label: "Forming", className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
   building: { label: "Building", className: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-  submitted: { label: "Submitted", className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
+  submitted: {
+    label: "Submitted",
+    className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  },
   won: { label: "Won", className: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" },
 };
 
@@ -76,8 +73,14 @@ const ROLES = [
 const ROLE_CONFIG: Record<string, { label: string; className: string }> = {
   captain: { label: "Captain", className: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" },
   developer: { label: "Developer", className: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-  designer: { label: "Designer", className: "bg-purple-500/10 text-purple-400 border-purple-500/20" },
-  presenter: { label: "Presenter", className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
+  designer: {
+    label: "Designer",
+    className: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+  },
+  presenter: {
+    label: "Presenter",
+    className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  },
 };
 
 function TeamDetailSkeleton() {
@@ -139,7 +142,7 @@ function TeamDetailContent({ userId }: { userId: string }) {
   });
 
   const isCaptain = team?.captain_id === userId;
-  const statusConfig = team ? (TEAM_STATUS_CONFIG[team.status] || TEAM_STATUS_CONFIG.forming) : null;
+  const statusConfig = team ? TEAM_STATUS_CONFIG[team.status] || TEAM_STATUS_CONFIG.forming : null;
 
   function getInitials(name?: string) {
     if (!name) return "?";
@@ -235,7 +238,7 @@ function TeamDetailContent({ userId }: { userId: string }) {
       await apiUpdate(
         "hackathon_teams",
         { repo_link: repoLink || null, demo_link: demoLink || null },
-        { id: teamId }
+        { id: teamId },
       );
       toast.success("Project links updated.");
       queryClient.invalidateQueries({ queryKey: ["hackathon-team", teamId] });
@@ -377,11 +380,15 @@ function TeamDetailContent({ userId }: { userId: string }) {
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-headline-sm">Project Info</CardTitle>
               {isCaptain && !editingProject && (
-                <Button variant="ghost" size="sm" onClick={() => {
-                  setRepoLink(team.repo_link || "");
-                  setDemoLink(team.demo_link || "");
-                  setEditingProject(true);
-                }}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setRepoLink(team.repo_link || "");
+                    setDemoLink(team.demo_link || "");
+                    setEditingProject(true);
+                  }}
+                >
                   Edit
                 </Button>
               )}
@@ -413,7 +420,9 @@ function TeamDetailContent({ userId }: { userId: string }) {
                     />
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" onClick={handleSaveProject}>Save</Button>
+                    <Button size="sm" onClick={handleSaveProject}>
+                      Save
+                    </Button>
                     <Button size="sm" variant="outline" onClick={() => setEditingProject(false)}>
                       Cancel
                     </Button>
@@ -463,9 +472,7 @@ function TeamDetailContent({ userId }: { userId: string }) {
               <CardContent className="p-5 text-center">
                 <Trophy className="mx-auto h-10 w-10 text-yellow-400" />
                 <h3 className="mt-3 text-lg font-bold text-yellow-400">Winner!</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  This team won the hackathon!
-                </p>
+                <p className="text-sm text-muted-foreground mt-1">This team won the hackathon!</p>
               </CardContent>
             </Card>
           )}
@@ -477,11 +484,7 @@ function TeamDetailContent({ userId }: { userId: string }) {
                 <p className="text-sm text-muted-foreground mb-4">
                   Ready to submit? Make sure your repo and demo links are updated.
                 </p>
-                <Button
-                  className="w-full"
-                  onClick={handleSubmitProject}
-                  disabled={submitting}
-                >
+                <Button className="w-full" onClick={handleSubmitProject} disabled={submitting}>
                   <Send className="mr-2 h-4 w-4" />
                   {submitting ? "Submitting..." : "Submit Project"}
                 </Button>
@@ -494,9 +497,7 @@ function TeamDetailContent({ userId }: { userId: string }) {
               <CardContent className="p-5 text-center">
                 <Send className="mx-auto h-8 w-8 text-emerald-400 mb-2" />
                 <p className="text-sm font-medium text-emerald-400">Project Submitted</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Good luck in the hackathon!
-                </p>
+                <p className="text-xs text-muted-foreground mt-1">Good luck in the hackathon!</p>
               </CardContent>
             </Card>
           )}
@@ -560,5 +561,3 @@ interface TeamMemberDetail {
   username?: string;
   avatar_url?: string;
 }
-
-

@@ -19,6 +19,7 @@ The platform transforms curious students into production-ready Web3 professional
 The original PDF track. Students learn to build, test, and deploy smart contracts.
 
 **Phase 0 — Professional Culture**
+
 - Git & GitHub workflow: fork, clone, branch, PR, merge
 - Command line proficiency: navigation, scripts, env vars, error streams
 - OpSec & wallet safety: private keys, seed phrases, .env files, testnet hygiene
@@ -26,6 +27,7 @@ The original PDF track. Students learn to build, test, and deploy smart contract
 - Engineering culture: meaningful commits, clear READMEs, systematic debugging
 
 **Phase 1 — Engineering Foundation**
+
 - SWE Basics: Git deep-dive, CLI, package management, testing & debugging
 - Blockchain Architecture: cryptography layer, P2P network, mempool, state machine, consensus (PoW vs PoS)
 - Ecosystem Mapping: EVM (Solidity), MoveVM (Sui/Aptos), SVM (Solana), Bitcoin Script
@@ -34,6 +36,7 @@ The original PDF track. Students learn to build, test, and deploy smart contract
 - **Gate 1 exit:** PR merged + CLI quiz 70%+ + 3 DEVLOG entries
 
 **Phase 2 — Smart Contract Core**
+
 - Solidity & EVM (2 weeks): state variables, access control, gas optimization, Hardhat/Foundry, ERC-20 with governance
 - Move — Sui & Aptos (2 weeks): object model, resource-oriented programming, Sui objects, NFT module
 - Rust & Solana (2 weeks): ownership/borrowing, accounts/instructions, Anchor framework, counter program
@@ -41,6 +44,7 @@ The original PDF track. Students learn to build, test, and deploy smart contract
 - **Gate 2 exit:** dApp deployed + 5 passing tests + PR merged
 
 **Phase 3 — Specialisation (pick one)**
+
 - **Track 3A: Security Auditor** — reentrancy, flash loans, fuzzing/invariant testing, Slither/Mythril, MEV mechanics, Immunefi bug bounties
 - **Track 3B: Protocol Developer** — EVM internals (opcodes, storage slots), MoveVM/SVM internals, ZK proofs (Circom/Noir), MEV-Boost/Flashbots
 - **Track 3C: Full-Stack dApp Developer** — Account Abstraction (ERC-4337), Paymasters, session keys, social recovery, custom Subgraphs, viem/wagmi/Biconomy
@@ -55,11 +59,13 @@ The original PDF track. Students learn to build, test, and deploy smart contract
 Web3 designers. Visual and UX skills for decentralized applications.
 
 **Phase 0 — Professional Culture**
+
 - Tool stack: Figma, Penpot, design file management, naming conventions
 - Weekly design log ("DESIGNLOG")
 - OpSec: never embed keys in screenshots, protect client assets
 
 **Phase 1 — Foundations**
+
 - UX principles for Web3: transaction flows, confirmation states, error recovery
 - Wallet UX patterns: connect, sign, approve — what users actually see
 - Blockchain mental models for designers: accounts, gas, blocks (no code)
@@ -68,6 +74,7 @@ Web3 designers. Visual and UX skills for decentralized applications.
 - Hands-on: redesign a bad Web3 onboarding flow
 
 **Phase 2 — Core**
+
 - dApp UI design: DEX interfaces, NFT marketplaces, DAO dashboards
 - Wallet design: extension popups, mobile wallet screens
 - Transaction visualization: making gas fees and confirmations human-readable
@@ -76,6 +83,7 @@ Web3 designers. Visual and UX skills for decentralized applications.
 - Hands-on: full dApp design prototype in Figma (10+ screens)
 
 **Phase 3 — Specialisation (pick one)**
+
 - **Track 3A: NFT & Brand Design** — generative collections, DAO branding, metaverse assets
 - **Track 3B: Protocol UX** — complex DeFi flows, cross-chain UX, bridge interfaces
 - **Track 3C: Design Engineering** — HTML/CSS/React basics, component libraries, design-to-code
@@ -89,11 +97,13 @@ Web3 designers. Visual and UX skills for decentralized applications.
 Web3 marketers. Growth, community, and narrative in crypto.
 
 **Phase 0 — Professional Culture**
+
 - Tool stack: Dune, Nansen, Typefully, Hypefury, Notion
 - Weekly growth log ("GROWTHLOG")
 - OpSec: 2FA on all accounts, phishing awareness, admin key management
 
 **Phase 1 — Foundations**
+
 - Web3 marketing vs Web2: community ownership, token incentives, anonymity
 - Blockchain marketing landscape: L1s, L2s, DeFi, NFTs, DAOs
 - Narrative design: scarcity, novelty, controversy, identity
@@ -102,6 +112,7 @@ Web3 marketers. Growth, community, and narrative in crypto.
 - Hands-on: analyze a successful Web3 launch campaign — write a teardown
 
 **Phase 2 — Core**
+
 - Token launch marketing: pre-launch, fair launch, airdrop strategies
 - Airdrop design: eligibility, sybil resistance, claim UX, post-claim retention
 - Community building via marketing: turning followers into contributors
@@ -110,6 +121,7 @@ Web3 marketers. Growth, community, and narrative in crypto.
 - Hands-on: campaign sprint — pitch deck + content calendar + 5 sample posts
 
 **Phase 3 — Specialisation (pick one)**
+
 - **Track 3A: Growth Hacking** — viral loops, referral mechanics, quest platforms (Galxe, Layer3)
 - **Track 3B: Institutional Marketing** — B2B Web3, developer relations, enterprise blockchain
 - **Track 3C: DAO Marketing** — governance proposal marketing, treasury comms, voting campaigns
@@ -123,12 +135,14 @@ Web3 marketers. Growth, community, and narrative in crypto.
 The people layer. Running Web3 communities at scale.
 
 **Phase 0 — Professional Culture**
+
 - Tool stack: Discord (bots, roles, channels), Telegram, Guild.xyz (token-gating)
 - Moderation philosophy: warn, mute, kick, ban consistency
 - Weekly community log ("COMMLOG")
 - OpSec: admin key management, scam detection patterns, personal boundaries
 
 **Phase 1 — Foundations**
+
 - Community architecture: open vs gated, broadcast vs discussion, sync vs async
 - Member lifecycle: lurker → contributor → superfan → ambassador → mod
 - Web3 community economics: token behavior, airdrop farmers vs genuine members
@@ -137,6 +151,7 @@ The people layer. Running Web3 communities at scale.
 - Hands-on: design a community structure for a hypothetical DeFi protocol
 
 **Phase 2 — Core**
+
 - Ambassador programs: recruitment, training, incentive design, performance tracking
 - DAO governance facilitation: proposal discussions, temperature checks, vote coordination
 - Event production: AMAs, community calls, game nights, meme contests
@@ -145,6 +160,7 @@ The people layer. Running Web3 communities at scale.
 - Hands-on: run a simulated community event (plan, execute, post-mortem)
 
 **Phase 3 — Specialisation (pick one)**
+
 - **Track 4A: DAO Operations** — governance tooling (Snapshot, Tally), delegation, multi-sig treasury
 - **Track 4B: Developer Community** — devrel basics, hackathon community building, technical support triage
 - **Track 4C: Global Communities** — multi-language, multi-timezone, cultural adaptation, regional ambassadors
@@ -158,12 +174,14 @@ The people layer. Running Web3 communities at scale.
 Web3 writers, video makers, and explainers.
 
 **Phase 0 — Professional Culture**
+
 - Tool stack: Markdown, Git for writers, CMS (Hashnode, Mirror)
 - Editorial workflow: draft → review → publish → promote
 - Weekly content log ("CONTENTLOG")
 - OpSec: never embed keys in screenshots, protect sources, attribution ethics
 
 **Phase 1 — Foundations**
+
 - Technical writing fundamentals: clarity, structure, audience awareness
 - Web3 content formats: threads, long-form, documentation, whitepapers, video scripts
 - Blockchain concepts for writers: explaining gas, consensus, wallets without jargon
@@ -172,6 +190,7 @@ Web3 writers, video makers, and explainers.
 - Hands-on: write a 10-tweet thread explaining a complex Web3 concept to a beginner
 
 **Phase 2 — Core**
+
 - Long-form content: 2,000+ word deep dives, protocol explanations, case studies
 - Documentation writing: API references, developer guides, SDK docs — structure and conventions
 - Video scripting: storyboarding, visual metaphors for abstract concepts
@@ -180,6 +199,7 @@ Web3 writers, video makers, and explainers.
 - Hands-on: publish a long-form piece on Mirror.xyz
 
 **Phase 3 — Specialisation (pick one)**
+
 - **Track 5A: Developer Documentation** — API docs, SDK guides, auto-generated docs (Docusaurus, GitBook)
 - **Track 5B: Narrative & Journalism** — crypto investigative pieces, protocol deep dives, industry analysis
 - **Track 5C: Multimedia Content** — YouTube explainers, TikTok crypto, podcast production, infographics
@@ -193,12 +213,14 @@ Web3 writers, video makers, and explainers.
 Analysts and deep thinkers. Understanding why protocols work.
 
 **Phase 0 — Professional Culture**
+
 - Tool stack: Dune Analytics, Nansen, Token Terminal, DefiLlama, Messari
 - Research methodology: hypothesis → data → analysis → conclusion → peer review
 - Weekly research log ("RESEARCHLOG")
 - OpSec: protect unpublished findings, embargo awareness, confidential data handling
 
 **Phase 1 — Foundations**
+
 - Blockchain data literacy: reading block explorers, interpreting transaction traces
 - Protocol analysis framework: what does it do, how does it work, who controls it, what can break
 - Tokenomics fundamentals: supply mechanics, emission schedules, vesting, governance weight
@@ -207,6 +229,7 @@ Analysts and deep thinkers. Understanding why protocols work.
 - Hands-on: write a 1-page protocol analysis using the 4-question framework
 
 **Phase 2 — Core**
+
 - Deep protocol analysis: architecture review, economic model stress-testing, security assumptions
 - Governance research: proposal analysis, voter behavior, delegation dynamics, governance attacks
 - MEV research: sandwich attacks, arbitrage, liquidation bots, PBS, MEV supply chain
@@ -215,6 +238,7 @@ Analysts and deep thinkers. Understanding why protocols work.
 - Hands-on: produce a research report on MEV in a specific ecosystem
 
 **Phase 3 — Specialisation (pick one)**
+
 - **Track 6A: Protocol Researcher** — deep protocol reviews, economic audits, risk assessment reports
 - **Track 6B: Data Analyst** — SQL/Dune dashboards, on-chain metrics, trend analysis, predictive modeling
 - **Track 6C: Governance Researcher** — DAO analysis, proposal design, voter behavior, governance optimization
@@ -227,42 +251,42 @@ Analysts and deep thinkers. Understanding why protocols work.
 
 ### Already Built
 
-| Feature | Status |
-|---------|--------|
-| Learn listing page (`/learn`) | Done — ecosystem tabs, track cards |
-| 5 category sub-pages (design, marketing, etc.) | Done — auth-gated |
-| Learn admin (`/admin/learn`) | Done — track + module CRUD, publish toggles |
-| Leaderboard + points system | Done |
-| User profiles + DEVLOG potential | Done (profiles with bio/skills) |
-| Auth + roles | Done |
+| Feature                                        | Status                                      |
+| ---------------------------------------------- | ------------------------------------------- |
+| Learn listing page (`/learn`)                  | Done — ecosystem tabs, track cards          |
+| 5 category sub-pages (design, marketing, etc.) | Done — auth-gated                           |
+| Learn admin (`/admin/learn`)                   | Done — track + module CRUD, publish toggles |
+| Leaderboard + points system                    | Done                                        |
+| User profiles + DEVLOG potential               | Done (profiles with bio/skills)             |
+| Auth + roles                                   | Done                                        |
 
 ### Needs Building — 11 Features
 
 **HIGH PRIORITY (4)**
 
-| # | Feature | Files | DB |
-|---|---------|-------|----|
-| 1 | **Track Detail Page** `/learn/$slug` — phase timeline, module accordion, progress bar | 1 new | - |
-| 2 | **Module Content** — inline accordion on track page, Markdown rendering, "Mark Complete" button | embedded in #1 | - |
-| 3 | **Intake Assessment** `/intake` — 10-question quiz + practical task, auto-score, lane placement | 1 new | 1 new table |
-| 4 | **DEVLOG System** `/profile/devlog` + `/members/$id/devlog` — weekly entries, CRUD, public view | 2 new | 1 new table |
+| #   | Feature                                                                                         | Files          | DB          |
+| --- | ----------------------------------------------------------------------------------------------- | -------------- | ----------- |
+| 1   | **Track Detail Page** `/learn/$slug` — phase timeline, module accordion, progress bar           | 1 new          | -           |
+| 2   | **Module Content** — inline accordion on track page, Markdown rendering, "Mark Complete" button | embedded in #1 | -           |
+| 3   | **Intake Assessment** `/intake` — 10-question quiz + practical task, auto-score, lane placement | 1 new          | 1 new table |
+| 4   | **DEVLOG System** `/profile/devlog` + `/members/$id/devlog` — weekly entries, CRUD, public view | 2 new          | 1 new table |
 
 **MEDIUM PRIORITY (3)**
 
-| # | Feature | Files | DB |
-|---|---------|-------|----|
-| 5 | **Gate Check Dashboard** `/admin/gate-checks` — master grid, review modal, approve/reject | 1 new | 1 new table |
-| 6 | **Phase Progress Tracker** — visual pipeline per student on profile + track pages | 1 component | - |
-| 7 | **GitHub PR Integration** — OAuth, PR tracking, auto-points, streak badge | 2 new | 1 new table |
+| #   | Feature                                                                                   | Files       | DB          |
+| --- | ----------------------------------------------------------------------------------------- | ----------- | ----------- |
+| 5   | **Gate Check Dashboard** `/admin/gate-checks` — master grid, review modal, approve/reject | 1 new       | 1 new table |
+| 6   | **Phase Progress Tracker** — visual pipeline per student on profile + track pages         | 1 component | -           |
+| 7   | **GitHub PR Integration** — OAuth, PR tracking, auto-points, streak badge                 | 2 new       | 1 new table |
 
 **LOW PRIORITY (4)**
 
-| # | Feature | Files | DB |
-|---|---------|-------|----|
-| 8 | **SBT Certification** — Sui contract, admin issuance, PDF generation, profile display | 1 admin + contract | 1 new table |
-| 9 | **Hackathon Calendar** — admin adds competitions, student interest RSVP, team formation | modify existing | add columns |
-| 10 | **Cohort Management** `/admin/cohorts` + `/$id` — create, assign, progress grid, export | 2 new | 1 new table |
-| 11 | **Alumni Directory** `/alumni` — graduated members, roles, contact, filterable | 1 new | add columns |
+| #   | Feature                                                                                 | Files              | DB          |
+| --- | --------------------------------------------------------------------------------------- | ------------------ | ----------- |
+| 8   | **SBT Certification** — Sui contract, admin issuance, PDF generation, profile display   | 1 admin + contract | 1 new table |
+| 9   | **Hackathon Calendar** — admin adds competitions, student interest RSVP, team formation | modify existing    | add columns |
+| 10  | **Cohort Management** `/admin/cohorts` + `/$id` — create, assign, progress grid, export | 2 new              | 1 new table |
+| 11  | **Alumni Directory** `/alumni` — graduated members, roles, contact, filterable          | 1 new              | add columns |
 
 ---
 
@@ -360,44 +384,44 @@ ALTER TABLE leaderboard_entries ADD COLUMN IF NOT EXISTS sui_entry_object_id tex
 
 ## 4. New Routes — 9 Pages
 
-| # | Route | File | Auth | Priority |
-|---|-------|------|------|----------|
-| 1 | `/learn/$slug` | `learn/$slug.tsx` | View: public, Complete: login | **High** |
-| 2 | `/intake` | `intake.tsx` | Login required | **High** |
-| 3 | `/profile/devlog` | `profile/devlog.tsx` | Login + ownership | **High** |
-| 4 | `/members/$memberId/devlog` | `members/$memberId/devlog.tsx` | Public | **High** |
-| 5 | `/admin/gate-checks` | `admin/gate-checks.tsx` | Admin only | Medium |
-| 6 | `/admin/cohorts` | `admin/cohorts.tsx` | Admin only | Low |
-| 7 | `/admin/cohorts/$id` | `admin/cohorts/$id.tsx` | Admin only | Low |
-| 8 | `/admin/certifications` | `admin/certifications.tsx` | Admin only | Low |
-| 9 | `/alumni` | `alumni.tsx` | Public | Low |
-| 10 | `/admin/students` | `admin/students.tsx` | Admin only | Medium |
-| 11 | `/admin/students/$userId` | `admin/students/$userId.tsx` | Admin only | Medium |
-| 12 | `/profile/progress` | `profile/progress.tsx` | Login required | Medium |
-| 13 | `/arena` | `arena.tsx` | Public (view), Login (create/join) | Medium |
-| 14 | `/arena/$challengeId` | `arena/$challengeId.tsx` | Public | Medium |
-| 15 | `/arena/create` | `arena/create.tsx` | Login required | Medium |
-| 16 | `/admin/challenges` | `admin/challenges.tsx` | Admin only | Low |
+| #   | Route                       | File                           | Auth                               | Priority |
+| --- | --------------------------- | ------------------------------ | ---------------------------------- | -------- |
+| 1   | `/learn/$slug`              | `learn/$slug.tsx`              | View: public, Complete: login      | **High** |
+| 2   | `/intake`                   | `intake.tsx`                   | Login required                     | **High** |
+| 3   | `/profile/devlog`           | `profile/devlog.tsx`           | Login + ownership                  | **High** |
+| 4   | `/members/$memberId/devlog` | `members/$memberId/devlog.tsx` | Public                             | **High** |
+| 5   | `/admin/gate-checks`        | `admin/gate-checks.tsx`        | Admin only                         | Medium   |
+| 6   | `/admin/cohorts`            | `admin/cohorts.tsx`            | Admin only                         | Low      |
+| 7   | `/admin/cohorts/$id`        | `admin/cohorts/$id.tsx`        | Admin only                         | Low      |
+| 8   | `/admin/certifications`     | `admin/certifications.tsx`     | Admin only                         | Low      |
+| 9   | `/alumni`                   | `alumni.tsx`                   | Public                             | Low      |
+| 10  | `/admin/students`           | `admin/students.tsx`           | Admin only                         | Medium   |
+| 11  | `/admin/students/$userId`   | `admin/students/$userId.tsx`   | Admin only                         | Medium   |
+| 12  | `/profile/progress`         | `profile/progress.tsx`         | Login required                     | Medium   |
+| 13  | `/arena`                    | `arena.tsx`                    | Public (view), Login (create/join) | Medium   |
+| 14  | `/arena/$challengeId`       | `arena/$challengeId.tsx`       | Public                             | Medium   |
+| 15  | `/arena/create`             | `arena/create.tsx`             | Login required                     | Medium   |
+| 16  | `/admin/challenges`         | `admin/challenges.tsx`         | Admin only                         | Low      |
 
 ---
 
 ## 5. Decision Log — Alignment Answers
 
-| # | Question | Decision |
-|---|----------|----------|
-| 1 | Content management | Admin-side editor for all tracks. Technical from PDF. Non-technical: AI-drafted for admin review |
-| 2 | Active tracks first cohort | Build the full 6-track system now. Content populated over time |
-| 3 | Intake assessment | Built-in web form (auto-scored) |
-| 4 | Gate checks | Mixed — automated where possible (quiz, DEVLOG count, GitHub PR), manual where needed (code review, design critique) |
-| 5 | DEVLOG visibility | Public by default (build-in-public culture). Per-entry publish toggle for sensitive weeks |
-| 6 | Timeline | Build everything working first → then launch cohort |
-| 7 | Cohorts | Manual admin assignment. Cohorts created per academic period |
-| 8 | On-chain SBTs | Build now — Sui Move, non-transferable objects |
-| 9 | MVP priority order | Tracks → Modules → Intake → DEVLOG → Gates → Cohorts → SBTs → Alumni |
-| 10 | Non-technical content | Structure now (B), technical content from PDF (A), AI-draft non-technical for admin review (D) |
-| 11 | Badges as NFTs | Every badge (Top Builder, Event Champion, Pioneer, etc.) minted as non-transferable SBT on Sui |
-| 12 | Student progress management | Admin dashboard with per-student drill-down: phases, modules, gates, DEVLOG, badges, points |
-| 13 | Scalability architecture | Supabase for reads (edge-cached), Sui for immutable truth, modular service boundaries, rate-limited APIs |
+| #   | Question                    | Decision                                                                                                             |
+| --- | --------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 1   | Content management          | Admin-side editor for all tracks. Technical from PDF. Non-technical: AI-drafted for admin review                     |
+| 2   | Active tracks first cohort  | Build the full 6-track system now. Content populated over time                                                       |
+| 3   | Intake assessment           | Built-in web form (auto-scored)                                                                                      |
+| 4   | Gate checks                 | Mixed — automated where possible (quiz, DEVLOG count, GitHub PR), manual where needed (code review, design critique) |
+| 5   | DEVLOG visibility           | Public by default (build-in-public culture). Per-entry publish toggle for sensitive weeks                            |
+| 6   | Timeline                    | Build everything working first → then launch cohort                                                                  |
+| 7   | Cohorts                     | Manual admin assignment. Cohorts created per academic period                                                         |
+| 8   | On-chain SBTs               | Build now — Sui Move, non-transferable objects                                                                       |
+| 9   | MVP priority order          | Tracks → Modules → Intake → DEVLOG → Gates → Cohorts → SBTs → Alumni                                                 |
+| 10  | Non-technical content       | Structure now (B), technical content from PDF (A), AI-draft non-technical for admin review (D)                       |
+| 11  | Badges as NFTs              | Every badge (Top Builder, Event Champion, Pioneer, etc.) minted as non-transferable SBT on Sui                       |
+| 12  | Student progress management | Admin dashboard with per-student drill-down: phases, modules, gates, DEVLOG, badges, points                          |
+| 13  | Scalability architecture    | Supabase for reads (edge-cached), Sui for immutable truth, modular service boundaries, rate-limited APIs             |
 
 ---
 
@@ -424,15 +448,15 @@ ALTER TABLE leaderboard_entries ADD COLUMN IF NOT EXISTS sui_entry_object_id tex
 
 ### What Goes On-Chain vs Off-Chain
 
-| Data | Supabase | Sui |
-|------|----------|-----|
-| User profiles | ✅ | ❌ |
-| Module progress | ✅ | ❌ |
-| DEVLOG entries | ✅ | ❌ |
-| **Leaderboard points** | ✅ Fast read | ✅ **Immutable record** |
-| **Badges (Top Builder, Pioneer, etc.)** | ✅ Fast display | ✅ **Non-transferable NFT** |
-| **Certificates (Tier 1/2/3)** | ✅ PDF + metadata | ✅ **Non-transferable SBT** |
-| Gate checks, cohorts | ✅ | ❌ |
+| Data                                    | Supabase          | Sui                         |
+| --------------------------------------- | ----------------- | --------------------------- |
+| User profiles                           | ✅                | ❌                          |
+| Module progress                         | ✅                | ❌                          |
+| DEVLOG entries                          | ✅                | ❌                          |
+| **Leaderboard points**                  | ✅ Fast read      | ✅ **Immutable record**     |
+| **Badges (Top Builder, Pioneer, etc.)** | ✅ Fast display   | ✅ **Non-transferable NFT** |
+| **Certificates (Tier 1/2/3)**           | ✅ PDF + metadata | ✅ **Non-transferable SBT** |
+| Gate checks, cohorts                    | ✅                | ❌                          |
 
 ### Smart Contract (Sui Move)
 
@@ -517,49 +541,53 @@ module blockchainclub::registry {
 ## 7. Sprint Execution Plan
 
 ### Sprint 1: Curriculum Foundation
+
 **Goal:** Students can browse 6 tracks, view phases, read modules.
 
-| Task | Files | DB |
-|------|-------|----|
-| Create `curriculum_tracks` table + ALTER modules | SQL | 1 table + 4 columns |
-| Seed 6 tracks via admin (`/admin/learn`) | Admin UI | 6 track rows |
-| Update `/learn` — phase bars on cards, link to `$slug` | `learn/index.tsx` | - |
-| Create `/learn/$slug` — track detail with phase timeline | `learn/$slug.tsx` | - |
-| Module accordion — inline content + Markdown | `$slug.tsx` | - |
-| "Mark Complete" button → `user_module_progress` | `$slug.tsx` | - |
+| Task                                                     | Files             | DB                  |
+| -------------------------------------------------------- | ----------------- | ------------------- |
+| Create `curriculum_tracks` table + ALTER modules         | SQL               | 1 table + 4 columns |
+| Seed 6 tracks via admin (`/admin/learn`)                 | Admin UI          | 6 track rows        |
+| Update `/learn` — phase bars on cards, link to `$slug`   | `learn/index.tsx` | -                   |
+| Create `/learn/$slug` — track detail with phase timeline | `learn/$slug.tsx` | -                   |
+| Module accordion — inline content + Markdown             | `$slug.tsx`       | -                   |
+| "Mark Complete" button → `user_module_progress`          | `$slug.tsx`       | -                   |
 
 ### Sprint 2: Intake + DEVLOG
+
 **Goal:** Lane placement. Weekly logging.
 
-| Task | Files | DB |
-|------|-------|----|
-| Create `intake_assessments` + `devlog_entries` tables | SQL | 2 tables |
-| Build `/intake` — quiz + practical + auto-score | `intake.tsx` | - |
-| Build `/profile/devlog` — CRUD, week grid, streak | `profile/devlog.tsx` | - |
-| Build `/members/$id/devlog` — public view | `members/$memberId/devlog.tsx` | - |
-| Auto-award +5 points per DEVLOG entry | auto-awards.ts | - |
+| Task                                                  | Files                          | DB       |
+| ----------------------------------------------------- | ------------------------------ | -------- |
+| Create `intake_assessments` + `devlog_entries` tables | SQL                            | 2 tables |
+| Build `/intake` — quiz + practical + auto-score       | `intake.tsx`                   | -        |
+| Build `/profile/devlog` — CRUD, week grid, streak     | `profile/devlog.tsx`           | -        |
+| Build `/members/$id/devlog` — public view             | `members/$memberId/devlog.tsx` | -        |
+| Auto-award +5 points per DEVLOG entry                 | auto-awards.ts                 | -        |
 
 ### Sprint 3: Gates + Cohorts
+
 **Goal:** Admin tracks progression. Cohort management.
 
-| Task | Files | DB |
-|------|-------|----|
-| Create `gate_checks` + `cohorts` tables, add cohort_id to users | SQL | 2 tables + 1 column |
-| Build `/admin/gate-checks` — master grid, review modal | `admin/gate-checks.tsx` | - |
-| Build `/admin/cohorts` + `/$id` — list, create, dashboard | 2 files | - |
-| Gate status display on profile + track pages | modify existing | - |
+| Task                                                            | Files                   | DB                  |
+| --------------------------------------------------------------- | ----------------------- | ------------------- |
+| Create `gate_checks` + `cohorts` tables, add cohort_id to users | SQL                     | 2 tables + 1 column |
+| Build `/admin/gate-checks` — master grid, review modal          | `admin/gate-checks.tsx` | -                   |
+| Build `/admin/cohorts` + `/$id` — list, create, dashboard       | 2 files                 | -                   |
+| Gate status display on profile + track pages                    | modify existing         | -                   |
 
 ### Sprint 4: Blockchain + SBTs + Alumni
+
 **Goal:** On-chain certification. Alumni directory.
 
-| Task | Files | DB |
-|------|-------|----|
-| Create `certifications` table | SQL | 1 table |
-| Write + deploy Sui Move contract | `contracts/sui/` | - |
-| Build `/admin/certifications` — issue SBT, generate PDF | `admin/certifications.tsx` | - |
-| Build `/alumni` — Tier 3 graduate directory | `alumni.tsx` | - |
-| Wire SBT display on student profiles | modify profile | - |
-| Add Sui RPC integration to server.ts | `lib/sui-client.ts` | - |
+| Task                                                    | Files                      | DB      |
+| ------------------------------------------------------- | -------------------------- | ------- |
+| Create `certifications` table                           | SQL                        | 1 table |
+| Write + deploy Sui Move contract                        | `contracts/sui/`           | -       |
+| Build `/admin/certifications` — issue SBT, generate PDF | `admin/certifications.tsx` | -       |
+| Build `/alumni` — Tier 3 graduate directory             | `alumni.tsx`               | -       |
+| Wire SBT display on student profiles                    | modify profile             | -       |
+| Add Sui RPC integration to server.ts                    | `lib/sui-client.ts`        | -       |
 
 ---
 
@@ -572,6 +600,7 @@ module blockchainclub::registry {
 **What it shows (tabbed layout):**
 
 **Tab 1: Overview**
+
 - Student name, email, username, Sui address
 - Assigned cohort + lane (Foundation/Fast)
 - Current phase, current track
@@ -579,6 +608,7 @@ module blockchainclub::registry {
 - Points breakdown (event, learn, build, community)
 
 **Tab 2: Curriculum Progress**
+
 - Per-track view: which tracks enrolled, phase progress per track
 - Module completion grid: all modules × completion status
 - Color-coded: grey = locked, yellow = in progress, green = completed
@@ -586,17 +616,20 @@ module blockchainclub::registry {
 - Admin actions: override gate status, manually mark modules complete
 
 **Tab 3: DEVLOG**
+
 - All DEVLOG entries in reverse chronological order
 - Published/draft status per entry
 - Streak counter, total entries
 - Admin can view but not edit (student-owned content)
 
 **Tab 4: Badges & Certificates**
+
 - All earned badges (icon, name, date earned, on-chain status)
 - All certificates issued (tier, track, SBT tx hash link)
 - Admin actions: manually award badge, issue certificate
 
 **Tab 5: Activity Log**
+
 - Point award history (date, category, amount, reason)
 - Login timestamps
 - Module completion timestamps
@@ -605,10 +638,12 @@ module blockchainclub::registry {
 ### Student View: My Progress
 
 **Routes:**
+
 - `/profile` — updated with progress tab
 - `/profile/progress` — dedicated progress page
 
 **What it shows:**
+
 - Phase pipeline visual (5 phases, current phase highlighted)
 - Modules completed / total in current phase
 - Next module to complete
@@ -654,42 +689,46 @@ GET /api/supabase/student-progress?userId=x
 
 ### Design Principles
 
-| Principle | Implementation |
-|-----------|---------------|
-| **Read-heavy, write-light** | Supabase handles 99% of reads via PostgREST with automatic indexing |
-| **On-chain writes are async** | Sui RPC calls are fire-and-forget from the API. User doesn't wait for block confirmation |
-| **Edge caching for public pages** | Vercel's CDN caches SSR output. Static data (track listings, modules) served from edge |
-| **Rate limiting** | Already implemented via in-memory rate limiter on auth endpoints. Extend to all API routes |
-| **Connection pooling** | Supabase pooler handles DB connections. No per-request connection overhead |
-| **Off-chain storage for media** | Supabase Storage buckets with CDN delivery for images, PDFs |
-| **Idempotent blockchain writes** | Check on-chain state before writing to Sui. Skip if already awarded (prevent double-mint) |
+| Principle                         | Implementation                                                                             |
+| --------------------------------- | ------------------------------------------------------------------------------------------ |
+| **Read-heavy, write-light**       | Supabase handles 99% of reads via PostgREST with automatic indexing                        |
+| **On-chain writes are async**     | Sui RPC calls are fire-and-forget from the API. User doesn't wait for block confirmation   |
+| **Edge caching for public pages** | Vercel's CDN caches SSR output. Static data (track listings, modules) served from edge     |
+| **Rate limiting**                 | Already implemented via in-memory rate limiter on auth endpoints. Extend to all API routes |
+| **Connection pooling**            | Supabase pooler handles DB connections. No per-request connection overhead                 |
+| **Off-chain storage for media**   | Supabase Storage buckets with CDN delivery for images, PDFs                                |
+| **Idempotent blockchain writes**  | Check on-chain state before writing to Sui. Skip if already awarded (prevent double-mint)  |
 
 ### Traffic Estimations & Capacity Planning
 
-| Metric | Estimate (100 students) | Estimate (1,000 students) | Capacity |
-|--------|------------------------|--------------------------|----------|
-| Page views / day | ~2,000 | ~20,000 | Vercel auto-scales |
-| API calls / day | ~10,000 | ~100,000 | Supabase free tier: unlimited API calls |
-| DB read queries / day | ~50,000 | ~500,000 | PostgREST with row-level security, auto-indexed |
-| DB write queries / day | ~500 | ~5,000 | Well within Supabase limits |
-| Sui transactions / day | ~200 | ~2,000 | Sui testnet: free. Mainnet: ~$0.01/tx |
-| Storage (media + PDFs) | ~1 GB | ~10 GB | Supabase Storage: 1GB free, scales linearly |
+| Metric                 | Estimate (100 students) | Estimate (1,000 students) | Capacity                                        |
+| ---------------------- | ----------------------- | ------------------------- | ----------------------------------------------- |
+| Page views / day       | ~2,000                  | ~20,000                   | Vercel auto-scales                              |
+| API calls / day        | ~10,000                 | ~100,000                  | Supabase free tier: unlimited API calls         |
+| DB read queries / day  | ~50,000                 | ~500,000                  | PostgREST with row-level security, auto-indexed |
+| DB write queries / day | ~500                    | ~5,000                    | Well within Supabase limits                     |
+| Sui transactions / day | ~200                    | ~2,000                    | Sui testnet: free. Mainnet: ~$0.01/tx           |
+| Storage (media + PDFs) | ~1 GB                   | ~10 GB                    | Supabase Storage: 1GB free, scales linearly     |
 
 ### Bottleneck Mitigation
 
 **Bottleneck 1: Leaderboard queries**
+
 - 50+ students × frequent polling = many reads
 - **Fix:** Cache leaderboard in Supabase with a materialized view. Refresh every 5 minutes. Students see slightly stale data but page loads instantly.
 
 **Bottleneck 2: On-chain writes during hackathons**
+
 - 100 students submitting projects → 100 Sui transactions in 48 hours
 - **Fix:** Batch Sui transactions where possible. Queue writes, process sequentially. Fire-and-forget — don't block the API response.
 
 **Bottleneck 3: DEVLOG reads (public profiles)**
+
 - External visitors viewing student DEVLOGs
 - **Fix:** Vercel ISR (Incremental Static Regeneration) for public DEVLOG pages. Revalidate every hour.
 
 **Bottleneck 4: Admin dashboard analytics**
+
 - 14+ parallel count queries for dashboard stats
 - **Already fixed:** parallel Promise.all() queries. Can further optimize with a nightly cron job that pre-computes stats into a `dashboard_cache` table.
 
@@ -722,39 +761,39 @@ GET /api/supabase/student-progress?userId=x
 
 ```sql
 -- Speed up progress queries
-CREATE INDEX IF NOT EXISTS idx_user_module_progress_user 
+CREATE INDEX IF NOT EXISTS idx_user_module_progress_user
   ON user_module_progress(user_id, module_id);
 
-CREATE INDEX IF NOT EXISTS idx_gate_checks_user 
+CREATE INDEX IF NOT EXISTS idx_gate_checks_user
   ON gate_checks(user_id, track_id);
 
-CREATE INDEX IF NOT EXISTS idx_devlog_user_week 
+CREATE INDEX IF NOT EXISTS idx_devlog_user_week
   ON devlog_entries(user_id, week_number);
 
-CREATE INDEX IF NOT EXISTS idx_leaderboard_points 
+CREATE INDEX IF NOT EXISTS idx_leaderboard_points
   ON leaderboard_entries(total_points DESC);
 
-CREATE INDEX IF NOT EXISTS idx_modules_track_phase 
+CREATE INDEX IF NOT EXISTS idx_modules_track_phase
   ON modules(track_id, phase);
 
 -- Speed up admin student search
-CREATE INDEX IF NOT EXISTS idx_profiles_fullname 
+CREATE INDEX IF NOT EXISTS idx_profiles_fullname
   ON profiles(full_name);
-CREATE INDEX IF NOT EXISTS idx_profiles_username 
+CREATE INDEX IF NOT EXISTS idx_profiles_username
   ON profiles(username);
-CREATE INDEX IF NOT EXISTS idx_users_email 
+CREATE INDEX IF NOT EXISTS idx_users_email
   ON users(email);
 ```
 
 ### Caching Strategy
 
-| Layer | What | TTL |
-|-------|------|-----|
-| **Vercel CDN** | SSR output for public pages (learn, events, leaderboard) | 1 hour (ISR) |
-| **Supabase** | Leaderboard materialized view | 5 min refresh |
-| **Browser** | React Query staleTime for track/module data | 5 min |
-| **API** | In-memory rate limiter counters | 15 min window |
-| **No cache** | User-specific data (progress, profile, DEVLOG) | Real-time |
+| Layer          | What                                                     | TTL           |
+| -------------- | -------------------------------------------------------- | ------------- |
+| **Vercel CDN** | SSR output for public pages (learn, events, leaderboard) | 1 hour (ISR)  |
+| **Supabase**   | Leaderboard materialized view                            | 5 min refresh |
+| **Browser**    | React Query staleTime for track/module data              | 5 min         |
+| **API**        | In-memory rate limiter counters                          | 15 min window |
+| **No cache**   | User-specific data (progress, profile, DEVLOG)           | Real-time     |
 
 ---
 
@@ -783,39 +822,39 @@ The platform is a **game engine**. Every click, every module, every PR maps to a
 
 Every single action a student can take on the platform has a defined point value and category. This is the **complete map**.
 
-| Action | Category | Points | Unlocks |
-|--------|----------|--------|---------|
-| Complete a module | learn | +5 | Next module in phase |
-| Pass module quiz (80%+) | learn | +3 | - |
-| Complete final module in a phase | learn | +10 bonus | Next phase (with gate check) |
-| Attend an event (RSVP + marked attended) | event | +5 | Event champion badge eligibility |
-| Submit a project | build | +5 | - |
-| Project approved by admin | build | +10 | Project appears on leaderboard |
-| Publish blog post | community | +5 | Blog goes live |
-| Complete profile (all fields) | community | +3 | Profile badge |
-| Publish DEVLOG entry (weekly) | community | +5 | Streak counter + streak badge |
-| Submit a PR (GitHub) | build | +10 | PR streak + gate eligibility |
-| Review a peer's PR | community | +5 | - |
-| Review a peer's design/code | community | +3 | - |
-| Pass Gate 1 | learn | +20 | Phase 2 unlocked |
-| Pass Gate 2 | build | +30 | Phase 3 unlocked |
-| Pass Gate 3 / Capstone | build | +50 | Certificate eligible |
-| Place in a hackathon | build | +50 | Hackathon badge |
-| Help in WhatsApp community (bot-detected) | community | 1-5 | - |
-| Mentor a peer (admin-logged) | community | +15 | Mentor badge |
-| Create a challenge | community | +5 | Challenge goes live |
-| Win a duel | build | Pool (90%) | Duelist badge |
-| Win an open challenge | build | +30 | Challenge badge |
-| Vote on a challenge | community | +1 | - |
-| Join a squad | community | +2 | Squad access |
-| Complete squad goal | community | +10 | Squad achievement |
-| Attend a pair programming session | community | +5 | - |
-| Maintain a 4-week streak | community | +5 bonus | - |
-| Maintain an 8-week streak | community | +10 bonus | Streak Master badge |
-| Maintain a 12-week streak | community | +20 bonus | - |
-| Complete intake assessment | learn | +2 | Lane assignment |
-| Add Sui wallet to profile | community | +3 | On-chain rewards enabled |
-| Get a PR merged (first time) | build | +15 | First Commit badge |
+| Action                                    | Category  | Points     | Unlocks                          |
+| ----------------------------------------- | --------- | ---------- | -------------------------------- |
+| Complete a module                         | learn     | +5         | Next module in phase             |
+| Pass module quiz (80%+)                   | learn     | +3         | -                                |
+| Complete final module in a phase          | learn     | +10 bonus  | Next phase (with gate check)     |
+| Attend an event (RSVP + marked attended)  | event     | +5         | Event champion badge eligibility |
+| Submit a project                          | build     | +5         | -                                |
+| Project approved by admin                 | build     | +10        | Project appears on leaderboard   |
+| Publish blog post                         | community | +5         | Blog goes live                   |
+| Complete profile (all fields)             | community | +3         | Profile badge                    |
+| Publish DEVLOG entry (weekly)             | community | +5         | Streak counter + streak badge    |
+| Submit a PR (GitHub)                      | build     | +10        | PR streak + gate eligibility     |
+| Review a peer's PR                        | community | +5         | -                                |
+| Review a peer's design/code               | community | +3         | -                                |
+| Pass Gate 1                               | learn     | +20        | Phase 2 unlocked                 |
+| Pass Gate 2                               | build     | +30        | Phase 3 unlocked                 |
+| Pass Gate 3 / Capstone                    | build     | +50        | Certificate eligible             |
+| Place in a hackathon                      | build     | +50        | Hackathon badge                  |
+| Help in WhatsApp community (bot-detected) | community | 1-5        | -                                |
+| Mentor a peer (admin-logged)              | community | +15        | Mentor badge                     |
+| Create a challenge                        | community | +5         | Challenge goes live              |
+| Win a duel                                | build     | Pool (90%) | Duelist badge                    |
+| Win an open challenge                     | build     | +30        | Challenge badge                  |
+| Vote on a challenge                       | community | +1         | -                                |
+| Join a squad                              | community | +2         | Squad access                     |
+| Complete squad goal                       | community | +10        | Squad achievement                |
+| Attend a pair programming session         | community | +5         | -                                |
+| Maintain a 4-week streak                  | community | +5 bonus   | -                                |
+| Maintain an 8-week streak                 | community | +10 bonus  | Streak Master badge              |
+| Maintain a 12-week streak                 | community | +20 bonus  | -                                |
+| Complete intake assessment                | learn     | +2         | Lane assignment                  |
+| Add Sui wallet to profile                 | community | +3         | On-chain rewards enabled         |
+| Get a PR merged (first time)              | build     | +15        | First Commit badge               |
 
 **Total: 30+ actions mapped.** Every click counts.
 
@@ -823,20 +862,20 @@ Every single action a student can take on the platform has a defined point value
 
 Points don't just rank you on a leaderboard — they **unlock content**.
 
-| What | Requirement | Type |
-|------|-------------|------|
-| Next module in phase | Previous module completed | Sequential |
-| Phase 1 content | Gate 0 passed (intake + Phase 0 modules done) | Gate |
-| Phase 2 content | Gate 1 passed (PR + quiz 70% + 3 DEVLOG entries) | Gate |
-| Phase 3 tracks | Gate 2 passed (dApp deployed + 5 tests + PR merged) | Gate |
-| Capstone | Gate 3 passed (all Phase 3 modules done) | Gate |
-| Project submission | Level 2 (50+ points) | Level |
-| Challenge creation | Level 2 (50+ points) | Level |
-| Squad creation | Level 1 (10+ points) | Level |
-| Mentor role | Level 4 (300+ points) + Tier 3 certificate | Level + Cert |
-| Certificate Tier 1 | Gate 1 passed | Gate |
-| Certificate Tier 2 | Gate 2 passed | Gate |
-| Certificate Tier 3 | Capstone complete | Gate |
+| What                 | Requirement                                         | Type         |
+| -------------------- | --------------------------------------------------- | ------------ |
+| Next module in phase | Previous module completed                           | Sequential   |
+| Phase 1 content      | Gate 0 passed (intake + Phase 0 modules done)       | Gate         |
+| Phase 2 content      | Gate 1 passed (PR + quiz 70% + 3 DEVLOG entries)    | Gate         |
+| Phase 3 tracks       | Gate 2 passed (dApp deployed + 5 tests + PR merged) | Gate         |
+| Capstone             | Gate 3 passed (all Phase 3 modules done)            | Gate         |
+| Project submission   | Level 2 (50+ points)                                | Level        |
+| Challenge creation   | Level 2 (50+ points)                                | Level        |
+| Squad creation       | Level 1 (10+ points)                                | Level        |
+| Mentor role          | Level 4 (300+ points) + Tier 3 certificate          | Level + Cert |
+| Certificate Tier 1   | Gate 1 passed                                       | Gate         |
+| Certificate Tier 2   | Gate 2 passed                                       | Gate         |
+| Certificate Tier 3   | Capstone complete                                   | Gate         |
 
 **Visual:** Each module, phase, and gate shows a lock/unlock state. Locked content shows a tooltip: "Complete X to unlock."
 
@@ -845,11 +884,13 @@ Points don't just rank you on a leaderboard — they **unlock content**.
 Every student sees their live game state:
 
 **Top Bar (persistent, site-wide):**
+
 ```
 [@username]  Lvl 3 Builder  |  ⭐ 245 pts  |  🔥 4-wk streak  |  📝 6/12 modules  |  🏆 Phase 1
 ```
 
 **Profile Page:**
+
 ```
 ┌─────────────────────────────────────┐
 │  🏆 Level 3: Builder                │
@@ -876,22 +917,22 @@ Every student sees their live game state:
 
 ### 10.4 Point Economy (Enhanced)
 
-| Action | Category | Points | Trigger |
-|--------|----------|--------|---------|
-| Complete a module | learn | +5 | `user_module_progress` insert → `awardPoints(userId, "learn", 5)` |
-| Attend an event (RSVP + admin marks attended) | event | +5 | `/api/events/attend` → `awardEventPoints()` |
-| Project approved by admin | build | +10 | Admin clicks Approve → `awardProjectPoints()` |
-| Blog post published | community | +5 | Admin clicks Publish → `awardPoints(userId, "community", 5)` |
-| Complete profile (all required fields) | community | +3 | Profile save → check completeness → award |
-| Publish DEVLOG entry | community | +5 | `devlog_entries` insert → `awardPoints(userId, "community", 5)` |
-| Submit a PR (GitHub integration) | build | +10 | GitHub webhook → verify → award |
-| Review a peer's PR | community | +5 | GitHub webhook → verify → award |
-| Pass Gate 1 | learn | +20 | Admin approves gate → award |
-| Pass Gate 2 | build | +30 | Admin approves gate → award |
-| Pass Gate 3 / Capstone | build | +50 | Admin approves capstone → award |
-| Place in a hackathon | build | +50 | Admin enters result → award |
-| Help in WhatsApp community (classified by bot) | community | 1-5 | Webhook → classify → award |
-| Mentor a peer (admin-assigned) | community | +15 | Admin logs mentoring session → award |
+| Action                                         | Category  | Points | Trigger                                                           |
+| ---------------------------------------------- | --------- | ------ | ----------------------------------------------------------------- |
+| Complete a module                              | learn     | +5     | `user_module_progress` insert → `awardPoints(userId, "learn", 5)` |
+| Attend an event (RSVP + admin marks attended)  | event     | +5     | `/api/events/attend` → `awardEventPoints()`                       |
+| Project approved by admin                      | build     | +10    | Admin clicks Approve → `awardProjectPoints()`                     |
+| Blog post published                            | community | +5     | Admin clicks Publish → `awardPoints(userId, "community", 5)`      |
+| Complete profile (all required fields)         | community | +3     | Profile save → check completeness → award                         |
+| Publish DEVLOG entry                           | community | +5     | `devlog_entries` insert → `awardPoints(userId, "community", 5)`   |
+| Submit a PR (GitHub integration)               | build     | +10    | GitHub webhook → verify → award                                   |
+| Review a peer's PR                             | community | +5     | GitHub webhook → verify → award                                   |
+| Pass Gate 1                                    | learn     | +20    | Admin approves gate → award                                       |
+| Pass Gate 2                                    | build     | +30    | Admin approves gate → award                                       |
+| Pass Gate 3 / Capstone                         | build     | +50    | Admin approves capstone → award                                   |
+| Place in a hackathon                           | build     | +50    | Admin enters result → award                                       |
+| Help in WhatsApp community (classified by bot) | community | 1-5    | Webhook → classify → award                                        |
+| Mentor a peer (admin-assigned)                 | community | +15    | Admin logs mentoring session → award                              |
 
 ### 10.2 Point Flow (Supabase + Sui)
 
@@ -917,26 +958,28 @@ Every student sees their live game state:
 ```
 
 Every point award:
+
 1. Updates Supabase `leaderboard_entries` — instant leaderboard refresh
 2. Calls `checkAndAwardBadges()` — checks thresholds
 3. If eligible for a badge → inserts into Supabase `user_badges` + calls Sui `mint_badge()`
 
 ### 10.3 Badge System (10 Types)
 
-| # | Badge | Criteria | Points Threshold | Icon |
-|---|-------|----------|-----------------|------|
-| 0 | **Pioneer** | Registered when club ≤ 10 members | One-time, first 10 members | Award |
-| 1 | **First Commit** | Contributed to 1+ project | 1 project_members row | Star |
-| 2 | **Team Player** | Contributed to 3+ projects | 3 project_members rows | Users |
-| 3 | **Event Champion** | Attended 5+ events | 5 event_rsvps (attended=true) | Calendar |
-| 4 | **Top Builder** | 50+ build points | build_points ≥ 50 | Code |
-| 5 | **Top Learner** | 50+ learn points | learn_points ≥ 50 | BookOpen |
-| 6 | **Most Active** | 100+ total points | total_points ≥ 100 | Zap |
-| 7 | **Community Star** | 30+ community points | community_points ≥ 30 | Trophy |
-| 8 | **Goal Setter** | Complete Phase 1 | Pass Gate 1 | Target |
-| 9 | **Streak Master** | 4+ consecutive DEVLOG weeks | 4 devlog_entries in a row | Flame |
+| #   | Badge              | Criteria                          | Points Threshold              | Icon     |
+| --- | ------------------ | --------------------------------- | ----------------------------- | -------- |
+| 0   | **Pioneer**        | Registered when club ≤ 10 members | One-time, first 10 members    | Award    |
+| 1   | **First Commit**   | Contributed to 1+ project         | 1 project_members row         | Star     |
+| 2   | **Team Player**    | Contributed to 3+ projects        | 3 project_members rows        | Users    |
+| 3   | **Event Champion** | Attended 5+ events                | 5 event_rsvps (attended=true) | Calendar |
+| 4   | **Top Builder**    | 50+ build points                  | build_points ≥ 50             | Code     |
+| 5   | **Top Learner**    | 50+ learn points                  | learn_points ≥ 50             | BookOpen |
+| 6   | **Most Active**    | 100+ total points                 | total_points ≥ 100            | Zap      |
+| 7   | **Community Star** | 30+ community points              | community_points ≥ 30         | Trophy   |
+| 8   | **Goal Setter**    | Complete Phase 1                  | Pass Gate 1                   | Target   |
+| 9   | **Streak Master**  | 4+ consecutive DEVLOG weeks       | 4 devlog_entries in a row     | Flame    |
 
 **Badge Lifecycle:**
+
 1. `checkAndAwardBadges()` runs after every `awardPoints()` call
 2. Checks each badge's threshold against the student's current stats
 3. If threshold met AND badge not already owned → `mint_badge()` on Sui
@@ -957,13 +1000,13 @@ Every point award:
 
 ### 10.5 Level System (Engagement Tiers)
 
-| Level | Name | Points Required | Perk |
-|-------|------|-----------------|------|
-| 1 | Explorer | 0 | Access to Phase 0-1 content |
-| 2 | Builder | 50 | Access to Phase 2 content, project submission |
-| 3 | Specialist | 150 | Access to Phase 3 tracks, mentor matching |
-| 4 | Master | 300 | Alumni status, "Track Lead" eligibility, certificate priority |
-| 5 | Legend | 500 | Featured on landing page, priority hackathon sponsorship |
+| Level | Name       | Points Required | Perk                                                          |
+| ----- | ---------- | --------------- | ------------------------------------------------------------- |
+| 1     | Explorer   | 0               | Access to Phase 0-1 content                                   |
+| 2     | Builder    | 50              | Access to Phase 2 content, project submission                 |
+| 3     | Specialist | 150             | Access to Phase 3 tracks, mentor matching                     |
+| 4     | Master     | 300             | Alumni status, "Track Lead" eligibility, certificate priority |
+| 5     | Legend     | 500             | Featured on landing page, priority hackathon sponsorship      |
 
 Levels unlock organically. No manual admin action needed — points determine level.
 
@@ -976,6 +1019,7 @@ Levels unlock organically. No manual admin action needed — points determine le
 **Session Streak:** Consecutive weeks attending a session (RSVP + attendance marked). Shown as "🎓 6-week session streak".
 
 **Streak bonuses:**
+
 - 4-week streak → +5 bonus points
 - 8-week streak → +10 bonus points
 - 12-week streak → +20 bonus points + "Streak Master" badge eligibility
@@ -985,18 +1029,21 @@ Levels unlock organically. No manual admin action needed — points determine le
 ### 10.7 Visual Progress Indicators
 
 **On profile:**
+
 - Level badge (Explorer → Legend)
 - Points bar with next-level threshold
 - Badge gallery (earned badges as icons, locked badges greyed out)
 - Streak indicators
 
 **On leaderboard:**
+
 - Rank number
 - Points with category breakdown (hover tooltip)
 - Level badge next to name
 - Badge icons (max 2 shown, "..." for more)
 
 **On track detail page:**
+
 - Phase progress pipeline (Phase 0-3 + Capstone)
 - Completed modules / total per phase
 - Points earned in this track
@@ -1091,14 +1138,14 @@ ALTER TABLE leaderboard_entries ADD COLUMN IF NOT EXISTS longest_streak integer 
 
 ### 10.10 Anti-Abuse Mechanisms
 
-| Mechanism | Implementation |
-|-----------|---------------|
-| **Duplicate prevention** | UNIQUE constraints on every points-granting action (user_id + module_id, user_id + event_id, user_id + badge_id) |
-| **Rate limiting** | Points awarded at most once per action. Cannot "complete" same module twice |
-| **Admin-only triggers** | Project approval, blog publish, event attendance — all require SUPER_ADMIN/ADMIN role |
-| **Sui double-mint protection** | Contract checks `Badge` exists before minting. Server checks `badge_mints` table |
-| **Streak validation** | Streak calculated from actual data (DEVLOG entries, PRs) — not self-reported |
-| **Leaderboard opt-out** | Privacy toggle for students who don't want public ranking |
+| Mechanism                      | Implementation                                                                                                   |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| **Duplicate prevention**       | UNIQUE constraints on every points-granting action (user_id + module_id, user_id + event_id, user_id + badge_id) |
+| **Rate limiting**              | Points awarded at most once per action. Cannot "complete" same module twice                                      |
+| **Admin-only triggers**        | Project approval, blog publish, event attendance — all require SUPER_ADMIN/ADMIN role                            |
+| **Sui double-mint protection** | Contract checks `Badge` exists before minting. Server checks `badge_mints` table                                 |
+| **Streak validation**          | Streak calculated from actual data (DEVLOG entries, PRs) — not self-reported                                     |
+| **Leaderboard opt-out**        | Privacy toggle for students who don't want public ranking                                                        |
 
 ---
 
@@ -1111,6 +1158,7 @@ Beyond solo learning, the platform supports team-based features that mirror real
 Small groups (3-5 students) that progress through a track together.
 
 **Features:**
+
 - Squad creation: any student can create a squad, invite members by username
 - Squad dashboard: shared progress view — all members' module completion, gate status
 - Squad chat: lightweight messaging within the squad page (no Discord dependency)
@@ -1125,6 +1173,7 @@ Small groups (3-5 students) that progress through a track together.
 Every student submission gets reviewed by another student before a track lead sees it.
 
 **Flow:**
+
 1. Student A submits a PR / design / content piece
 2. Another student in the same track (Student B) is auto-assigned as reviewer
 3. Student B reviews, leaves feedback (must include: 1 suggestion, 1 thing done well)
@@ -1140,6 +1189,7 @@ Every student submission gets reviewed by another student before a track lead se
 Live collaborative coding sessions within the platform.
 
 **Features:**
+
 - "Find a Partner" button: matches students at similar phase/progress
 - Session timer: 30, 45, or 60-minute blocks
 - Shared problem: both students work on the same challenge repo
@@ -1153,6 +1203,7 @@ Live collaborative coding sessions within the platform.
 Dedicated team management for internal and external hackathons.
 
 **Features:**
+
 - Team creation: captain creates team, sets team name, invites members (2-4 total)
 - Team profile: name, members, project repo, demo link, status
 - Role assignment: captain, dev, designer, presenter
@@ -1167,6 +1218,7 @@ Dedicated team management for internal and external hackathons.
 Cross-track project teams — technical, design, marketing, and content students collaborate.
 
 **Example:** A DeFi project team has:
+
 - 2 Technical students (smart contracts, frontend)
 - 1 Design student (UI/UX, branding)
 - 1 Marketing student (GTM strategy, pitch deck)
@@ -1175,6 +1227,7 @@ Cross-track project teams — technical, design, marketing, and content students
 This mirrors real Web3 teams and makes the club's cross-disciplinary nature an asset.
 
 **Features:**
+
 - "Looking for team" board: students post roles they need
 - Cross-track matching: filter by track, phase, skills
 - Team dashboard: progress per discipline
@@ -1188,22 +1241,23 @@ Competitive, time-bound events where students compete, vote, and earn recognitio
 
 ### 12.1 Challenge Types
 
-| Type | Description | Duration | Participants | Winner Determination |
-|------|-------------|----------|-------------|---------------------|
-| **Code Duel** | 1v1 fix-a-bug race: both get the same broken contract, first to pass tests wins | 30 min | 2 | Automated (test pass) |
-| **Team Clash** | 3v3 build sprint: teams build a mini-dApp from a prompt | 3 hours | 6 (2 teams) | Peer vote + mentor judge |
-| **Open Challenge** | Weekly prompt: "Build an ERC-20 token with a twist". Anyone submits. | 1 week | Unlimited | Community vote (upvotes) |
-| **Security CTF** | Capture the Flag: find and exploit vulnerabilities in deliberately buggy contracts | 2 hours | Individual | Points per flag captured |
-| **Design Duel** | 1v1 redesign: both redesign a bad dApp UI, community votes | 24 hours | 2 | Community vote |
-| **Content Clash** | Best explainer thread on a given topic. Most engagement wins. | 48 hours | Individual | Likes + RTs + judge score |
-| **Research Rush** | Analyze a protocol, submit findings. Judges score on depth. | 72 hours | Individual | Mentor panel |
-| **Speed Sprint** | "Who can complete 3 modules fastest?" Automated tracking. | 1 day | Individual | Automated (completion time) |
+| Type               | Description                                                                        | Duration | Participants | Winner Determination        |
+| ------------------ | ---------------------------------------------------------------------------------- | -------- | ------------ | --------------------------- |
+| **Code Duel**      | 1v1 fix-a-bug race: both get the same broken contract, first to pass tests wins    | 30 min   | 2            | Automated (test pass)       |
+| **Team Clash**     | 3v3 build sprint: teams build a mini-dApp from a prompt                            | 3 hours  | 6 (2 teams)  | Peer vote + mentor judge    |
+| **Open Challenge** | Weekly prompt: "Build an ERC-20 token with a twist". Anyone submits.               | 1 week   | Unlimited    | Community vote (upvotes)    |
+| **Security CTF**   | Capture the Flag: find and exploit vulnerabilities in deliberately buggy contracts | 2 hours  | Individual   | Points per flag captured    |
+| **Design Duel**    | 1v1 redesign: both redesign a bad dApp UI, community votes                         | 24 hours | 2            | Community vote              |
+| **Content Clash**  | Best explainer thread on a given topic. Most engagement wins.                      | 48 hours | Individual   | Likes + RTs + judge score   |
+| **Research Rush**  | Analyze a protocol, submit findings. Judges score on depth.                        | 72 hours | Individual   | Mentor panel                |
+| **Speed Sprint**   | "Who can complete 3 modules fastest?" Automated tracking.                          | 1 day    | Individual   | Automated (completion time) |
 
 ### 12.2 Battle Creation
 
 **Any student can create a challenge.** Admin approval required for points-awarding challenges.
 
 **Creation Form:**
+
 - Challenge type (dropdown)
 - Title + description
 - Start time + duration
@@ -1213,6 +1267,7 @@ Competitive, time-bound events where students compete, vote, and earn recognitio
 - Judging criteria (for non-automated challenges)
 
 **Wager System:**
+
 - Creator stakes their own points
 - Participants also stake points to enter
 - Winner takes pool (minus 10% club tax)
@@ -1225,12 +1280,14 @@ Competitive, time-bound events where students compete, vote, and earn recognitio
 Dedicated page for all active and upcoming challenges.
 
 **Layout:**
+
 - **Live Now** — currently active duels and sprints (with real-time countdown)
 - **Upcoming** — scheduled challenges (with registration count)
 - **Leaderboard** — challenge winners, most duels won, highest wager earnings
 - **My Challenges** — challenges I created, joined, or need to vote on
 
 **Challenge Card:**
+
 - Type badge (Code Duel, Open Challenge, etc.)
 - Title, description snippet
 - Creator name + avatar
@@ -1244,6 +1301,7 @@ Dedicated page for all active and upcoming challenges.
 For non-automated challenges, the community determines winners.
 
 **Voting System:**
+
 - Upvote-only (no downvotes — prevents negativity)
 - Weighted votes: higher-level students' votes count more (Level 1 = 1x, Level 5 = 2x)
 - Blind voting: submissions shown without creator names until voting ends
@@ -1251,35 +1309,36 @@ For non-automated challenges, the community determines winners.
 - Vote audit: all votes recorded, visible after challenge ends
 
 **Auto-judged challenges:**
+
 - Code Duels: test suite passes → instant winner
 - Speed Sprints: completion timestamps → fastest wins
 - Security CTFs: flag submission → auto-scored by contract
 
 ### 12.5 Challenge Rewards
 
-| Outcome | Creator | Winner | Participants |
-|---------|---------|--------|-------------|
-| Win a duel | - | Wager pool (90%) | - |
-| Lose a duel | - | - | Lose stake |
-| Win open challenge | Club reward: +30 pts | Community recognition + badge eligibility | - |
-| Win team clash | - | +20 pts per member | - |
-| Win CTF | - | +15 pts per flag | +5 pts per flag found |
-| Win speed sprint | - | +10 pts | +2 pts for completing |
+| Outcome            | Creator              | Winner                                    | Participants          |
+| ------------------ | -------------------- | ----------------------------------------- | --------------------- |
+| Win a duel         | -                    | Wager pool (90%)                          | -                     |
+| Lose a duel        | -                    | -                                         | Lose stake            |
+| Win open challenge | Club reward: +30 pts | Community recognition + badge eligibility | -                     |
+| Win team clash     | -                    | +20 pts per member                        | -                     |
+| Win CTF            | -                    | +15 pts per flag                          | +5 pts per flag found |
+| Win speed sprint   | -                    | +10 pts                                   | +2 pts for completing |
 
 ### 12.6 Challenge Badges
 
 New badge types for competitive achievements:
 
-| Badge | Criteria |
-|-------|----------|
-| **Duelist** | Won 5 Code Duels |
-| **Gladiator** | Won 10 Code Duels |
-| **Challenger** | Created 5 public challenges |
-| **Speed Demon** | Won 3 Speed Sprints |
-| **CTF Hunter** | Captured 10 flags in CTFs |
-| **Crowd Favorite** | Won 3 community-voted challenges |
-| **High Roller** | Earned 100+ points from wagers |
-| **Versatile** | Won a challenge in 3 different categories |
+| Badge              | Criteria                                  |
+| ------------------ | ----------------------------------------- |
+| **Duelist**        | Won 5 Code Duels                          |
+| **Gladiator**      | Won 10 Code Duels                         |
+| **Challenger**     | Created 5 public challenges               |
+| **Speed Demon**    | Won 3 Speed Sprints                       |
+| **CTF Hunter**     | Captured 10 flags in CTFs                 |
+| **Crowd Favorite** | Won 3 community-voted challenges          |
+| **High Roller**    | Earned 100+ points from wagers            |
+| **Versatile**      | Won a challenge in 3 different categories |
 
 ### 12.7 Challenge Database Tables
 
@@ -1335,18 +1394,19 @@ ON CONFLICT (id) DO NOTHING;
 
 ### 12.8 Challenge Routes
 
-| Route | File | Auth | Priority |
-|-------|------|------|----------|
-| `/arena` | `arena.tsx` | Public (view), Login (participate) | Medium |
-| `/arena/$challengeId` | `arena/$challengeId.tsx` | Public | Medium |
-| `/arena/create` | `arena/create.tsx` | Login required | Medium |
-| `/admin/challenges` | `admin/challenges.tsx` | Admin only | Low |
+| Route                 | File                     | Auth                               | Priority |
+| --------------------- | ------------------------ | ---------------------------------- | -------- |
+| `/arena`              | `arena.tsx`              | Public (view), Login (participate) | Medium   |
+| `/arena/$challengeId` | `arena/$challengeId.tsx` | Public                             | Medium   |
+| `/arena/create`       | `arena/create.tsx`       | Login required                     | Medium   |
+| `/admin/challenges`   | `admin/challenges.tsx`   | Admin only                         | Low      |
 
 ---
 
 ## 13. Files Inventory
 
 ### New Files (24)
+
 ```
 src/routes/learn/$slug.tsx                          — Track detail page
 src/routes/intake.tsx                               — Intake assessment
@@ -1375,6 +1435,7 @@ contracts/sui/sources/club_registry.move            — Sui Move contract
 ```
 
 ### Modified Files (9)
+
 ```
 src/routes/learn/index.tsx                          — Phase bars + new links
 src/routes/profile.tsx                              — DEVLOG tab + progress tab + gate status
@@ -1388,6 +1449,7 @@ src/lib/supabase.ts                                 — Materialized view querie
 ```
 
 ### New Database Objects (11 tables + 8 indexes + 8 badges + 1 view)
+
 ```
 Tables:    curriculum_tracks, intake_assessments, devlog_entries,
            gate_checks, cohorts, certifications, badge_mints,
@@ -1408,16 +1470,21 @@ Every module across all 6 tracks follows this structure:
 ## [Module Title]
 
 ### Overview
+
 One paragraph — what you'll learn and why it matters.
 
 ### Core Concepts
+
 3-5 key ideas in this module.
 
 ### Deep Dive
+
 Main content. Sections with headings, examples, and cross-references.
 
 ### Practical Exercise
+
 A hands-on task. Must produce a deliverable.
+
 - Technical: PR, deployed contract, test suite
 - Design: Figma link, design system component
 - Marketing: Campaign brief, content piece, analytics report
@@ -1426,9 +1493,11 @@ A hands-on task. Must produce a deliverable.
 - Research: Analysis note, Dune query, methodology section
 
 ### Check Your Understanding
+
 2-3 questions or reflection prompts.
 
 ### Resources
+
 Links to further reading, tools, templates.
 ```
 
@@ -1436,12 +1505,12 @@ Links to further reading, tools, templates.
 
 ## 15. Weekly Session Format — All Tracks
 
-| Time | Segment | Description |
-|------|---------|-------------|
-| 0:00–0:15 | Concept | Visual, interactive delivery. One concept per session. No long slide decks. |
-| 0:15–1:00 | Build | Hands-on broken code/problem. Students receive a repo or brief with a deliberate issue to fix. |
+| Time      | Segment         | Description                                                                                               |
+| --------- | --------------- | --------------------------------------------------------------------------------------------------------- |
+| 0:00–0:15 | Concept         | Visual, interactive delivery. One concept per session. No long slide decks.                               |
+| 0:15–1:00 | Build           | Hands-on broken code/problem. Students receive a repo or brief with a deliberate issue to fix.            |
 | 1:00–1:15 | Submit & Review | Students submit their work. One student randomly selected to walk through their solution. Group feedback. |
 
 ---
 
-*Plan finalized June 2026. Ready for Sprint 1 execution.*
+_Plan finalized June 2026. Ready for Sprint 1 execution._

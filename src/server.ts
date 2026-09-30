@@ -46,10 +46,13 @@ async function handleAuthRegister(request: Request): Promise<Response> {
     const headers = getRateLimitHeaders(rateLimitKey, 5, 15 * 60 * 1000);
 
     if (headers["X-RateLimit-Remaining"] === "0") {
-      return new Response(JSON.stringify({ error: "Too many registration attempts. Please try again later." }), {
-        status: 429,
-        headers: { "Content-Type": "application/json", ...headers },
-      });
+      return new Response(
+        JSON.stringify({ error: "Too many registration attempts. Please try again later." }),
+        {
+          status: 429,
+          headers: { "Content-Type": "application/json", ...headers },
+        },
+      );
     }
 
     const { register } = await import("./lib/api/auth-direct");
@@ -75,10 +78,13 @@ async function handleAuthLogin(request: Request): Promise<Response> {
     const headers = getRateLimitHeaders(rateLimitKey, 10, 15 * 60 * 1000);
 
     if (headers["X-RateLimit-Remaining"] === "0") {
-      return new Response(JSON.stringify({ error: "Too many login attempts. Please try again later." }), {
-        status: 429,
-        headers: { "Content-Type": "application/json", ...headers },
-      });
+      return new Response(
+        JSON.stringify({ error: "Too many login attempts. Please try again later." }),
+        {
+          status: 429,
+          headers: { "Content-Type": "application/json", ...headers },
+        },
+      );
     }
 
     const { login } = await import("./lib/api/auth-direct");
@@ -120,7 +126,7 @@ async function handleSupabaseApi(request: Request, pathname: string): Promise<Re
 
     const authHeader = request.headers.get("Authorization");
     const isWriteOp = ["insert", "update", "delete", "rpc", "adjust-points", "settings"].some(
-      (op) => pathname.includes(`/api/supabase/${op}`)
+      (op) => pathname.includes(`/api/supabase/${op}`),
     );
 
     if (isWriteOp) {
@@ -485,10 +491,13 @@ async function handleCommunityLog(request: Request): Promise<Response> {
     const { activityType, description, points } = body;
 
     if (!activityType || !description || points === undefined) {
-      return new Response(JSON.stringify({ error: "activityType, description, and points are required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "activityType, description, and points are required" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
     }
 
     const userId = payload.userId;
@@ -536,7 +545,15 @@ async function handleAwards(request: Request): Promise<Response> {
     const body = await request.json();
     const { action, targetId } = body;
 
-    const { awardProjectPoints, awardEventPoints, awardPoints, checkAndAwardBadges, awardChallengeWinPoints, awardChallengeParticipation, checkChallengeBadges } = await import("./lib/auto-awards");
+    const {
+      awardProjectPoints,
+      awardEventPoints,
+      awardPoints,
+      checkAndAwardBadges,
+      awardChallengeWinPoints,
+      awardChallengeParticipation,
+      checkChallengeBadges,
+    } = await import("./lib/auto-awards");
     const { query } = await import("./lib/supabase");
 
     switch (action) {
@@ -643,13 +660,10 @@ async function handleChallengeVote(request: Request): Promise<Response> {
     const { challengeId, participantId } = body;
 
     if (!challengeId || !participantId) {
-      return new Response(
-        JSON.stringify({ error: "challengeId and participantId are required" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      return new Response(JSON.stringify({ error: "challengeId and participantId are required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const { data: entry } = await query("leaderboard_entries", {
@@ -657,9 +671,7 @@ async function handleChallengeVote(request: Request): Promise<Response> {
       filters: { user_id: payload.userId },
       single: true,
     });
-    const weight = entry
-      ? Math.max(1, Math.floor((entry.total_points as number) / 50) + 1)
-      : 1;
+    const weight = entry ? Math.max(1, Math.floor((entry.total_points as number) / 50) + 1) : 1;
 
     const { error: voteError } = await from("challenge_votes").insert({
       challenge_id: challengeId,
@@ -671,13 +683,10 @@ async function handleChallengeVote(request: Request): Promise<Response> {
 
     if (voteError) {
       if ((voteError.message || "").includes("duplicate") || voteError.code === 409) {
-        return new Response(
-          JSON.stringify({ error: "You have already voted in this challenge" }),
-          {
-            status: 409,
-            headers: { "Content-Type": "application/json" },
-          },
-        );
+        return new Response(JSON.stringify({ error: "You have already voted in this challenge" }), {
+          status: 409,
+          headers: { "Content-Type": "application/json" },
+        });
       }
       throw new Error(voteError.message || "Vote failed");
     }
@@ -757,7 +766,10 @@ async function handleVerifyEmail(request: Request): Promise<Response> {
 
     const { error } = await supabase
       .from("users")
-      .update({ is_active: true, is_approved: true, updated_at: new Date().toISOString() }, { id: userId });
+      .update(
+        { is_active: true, is_approved: true, updated_at: new Date().toISOString() },
+        { id: userId },
+      );
 
     if (error) throw new Error(error.message);
 
@@ -811,15 +823,21 @@ async function handleResendVerification(request: Request): Promise<Response> {
     await storeVerificationCode(userId, code);
     await sendVerificationEmail(email, code);
 
-    return new Response(JSON.stringify({ message: "Verification code resent. Please check your inbox." }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ message: "Verification code resent. Please check your inbox." }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message || "Failed to resend verification code" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: error.message || "Failed to resend verification code" }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }
 
@@ -845,19 +863,25 @@ async function handleForgotPassword(request: Request): Promise<Response> {
     });
 
     if (!user) {
-      return new Response(JSON.stringify({ message: "If an account exists, a reset email has been sent" }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ message: "If an account exists, a reset email has been sent" }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
     }
 
     const resetToken = generatePasswordResetToken(user.id);
     await sendPasswordResetEmail(user.email, resetToken);
 
-    return new Response(JSON.stringify({ message: "If an account exists, a reset email has been sent" }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ message: "If an account exists, a reset email has been sent" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message || "Failed to process request" }), {
       status: 500,
@@ -898,7 +922,10 @@ async function handleResetPassword(request: Request): Promise<Response> {
     const passwordHash = await hashPassword(password);
     const { error } = await supabase
       .from("users")
-      .update({ password_hash: passwordHash, updated_at: new Date().toISOString() }, { id: payload.userId });
+      .update(
+        { password_hash: passwordHash, updated_at: new Date().toISOString() },
+        { id: payload.userId },
+      );
 
     if (error) throw new Error(error.message);
 
@@ -971,7 +998,10 @@ async function handleWhatsAppStats(request: Request): Promise<Response> {
       filters: {},
     });
 
-    const memberMap = new Map<string, { points: number; messages: number; breakdown: Record<string, number> }>();
+    const memberMap = new Map<
+      string,
+      { points: number; messages: number; breakdown: Record<string, number> }
+    >();
     for (const interaction of allInteractions || []) {
       const key = interaction.user_id || interaction.phone_number;
       if (!memberMap.has(key)) {
@@ -1189,10 +1219,13 @@ async function handleAvatarUpload(request: Request): Promise<Response> {
     });
   } catch (error: any) {
     console.error("Avatar upload error:", error.message, error.stack);
-    return new Response(JSON.stringify({ error: error.message || "Upload failed", details: error.stack }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: error.message || "Upload failed", details: error.stack }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }
 
@@ -1241,7 +1274,7 @@ async function handleProjectUpload(request: Request): Promise<Response> {
     if (!allowedTypes.includes(file.type)) {
       return new Response(
         JSON.stringify({ error: "Only JPEG, PNG, WebP, and SVG images are allowed" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
 
@@ -1261,10 +1294,13 @@ async function handleProjectUpload(request: Request): Promise<Response> {
     });
   } catch (error: any) {
     console.error("Project upload error:", error.message, error.stack);
-    return new Response(JSON.stringify({ error: error.message || "Upload failed", details: error.stack }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: error.message || "Upload failed", details: error.stack }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }
 
@@ -1302,34 +1338,35 @@ async function handleProjectSubmit(request: Request): Promise<Response> {
 
     const body = await request.json();
 
-    const { error: projectError, data: inserted } = await supabase
-      .from("projects")
-      .insert({
-        id: crypto.randomUUID(),
-        name: body.name,
-        description: body.description || null,
-        headline: body.headline || null,
-        team_name: body.teamName || null,
-        cover_image: body.logoUrl || null,
-        logo_url: body.logoUrl || null,
-        banner_url: body.bannerUrl || null,
-        github_url: body.githubUrl || null,
-        demo_url: body.demoUrl || null,
-        website_url: body.websiteUrl || body.demoUrl || null,
-        x_link: body.xLink || null,
-        ecosystem: body.ecosystem || "GENERAL",
-        hackathon_id: body.hackathonId || null,
-        status: "PENDING",
-        submitted_by: payload.userId,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      });
+    const { error: projectError, data: inserted } = await supabase.from("projects").insert({
+      id: crypto.randomUUID(),
+      name: body.name,
+      description: body.description || null,
+      headline: body.headline || null,
+      team_name: body.teamName || null,
+      cover_image: body.logoUrl || null,
+      logo_url: body.logoUrl || null,
+      banner_url: body.bannerUrl || null,
+      github_url: body.githubUrl || null,
+      demo_url: body.demoUrl || null,
+      website_url: body.websiteUrl || body.demoUrl || null,
+      x_link: body.xLink || null,
+      ecosystem: body.ecosystem || "GENERAL",
+      hackathon_id: body.hackathonId || null,
+      status: "PENDING",
+      submitted_by: payload.userId,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
 
     if (projectError) {
-      return new Response(JSON.stringify({ error: projectError.message || "Failed to submit project" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: projectError.message || "Failed to submit project" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
     }
 
     const project = Array.isArray(inserted) ? inserted[0] : inserted;
@@ -1340,7 +1377,7 @@ async function handleProjectSubmit(request: Request): Promise<Response> {
           project_id: project.id,
           user_id: userId,
           role: "Member",
-        }))
+        })),
       );
     }
 
@@ -1350,10 +1387,13 @@ async function handleProjectSubmit(request: Request): Promise<Response> {
     });
   } catch (error: any) {
     console.error("Project submit error:", error.message, error.stack);
-    return new Response(JSON.stringify({ error: error.message || "Submit failed", details: error.stack }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: error.message || "Submit failed", details: error.stack }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }
 
@@ -1493,7 +1533,9 @@ async function handleDevlogCreate(request: Request): Promise<Response> {
       });
 
       if (allEntries && allEntries.length >= 4) {
-        const weeks = allEntries.map((e: any) => e.week_number).sort((a: number, b: number) => a - b);
+        const weeks = allEntries
+          .map((e: any) => e.week_number)
+          .sort((a: number, b: number) => a - b);
         let longestStreak = 1;
         let currentRun = 1;
         for (let i = 1; i < weeks.length; i++) {
@@ -1581,13 +1623,16 @@ async function handleIntakeSubmit(request: Request): Promise<Response> {
     });
 
     if (existing) {
-      return new Response(JSON.stringify({ 
-        error: "Assessment already submitted",
-        result: existing
-      }), {
-        status: 409,
-        headers: { "Content-Type": "application/json", ...rateLimitHeaders },
-      });
+      return new Response(
+        JSON.stringify({
+          error: "Assessment already submitted",
+          result: existing,
+        }),
+        {
+          status: 409,
+          headers: { "Content-Type": "application/json", ...rateLimitHeaders },
+        },
+      );
     }
 
     const body = await request.json();
@@ -1668,54 +1713,54 @@ export default {
     if (url.pathname === "/api/auth/profile" && request.method === "GET") {
       return handleProfileFetch(request);
     }
-  if (url.pathname === "/api/auth/avatar" && request.method === "POST") {
-    return handleAvatarUpload(request);
-  }
-  if (url.pathname === "/api/auth/verify-email" && request.method === "POST") {
-    return handleVerifyEmail(request);
-  }
-  if (url.pathname === "/api/auth/resend-verification" && request.method === "POST") {
-    return handleResendVerification(request);
-  }
-  if (url.pathname === "/api/auth/forgot-password" && request.method === "POST") {
-    return handleForgotPassword(request);
-  }
-  if (url.pathname === "/api/auth/reset-password" && request.method === "POST") {
-    return handleResetPassword(request);
-  }
-  if (url.pathname === "/api/whatsapp/webhook" && request.method === "POST") {
-    return handleWhatsAppWebhook(request);
-  }
-  if (url.pathname === "/api/whatsapp/stats" && request.method === "GET") {
-    return handleWhatsAppStats(request);
-  }
-  if (url.pathname === "/api/supabase/community-log" && request.method === "POST") {
-    return handleCommunityLog(request);
-  }
-  if (url.pathname === "/api/projects/upload" && request.method === "POST") {
-    return handleProjectUpload(request);
-  }
-  if (url.pathname === "/api/projects/submit" && request.method === "POST") {
-    return handleProjectSubmit(request);
-  }
-  if (url.pathname.startsWith("/api/supabase/")) {
+    if (url.pathname === "/api/auth/avatar" && request.method === "POST") {
+      return handleAvatarUpload(request);
+    }
+    if (url.pathname === "/api/auth/verify-email" && request.method === "POST") {
+      return handleVerifyEmail(request);
+    }
+    if (url.pathname === "/api/auth/resend-verification" && request.method === "POST") {
+      return handleResendVerification(request);
+    }
+    if (url.pathname === "/api/auth/forgot-password" && request.method === "POST") {
+      return handleForgotPassword(request);
+    }
+    if (url.pathname === "/api/auth/reset-password" && request.method === "POST") {
+      return handleResetPassword(request);
+    }
+    if (url.pathname === "/api/whatsapp/webhook" && request.method === "POST") {
+      return handleWhatsAppWebhook(request);
+    }
+    if (url.pathname === "/api/whatsapp/stats" && request.method === "GET") {
+      return handleWhatsAppStats(request);
+    }
+    if (url.pathname === "/api/supabase/community-log" && request.method === "POST") {
+      return handleCommunityLog(request);
+    }
+    if (url.pathname === "/api/projects/upload" && request.method === "POST") {
+      return handleProjectUpload(request);
+    }
+    if (url.pathname === "/api/projects/submit" && request.method === "POST") {
+      return handleProjectSubmit(request);
+    }
+    if (url.pathname.startsWith("/api/supabase/")) {
       return handleSupabaseApi(request, url.pathname);
     }
-  if (url.pathname === "/api/awards" && request.method === "POST") {
-    return handleAwards(request);
-  }
-  if (url.pathname === "/api/events/attend" && request.method === "POST") {
-    return handleEventAttend(request);
-  }
-  if (url.pathname === "/api/challenges/vote" && request.method === "POST") {
-    return handleChallengeVote(request);
-  }
-  if (url.pathname === "/api/devlog" && request.method === "POST") {
-    return handleDevlogCreate(request);
-  }
-  if (url.pathname === "/api/intake/submit" && request.method === "POST") {
-    return handleIntakeSubmit(request);
-  }
+    if (url.pathname === "/api/awards" && request.method === "POST") {
+      return handleAwards(request);
+    }
+    if (url.pathname === "/api/events/attend" && request.method === "POST") {
+      return handleEventAttend(request);
+    }
+    if (url.pathname === "/api/challenges/vote" && request.method === "POST") {
+      return handleChallengeVote(request);
+    }
+    if (url.pathname === "/api/devlog" && request.method === "POST") {
+      return handleDevlogCreate(request);
+    }
+    if (url.pathname === "/api/intake/submit" && request.method === "POST") {
+      return handleIntakeSubmit(request);
+    }
 
     try {
       const handler = await getServerEntry();
@@ -1727,7 +1772,10 @@ export default {
           final = new Response(final.body, {
             status: final.status,
             statusText: final.statusText,
-            headers: { ...Object.fromEntries(final.headers.entries()), "Cache-Control": cacheHeader },
+            headers: {
+              ...Object.fromEntries(final.headers.entries()),
+              "Cache-Control": cacheHeader,
+            },
           });
         }
       }

@@ -22,7 +22,7 @@ export const DEFAULT_CONFIGS: Record<string, RateLimitConfig> = {
 function internalCheck(
   key: string,
   maxRequests: number,
-  windowMs: number
+  windowMs: number,
 ): { allowed: boolean; remaining: number; resetAt: number } {
   const now = Date.now();
   const entry = rateLimitStore.get(key);
@@ -45,7 +45,7 @@ function internalCheck(
 
 export function checkRateLimit(
   ip: string,
-  config: RateLimitConfig
+  config: RateLimitConfig,
 ): { allowed: boolean; remaining: number; headers: Record<string, string> } {
   const key = `${config.keyPrefix}:${ip}`;
   const { allowed, remaining, resetAt } = internalCheck(key, config.maxRequests, config.windowMs);
@@ -63,7 +63,7 @@ export function checkRateLimit(
 export function getRateLimitHeaders(
   key: string,
   maxRequests: number = 5,
-  windowMs: number = 15 * 60 * 1000
+  windowMs: number = 15 * 60 * 1000,
 ): Record<string, string> {
   const { allowed, remaining, resetAt } = internalCheck(key, maxRequests, windowMs);
   return {

@@ -16,7 +16,10 @@ export const Route = createFileRoute("/intake")({
   head: () => ({
     meta: [
       { title: "Intake Assessment | BlockchainClub FUTMinna" },
-      { name: "description", content: "Complete the intake assessment for lane placement in BlockchainClub FUTMinna." },
+      {
+        name: "description",
+        content: "Complete the intake assessment for lane placement in BlockchainClub FUTMinna.",
+      },
     ],
   }),
   component: IntakePage,
@@ -67,7 +70,10 @@ const SWE_QUESTIONS = [
     question: "Name one difference between a branch and a fork in GitHub:",
     options: [
       { value: "A", label: "Branches are private, forks are public" },
-      { value: "B", label: "A branch exists within the same repo; a fork is a separate copy of the repo" },
+      {
+        value: "B",
+        label: "A branch exists within the same repo; a fork is a separate copy of the repo",
+      },
       { value: "C", label: "Branches cannot be merged, forks can" },
       { value: "D", label: "Forks are only used in open source" },
     ],
@@ -90,7 +96,10 @@ const BLOCKCHAIN_QUESTIONS = [
     question: "What is the difference between a transaction and a block?",
     options: [
       { value: "A", label: "They are the same thing" },
-      { value: "B", label: "A transaction is a single action; a block is a batch of verified transactions" },
+      {
+        value: "B",
+        label: "A transaction is a single action; a block is a batch of verified transactions",
+      },
       { value: "C", label: "Transactions are public, blocks are private" },
       { value: "D", label: "Blocks are only used in Bitcoin" },
     ],
@@ -128,11 +137,7 @@ const BLOCKCHAIN_QUESTIONS = [
   },
 ];
 
-const STEPS = [
-  { title: "SWE Basics" },
-  { title: "Blockchain" },
-  { title: "Practical" },
-];
+const STEPS = [{ title: "SWE Basics" }, { title: "Blockchain" }, { title: "Practical" }];
 
 const STARTER_REPO_URL = "https://github.com/BlockchainClub-FUTMINNA/intake-starter";
 
@@ -150,7 +155,9 @@ function StepIndicator({ step }: { step: number }) {
           >
             {i + 1}
           </div>
-          <span className={`text-sm font-medium hidden sm:inline ${i <= step ? "text-foreground" : "text-muted-foreground"}`}>
+          <span
+            className={`text-sm font-medium hidden sm:inline ${i <= step ? "text-foreground" : "text-muted-foreground"}`}
+          >
             {s.title}
           </span>
           {i < STEPS.length - 1 && (
@@ -261,7 +268,9 @@ function IntakePage() {
                     </p>
                   </div>
                   <div className="bg-muted rounded-lg p-4 text-left">
-                    <p className="text-sm font-medium mb-1">Your Score: {existingResult.total_score} / 10</p>
+                    <p className="text-sm font-medium mb-1">
+                      Your Score: {existingResult.total_score} / 10
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {existingResult.lane === "Fast Lane"
                         ? "You meet the requirements for advanced tracks."
@@ -280,7 +289,11 @@ function IntakePage() {
     );
   }
 
-  function handleAnswerChange(questionIndex: number, value: string, category: "swe" | "blockchain") {
+  function handleAnswerChange(
+    questionIndex: number,
+    value: string,
+    category: "swe" | "blockchain",
+  ) {
     if (category === "swe") {
       setSweAnswers((prev) => ({ ...prev, [questionIndex]: value }));
     } else {
@@ -313,7 +326,8 @@ function IntakePage() {
       const blockchainScore = calculateScore(blockchainAnswers, BLOCKCHAIN_QUESTIONS);
       const totalScore = sweScore + blockchainScore;
       const practicalCompleted = practicalDone && forkUrl.trim().length > 0;
-      const lane: LaneResult = totalScore >= 6 && practicalCompleted ? "Fast Lane" : "Foundation Lane";
+      const lane: LaneResult =
+        totalScore >= 6 && practicalCompleted ? "Fast Lane" : "Foundation Lane";
 
       const res = await fetch("/api/intake/submit", {
         method: "POST",
@@ -453,7 +467,10 @@ function IntakePage() {
                           {q.options.map((opt) => (
                             <div key={opt.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={opt.value} id={`swe-${qi}-${opt.value}`} />
-                              <Label htmlFor={`swe-${qi}-${opt.value}`} className="text-sm cursor-pointer">
+                              <Label
+                                htmlFor={`swe-${qi}-${opt.value}`}
+                                className="text-sm cursor-pointer"
+                              >
                                 {opt.label}
                               </Label>
                             </div>
@@ -477,7 +494,10 @@ function IntakePage() {
                           {q.options.map((opt) => (
                             <div key={opt.value} className="flex items-center space-x-2">
                               <RadioGroupItem value={opt.value} id={`bc-${qi}-${opt.value}`} />
-                              <Label htmlFor={`bc-${qi}-${opt.value}`} className="text-sm cursor-pointer">
+                              <Label
+                                htmlFor={`bc-${qi}-${opt.value}`}
+                                className="text-sm cursor-pointer"
+                              >
                                 {opt.label}
                               </Label>
                             </div>
@@ -492,7 +512,8 @@ function IntakePage() {
                     <div className="space-y-2">
                       <h3 className="text-headline-sm font-bold">Practical Task</h3>
                       <p className="text-sm text-muted-foreground">
-                        Fork and fix a deliberately buggy contract to demonstrate your hands-on skills.
+                        Fork and fix a deliberately buggy contract to demonstrate your hands-on
+                        skills.
                       </p>
                     </div>
 
@@ -559,5 +580,3 @@ function IntakePage() {
     </div>
   );
 }
-
-

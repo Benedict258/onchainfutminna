@@ -7,7 +7,14 @@ import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 const resetPasswordSchema = z
   .object({
@@ -28,7 +35,10 @@ export const Route = createFileRoute("/auth/reset-password")({
   head: () => ({
     meta: [
       { title: "Reset Password | BlockchainClub FUTMinna" },
-      { name: "description", content: "Set a new password for your BlockchainClub FUTMinna account." },
+      {
+        name: "description",
+        content: "Set a new password for your BlockchainClub FUTMinna account.",
+      },
     ],
   }),
   component: ResetPasswordPage,
@@ -77,9 +87,7 @@ function ResetPasswordPage() {
               <img src="/lightlogo.png" alt="BCF" className="h-[100px] w-auto" />
             </Link>
             <h2 className="text-headline-lg text-foreground">Reset Password</h2>
-            <p className="mt-3 text-muted-foreground">
-              Choose a new password for your account.
-            </p>
+            <p className="mt-3 text-muted-foreground">Choose a new password for your account.</p>
           </div>
         </div>
         <div className="flex items-center justify-center px-6 py-12 lg:py-16">
@@ -97,7 +105,9 @@ function ResetPasswordPage() {
                 </div>
               ) : success ? (
                 <div className="text-center space-y-4">
-                  <p className="text-muted-foreground">Your password has been reset successfully.</p>
+                  <p className="text-muted-foreground">
+                    Your password has been reset successfully.
+                  </p>
                   <Button asChild className="w-full">
                     <Link to="/auth">Sign In</Link>
                   </Button>
@@ -144,5 +154,3 @@ function ResetPasswordPage() {
     </div>
   );
 }
-
-

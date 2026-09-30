@@ -36,7 +36,11 @@ function MemberDevlogPage() {
   const memberId = params.memberId;
   const fetchMember = useServerFn(getMemberById);
 
-  const { data: member, isLoading: memberLoading, error: memberError } = useQuery({
+  const {
+    data: member,
+    isLoading: memberLoading,
+    error: memberError,
+  } = useQuery({
     queryKey: ["member", memberId],
     queryFn: () => fetchMember({ data: { id: memberId } }),
   });
@@ -96,7 +100,10 @@ function MemberDevlogPage() {
         <Avatar className="h-16 w-16 border-2 border-primary/20">
           <AvatarImage src={member.avatar_url || undefined} />
           <AvatarFallback className="text-xl">
-            {member.full_name?.split(" ").map((p: string) => p[0]).join("") || "M"}
+            {member.full_name
+              ?.split(" ")
+              .map((p: string) => p[0])
+              .join("") || "M"}
           </AvatarFallback>
         </Avatar>
         <div>
@@ -114,9 +121,7 @@ function MemberDevlogPage() {
       ) : entries.length === 0 ? (
         <Card className="border-border bg-card">
           <CardContent className="p-12 text-center">
-            <p className="text-muted-foreground">
-              This member hasn't started their DEVLOG yet.
-            </p>
+            <p className="text-muted-foreground">This member hasn't started their DEVLOG yet.</p>
           </CardContent>
         </Card>
       ) : (
@@ -148,5 +153,3 @@ function MemberDevlogPage() {
     </div>
   );
 }
-
-

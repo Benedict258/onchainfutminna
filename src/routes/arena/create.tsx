@@ -1,24 +1,24 @@
-﻿import { createFileRoute, useRouter } from "@tanstack/react-router"
-import { useMutation } from "@tanstack/react-query"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { Slider } from "@/components/ui/slider"
+﻿import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Card, CardContent } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { apiInsert } from "@/lib/api-client"
-import { useAuthStore } from "@/stores/auth-store"
+} from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { apiInsert } from "@/lib/api-client";
+import { useAuthStore } from "@/stores/auth-store";
 import {
   ArrowLeft,
   Swords,
@@ -32,23 +32,13 @@ import {
   Timer,
   Plus,
   Info,
-} from "lucide-react"
-import { toast } from "sonner"
+} from "lucide-react";
+import { toast } from "sonner";
 
 type ChallengeType =
-  | "CODE_DUEL"
-  | "OPEN"
-  | "TEAM_CLASH"
-  | "CTF"
-  | "DESIGN"
-  | "CONTENT"
-  | "RESEARCH"
-  | "SPEED"
+  "CODE_DUEL" | "OPEN" | "TEAM_CLASH" | "CTF" | "DESIGN" | "CONTENT" | "RESEARCH" | "SPEED";
 
-const TYPE_INFO: Record<
-  ChallengeType,
-  { label: string; icon: React.ReactNode; desc: string }
-> = {
+const TYPE_INFO: Record<ChallengeType, { label: string; icon: React.ReactNode; desc: string }> = {
   CODE_DUEL: {
     label: "Code Duel",
     icon: <Code className="h-4 w-4" />,
@@ -89,7 +79,7 @@ const TYPE_INFO: Record<
     icon: <Timer className="h-4 w-4" />,
     desc: "Rapid-fire coding sprints with tight time constraints",
   },
-}
+};
 
 export const Route = createFileRoute("/arena/create")({
   head: () => ({
@@ -102,44 +92,40 @@ export const Route = createFileRoute("/arena/create")({
     ],
   }),
   component: CreateChallengePage,
-})
+});
 
 function CreateChallengePage() {
-  const router = useRouter()
-  const { user } = useAuthStore()
+  const router = useRouter();
+  const { user } = useAuthStore();
 
-  const [type, setType] = useState<ChallengeType>("CODE_DUEL")
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [rules, setRules] = useState("")
-  const [startTime, setStartTime] = useState("")
-  const [endTime, setEndTime] = useState("")
-  const [maxParticipants, setMaxParticipants] = useState("10")
-  const [stakePoints, setStakePoints] = useState(10)
-  const [isPublic, setIsPublic] = useState(true)
-  const [touched, setTouched] = useState<Record<string, boolean>>({})
+  const [type, setType] = useState<ChallengeType>("CODE_DUEL");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [rules, setRules] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [maxParticipants, setMaxParticipants] = useState("10");
+  const [stakePoints, setStakePoints] = useState(10);
+  const [isPublic, setIsPublic] = useState(true);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const formErrors = {
     title: touched.title && !title.trim() ? "Title is required" : "",
-    description:
-      touched.description && !description.trim()
-        ? "Description is required"
-        : "",
+    description: touched.description && !description.trim() ? "Description is required" : "",
     startTime: touched.startTime && !startTime ? "Start time is required" : "",
     endTime: touched.endTime && !endTime ? "End time is required" : "",
-  }
+  };
 
   const isFormValid =
     !!title.trim() &&
     !!description.trim() &&
     !!startTime &&
     !!endTime &&
-    new Date(endTime) > new Date(startTime)
+    new Date(endTime) > new Date(startTime);
 
   const createMutation = useMutation({
     mutationFn: async () => {
-      const status =
-        !isPublic || stakePoints === 0 ? "active" : "pending"
+      const status = !isPublic || stakePoints === 0 ? "active" : "pending";
 
       return apiInsert("challenges", {
         type,
@@ -148,33 +134,29 @@ function CreateChallengePage() {
         rules: rules.trim() || undefined,
         start_time: new Date(startTime).toISOString(),
         end_time: new Date(endTime).toISOString(),
-        max_participants: maxParticipants
-          ? parseInt(maxParticipants)
-          : undefined,
+        max_participants: maxParticipants ? parseInt(maxParticipants) : undefined,
         stake_points: stakePoints,
         is_public: isPublic,
         status,
         creator_id: user?.id,
-      })
+      });
     },
     onSuccess: (data: any) => {
-      const challenge = Array.isArray(data?.data)
-        ? data.data[0]
-        : data?.data
+      const challenge = Array.isArray(data?.data) ? data.data[0] : data?.data;
       toast.success(
         challenge?.status === "pending"
           ? "Challenge created! Awaiting admin approval."
-          : "Challenge is now live!"
-      )
+          : "Challenge is now live!",
+      );
       router.navigate({
         to: "/arena/$challengeId",
         params: { challengeId: challenge?.id || "" },
-      })
+      });
     },
     onError: (err: any) => {
-      toast.error(err?.message || "Failed to create challenge")
+      toast.error(err?.message || "Failed to create challenge");
     },
-  })
+  });
 
   if (!user) {
     return (
@@ -190,42 +172,31 @@ function CreateChallengePage() {
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="bg-background">
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <Button
-          variant="ghost"
-          className="mb-6 -ml-2"
-          onClick={() => router.history.back()}
-        >
+        <Button variant="ghost" className="mb-6 -ml-2" onClick={() => router.history.back()}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Arena
         </Button>
 
         <div className="mb-8">
-          <h1 className="text-headline-xl md:text-display-md tracking-tight">
-            Create Challenge
-          </h1>
+          <h1 className="text-headline-xl md:text-display-md tracking-tight">Create Challenge</h1>
           <p className="mt-3 text-muted-foreground">
-            Set up a new challenge for the community. Stake points to make it
-            competitive or keep it free for everyone.
+            Set up a new challenge for the community. Stake points to make it competitive or keep it
+            free for everyone.
           </p>
         </div>
 
         {/* TYPE SELECTION */}
         <div className="mb-8">
-          <Label className="text-sm font-semibold mb-3 block">
-            Challenge Type
-          </Label>
+          <Label className="text-sm font-semibold mb-3 block">Challenge Type</Label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {(
-              Object.entries(TYPE_INFO) as [
-                ChallengeType,
-                (typeof TYPE_INFO)[ChallengeType],
-              ][]
+              Object.entries(TYPE_INFO) as [ChallengeType, (typeof TYPE_INFO)[ChallengeType]][]
             ).map(([key, info]) => (
               <button
                 key={key}
@@ -237,22 +208,16 @@ function CreateChallengePage() {
                     : "border-border bg-card hover:border-primary/40"
                 }`}
               >
-                <span
-                  className={`${type === key ? "text-primary" : "text-muted-foreground"}`}
-                >
+                <span className={`${type === key ? "text-primary" : "text-muted-foreground"}`}>
                   {info.icon}
                 </span>
-                <span
-                  className={`text-xs font-semibold ${type === key ? "text-primary" : ""}`}
-                >
+                <span className={`text-xs font-semibold ${type === key ? "text-primary" : ""}`}>
                   {info.label}
                 </span>
               </button>
             ))}
           </div>
-          <p className="mt-2 text-xs text-muted-foreground">
-            {TYPE_INFO[type].desc}
-          </p>
+          <p className="mt-2 text-xs text-muted-foreground">{TYPE_INFO[type].desc}</p>
         </div>
 
         {/* FORM */}
@@ -268,9 +233,7 @@ function CreateChallengePage() {
                 className={formErrors.title ? "border-destructive" : ""}
               />
               {formErrors.title && (
-                <p className="text-xs text-destructive mt-1">
-                  {formErrors.title}
-                </p>
+                <p className="text-xs text-destructive mt-1">{formErrors.title}</p>
               )}
             </div>
 
@@ -285,9 +248,7 @@ function CreateChallengePage() {
                 className={formErrors.description ? "border-destructive" : ""}
               />
               {formErrors.description && (
-                <p className="text-xs text-destructive mt-1">
-                  {formErrors.description}
-                </p>
+                <p className="text-xs text-destructive mt-1">{formErrors.description}</p>
               )}
             </div>
 
@@ -313,9 +274,7 @@ function CreateChallengePage() {
                   className={formErrors.startTime ? "border-destructive" : ""}
                 />
                 {formErrors.startTime && (
-                  <p className="text-xs text-destructive mt-1">
-                    {formErrors.startTime}
-                  </p>
+                  <p className="text-xs text-destructive mt-1">{formErrors.startTime}</p>
                 )}
               </div>
               <div>
@@ -328,17 +287,13 @@ function CreateChallengePage() {
                   className={formErrors.endTime ? "border-destructive" : ""}
                 />
                 {formErrors.endTime && (
-                  <p className="text-xs text-destructive mt-1">
-                    {formErrors.endTime}
-                  </p>
+                  <p className="text-xs text-destructive mt-1">{formErrors.endTime}</p>
                 )}
               </div>
             </div>
 
             {startTime && endTime && new Date(endTime) <= new Date(startTime) && (
-              <p className="text-xs text-destructive">
-                End time must be after start time.
-              </p>
+              <p className="text-xs text-destructive">End time must be after start time.</p>
             )}
 
             <div>
@@ -355,9 +310,7 @@ function CreateChallengePage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <Label>Stake Points: {stakePoints}</Label>
-                <span className="text-xs text-muted-foreground">
-                  5 – 50 pts
-                </span>
+                <span className="text-xs text-muted-foreground">5 – 50 pts</span>
               </div>
               <Slider
                 value={[stakePoints]}
@@ -369,16 +322,13 @@ function CreateChallengePage() {
               />
               <p className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
                 <Info className="h-3 w-3" />
-                Each participant stakes {stakePoints} points. Total pool ={" "}
-                {stakePoints} � participants. Winner(s) split the pool.
+                Each participant stakes {stakePoints} points. Total pool = {stakePoints} �
+                participants. Winner(s) split the pool.
               </p>
             </div>
 
             <div className="flex items-center gap-3">
-              <Switch
-                checked={isPublic}
-                onCheckedChange={setIsPublic}
-              />
+              <Switch checked={isPublic} onCheckedChange={setIsPublic} />
               <div>
                 <Label className="cursor-pointer">Public Challenge</Label>
                 <p className="text-xs text-muted-foreground">
@@ -393,22 +343,17 @@ function CreateChallengePage() {
               <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4 flex items-start gap-3">
                 <Info className="h-4 w-4 text-amber-400 mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-amber-400">
-                    Admin Approval Required
-                  </p>
+                  <p className="text-sm font-medium text-amber-400">Admin Approval Required</p>
                   <p className="text-xs text-amber-400/80 mt-1">
-                    Public challenges with staked points need admin approval
-                    before going live. No-stake challenges go live immediately.
+                    Public challenges with staked points need admin approval before going live.
+                    No-stake challenges go live immediately.
                   </p>
                 </div>
               </div>
             )}
 
             <div className="flex justify-end gap-3 pt-4">
-              <Button
-                variant="outline"
-                onClick={() => router.history.back()}
-              >
+              <Button variant="outline" onClick={() => router.history.back()}>
                 Cancel
               </Button>
               <Button
@@ -426,7 +371,5 @@ function CreateChallengePage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
-
-

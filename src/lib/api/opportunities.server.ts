@@ -1,16 +1,18 @@
-import { createServerFn } from '@tanstack/react-start';
-import { z } from 'zod';
-import { supabase, query } from '@/lib/supabase';
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { supabase, query } from "@/lib/supabase";
 
-export const getOpportunities = createServerFn({ method: 'GET' })
+export const getOpportunities = createServerFn({ method: "GET" })
   .inputValidator(
     z.object({
       page: z.number().min(1).default(1),
       limit: z.number().min(1).max(100).default(20),
-      type: z.enum(['HACKATHON', 'GRANT', 'BOUNTY', 'JOB', 'INTERNSHIP', 'PROGRAM', 'AMBASSADOR']).optional(),
-      status: z.enum(['OPEN', 'CLOSING_SOON', 'CLOSED']).optional(),
-      ecosystem: z.enum(['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL']).optional(),
-    })
+      type: z
+        .enum(["HACKATHON", "GRANT", "BOUNTY", "JOB", "INTERNSHIP", "PROGRAM", "AMBASSADOR"])
+        .optional(),
+      status: z.enum(["OPEN", "CLOSING_SOON", "CLOSED"]).optional(),
+      ecosystem: z.enum(["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"]).optional(),
+    }),
   )
   .handler(async ({ data }) => {
     const { page, limit, type, status, ecosystem } = data;
@@ -22,12 +24,16 @@ export const getOpportunities = createServerFn({ method: 'GET' })
     if (status) filters.status = status;
     if (ecosystem) filters.ecosystem = ecosystem;
 
-    const { data: opportunities, count, error } = await query('opportunities', {
-      select: '*',
+    const {
+      data: opportunities,
+      count,
+      error,
+    } = await query("opportunities", {
+      select: "*",
       filters,
-      order: { column: 'deadline', ascending: true },
+      order: { column: "deadline", ascending: true },
       range: [from, to],
-      count: 'exact',
+      count: "exact",
     });
 
     if (error) throw error;
@@ -41,37 +47,41 @@ export const getOpportunities = createServerFn({ method: 'GET' })
     };
   });
 
-export const getOpportunityById = createServerFn({ method: 'GET' })
+export const getOpportunityById = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
-    const { data: opportunity, error } = await query('opportunities', {
-      select: '*',
+    const { data: opportunity, error } = await query("opportunities", {
+      select: "*",
       filters: { id: data.id },
       single: true,
     });
 
     if (error) throw error;
-    if (!opportunity) throw new Error('Opportunity not found');
+    if (!opportunity) throw new Error("Opportunity not found");
 
     return opportunity;
   });
 
-export const createOpportunity = createServerFn({ method: 'POST' })
+export const createOpportunity = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       title: z.string().min(1),
       organizer: z.string().optional(),
-      type: z.enum(['HACKATHON', 'GRANT', 'BOUNTY', 'JOB', 'INTERNSHIP', 'PROGRAM', 'AMBASSADOR']).default('HACKATHON'),
-      ecosystem: z.enum(['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL']).default('GENERAL'),
+      type: z
+        .enum(["HACKATHON", "GRANT", "BOUNTY", "JOB", "INTERNSHIP", "PROGRAM", "AMBASSADOR"])
+        .default("HACKATHON"),
+      ecosystem: z
+        .enum(["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"])
+        .default("GENERAL"),
       description: z.string().optional(),
       prize: z.string().optional(),
       imageUrl: z.string().optional(),
       applyUrl: z.string().url().optional(),
       deadline: z.string().datetime().optional(),
-      status: z.enum(['OPEN', 'CLOSING_SOON', 'CLOSED']).default('OPEN'),
+      status: z.enum(["OPEN", "CLOSING_SOON", "CLOSED"]).default("OPEN"),
       isPublished: z.boolean().default(false),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, ...opportunityData } = data;
@@ -90,32 +100,32 @@ export const createOpportunity = createServerFn({ method: 'POST' })
       is_published: opportunityData.isPublished,
     };
 
-    const { data: inserted, error } = await supabase
-      .from('opportunities')
-      .insert(processed);
+    const { data: inserted, error } = await supabase.from("opportunities").insert(processed);
 
     if (error) throw error;
 
     return inserted[0];
   });
 
-export const updateOpportunity = createServerFn({ method: 'POST' })
+export const updateOpportunity = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       id: z.string().uuid(),
       title: z.string().min(1).optional(),
       organizer: z.string().optional(),
-      type: z.enum(['HACKATHON', 'GRANT', 'BOUNTY', 'JOB', 'INTERNSHIP', 'PROGRAM', 'AMBASSADOR']).optional(),
-      ecosystem: z.enum(['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL']).optional(),
+      type: z
+        .enum(["HACKATHON", "GRANT", "BOUNTY", "JOB", "INTERNSHIP", "PROGRAM", "AMBASSADOR"])
+        .optional(),
+      ecosystem: z.enum(["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"]).optional(),
       description: z.string().optional(),
       prize: z.string().optional(),
       imageUrl: z.string().optional(),
       applyUrl: z.string().url().optional(),
       deadline: z.string().datetime().optional(),
-      status: z.enum(['OPEN', 'CLOSING_SOON', 'CLOSED']).optional(),
+      status: z.enum(["OPEN", "CLOSING_SOON", "CLOSED"]).optional(),
       isPublished: z.boolean().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, id, ...updateData } = data;
@@ -133,24 +143,22 @@ export const updateOpportunity = createServerFn({ method: 'POST' })
     if (updateData.status !== undefined) processed.status = updateData.status;
     if (updateData.isPublished !== undefined) processed.is_published = updateData.isPublished;
 
-    const { data: updated, error } = await supabase
-      .from('opportunities')
-      .update(processed, { id });
+    const { data: updated, error } = await supabase.from("opportunities").update(processed, { id });
 
     if (error) throw error;
 
     return updated[0];
   });
 
-export const deleteOpportunity = createServerFn({ method: 'POST' })
+export const deleteOpportunity = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       id: z.string().uuid(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
-    const { error } = await supabase.from('opportunities').delete({ id: data.id });
+    const { error } = await supabase.from("opportunities").delete({ id: data.id });
 
     if (error) throw error;
 

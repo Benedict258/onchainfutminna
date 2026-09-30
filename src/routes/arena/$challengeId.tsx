@@ -1,15 +1,15 @@
-﻿import { createFileRoute, Link } from "@tanstack/react-router"
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { apiQuerySingle, apiQueryAll, apiInsert, apiUpdate } from "@/lib/api-client"
-import { useAuthStore } from "@/stores/auth-store"
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { apiQuerySingle, apiQueryAll, apiInsert, apiUpdate } from "@/lib/api-client";
+import { useAuthStore } from "@/stores/auth-store";
 import {
   ArrowLeft,
   Swords,
@@ -35,8 +35,8 @@ import {
   Link as LinkIcon,
   Github,
   AlertCircle,
-} from "lucide-react"
-import { toast } from "sonner"
+} from "lucide-react";
+import { toast } from "sonner";
 
 const TYPE_LABELS: Record<string, string> = {
   CODE_DUEL: "Code Duel",
@@ -47,7 +47,7 @@ const TYPE_LABELS: Record<string, string> = {
   CONTENT: "Content Clash",
   RESEARCH: "Research Sprint",
   SPEED: "Speed Sprint",
-}
+};
 
 const TYPE_COLORS: Record<string, string> = {
   CODE_DUEL: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
@@ -58,7 +58,7 @@ const TYPE_COLORS: Record<string, string> = {
   CONTENT: "bg-violet-500/10 text-violet-400 border-violet-500/20",
   RESEARCH: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   SPEED: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-}
+};
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
   CODE_DUEL: <Code className="h-3.5 w-3.5" />,
@@ -69,38 +69,38 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
   CONTENT: <FileText className="h-3.5 w-3.5" />,
   RESEARCH: <Search className="h-3.5 w-3.5" />,
   SPEED: <Timer className="h-3.5 w-3.5" />,
-}
+};
 
 function formatCountdown(seconds: number) {
-  if (seconds <= 0) return "Ended"
-  const d = Math.floor(seconds / 86400)
-  const h = Math.floor((seconds % 86400) / 3600)
-  const m = Math.floor((seconds % 3600) / 60)
-  const s = seconds % 60
-  if (d > 0) return `${d}d ${h}h ${m}m ${s}s`
-  if (h > 0) return `${h}h ${m}m ${s}s`
-  if (m > 0) return `${m}m ${s}s`
-  return `${s}s`
+  if (seconds <= 0) return "Ended";
+  const d = Math.floor(seconds / 86400);
+  const h = Math.floor((seconds % 86400) / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (d > 0) return `${d}d ${h}h ${m}m ${s}s`;
+  if (h > 0) return `${h}h ${m}m ${s}s`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
 }
 
 function useCountdown(targetTime: string | null) {
-  const [now, setNow] = useState(Date.now())
+  const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(id)
-  }, [])
-  if (!targetTime) return { seconds: 0, isExpired: true }
-  const diff = Math.max(0, Math.floor((new Date(targetTime).getTime() - now) / 1000))
-  return { seconds: diff, isExpired: diff <= 0 }
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  if (!targetTime) return { seconds: 0, isExpired: true };
+  const diff = Math.max(0, Math.floor((new Date(targetTime).getTime() - now) / 1000));
+  return { seconds: diff, isExpired: diff <= 0 };
 }
 
 function getChallengePhase(challenge: any) {
-  const now = new Date()
-  const start = new Date(challenge.start_time)
-  const end = new Date(challenge.end_time)
-  if (now < start) return "upcoming"
-  if (now >= start && now <= end) return "live"
-  return "past"
+  const now = new Date();
+  const start = new Date(challenge.start_time);
+  const end = new Date(challenge.end_time);
+  if (now < start) return "upcoming";
+  if (now >= start && now <= end) return "live";
+  return "past";
 }
 
 export const Route = createFileRoute("/arena/$challengeId")({
@@ -111,7 +111,7 @@ export const Route = createFileRoute("/arena/$challengeId")({
     ],
   }),
   component: ChallengeDetailPage,
-})
+});
 
 function ChallengeDetailSkeleton() {
   return (
@@ -121,16 +121,16 @@ function ChallengeDetailSkeleton() {
       <Skeleton className="h-4 w-full" />
       <Skeleton className="h-4 w-2/3" />
     </div>
-  )
+  );
 }
 
 function ChallengeDetailPage() {
-  const params = Route.useParams()
-  const challengeId = params.challengeId
-  const { user } = useAuthStore()
-  const queryClient = useQueryClient()
-  const [submissionUrl, setSubmissionUrl] = useState("")
-  const [submitting, setSubmitting] = useState(false)
+  const params = Route.useParams();
+  const challengeId = params.challengeId;
+  const { user } = useAuthStore();
+  const queryClient = useQueryClient();
+  const [submissionUrl, setSubmissionUrl] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const { data: challenge, isLoading } = useQuery({
     queryKey: ["challenge", challengeId],
@@ -141,7 +141,7 @@ function ChallengeDetailPage() {
         filters: { id: challengeId },
       }),
     refetchInterval: 10000,
-  })
+  });
 
   const { data: submissions } = useQuery({
     queryKey: ["challenge-submissions", challengeId],
@@ -151,7 +151,7 @@ function ChallengeDetailPage() {
         filters: { challenge_id: challengeId },
       }),
     enabled: !!challenge,
-  })
+  });
 
   const joinMutation = useMutation({
     mutationFn: async () => {
@@ -159,46 +159,40 @@ function ChallengeDetailPage() {
         challenge_id: challengeId,
         user_id: user!.id,
         status: "joined",
-      })
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["challenge", challengeId] })
+      queryClient.invalidateQueries({ queryKey: ["challenge", challengeId] });
       queryClient.invalidateQueries({
         queryKey: ["challenge-submissions", challengeId],
-      })
-      toast.success("You joined the challenge!")
+      });
+      toast.success("You joined the challenge!");
     },
     onError: (err: any) => {
-      toast.error(err?.message || "Failed to join challenge")
+      toast.error(err?.message || "Failed to join challenge");
     },
-  })
+  });
 
   const voteMutation = useMutation({
-    mutationFn: async ({
-      submissionId,
-      vote,
-    }: {
-      submissionId: string
-      vote: "up" | "down"
-    }) => {
-      const sub = (submissions || []).find((s: any) => s.id === submissionId)
-      const currentVotes = sub?.votes || 0
+    mutationFn: async ({ submissionId, vote }: { submissionId: string; vote: "up" | "down" }) => {
+      const sub = (submissions || []).find((s: any) => s.id === submissionId);
+      const currentVotes = sub?.votes || 0;
       return apiUpdate(
         "challenge_participants",
         { votes: vote === "up" ? currentVotes + 1 : currentVotes - 1 },
-        { id: submissionId }
-      )
+        { id: submissionId },
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["challenge-submissions", challengeId],
-      })
-      toast.success("Vote recorded!")
+      });
+      toast.success("Vote recorded!");
     },
     onError: () => toast.error("Failed to vote"),
-  })
+  });
 
-  if (isLoading) return <ChallengeDetailSkeleton />
+  if (isLoading) return <ChallengeDetailSkeleton />;
 
   if (!challenge) {
     return (
@@ -212,84 +206,77 @@ function ChallengeDetailPage() {
           </Link>
         </Button>
       </div>
-    )
+    );
   }
 
-  const phase = getChallengePhase(challenge)
-  const now = new Date()
-  const startDate = new Date(challenge.start_time)
-  const endDate = new Date(challenge.end_time)
+  const phase = getChallengePhase(challenge);
+  const now = new Date();
+  const startDate = new Date(challenge.start_time);
+  const endDate = new Date(challenge.end_time);
 
   const timerTarget =
-    phase === "upcoming"
-      ? challenge.start_time
-      : phase === "live"
-        ? challenge.end_time
-        : null
+    phase === "upcoming" ? challenge.start_time : phase === "live" ? challenge.end_time : null;
 
-  const { seconds, isExpired } = useCountdown(timerTarget)
+  const { seconds, isExpired } = useCountdown(timerTarget);
 
-  const creator = challenge.creator
-  const creatorName = creator?.full_name || "Anonymous"
+  const creator = challenge.creator;
+  const creatorName = creator?.full_name || "Anonymous";
   const creatorInitials = creator?.full_name
     ? creator.full_name
         .split(" ")
         .map((n: string) => n[0])
         .join("")
         .slice(0, 2)
-    : "?"
+    : "?";
 
-  const participantList: any[] = challenge.challenge_participants || []
-  const allSubmissions: any[] = submissions || []
-  const participantCount = participantList.length
-  const max = challenge.max_participants || 0
-  const isFull = max > 0 && participantCount >= max
+  const participantList: any[] = challenge.challenge_participants || [];
+  const allSubmissions: any[] = submissions || [];
+  const participantCount = participantList.length;
+  const max = challenge.max_participants || 0;
+  const isFull = max > 0 && participantCount >= max;
 
-  const myParticipation = user
-    ? participantList.find((p: any) => p.user_id === user.id)
-    : null
-  const hasJoined = !!myParticipation
+  const myParticipation = user ? participantList.find((p: any) => p.user_id === user.id) : null;
+  const hasJoined = !!myParticipation;
 
-  const pointsPool = (challenge.stake_points || 0) * participantCount
-  const isAutomated =
-    challenge.type === "CODE_DUEL" || challenge.type === "SPEED"
+  const pointsPool = (challenge.stake_points || 0) * participantCount;
+  const isAutomated = challenge.type === "CODE_DUEL" || challenge.type === "SPEED";
   const isCommunityVoted =
-    challenge.type === "OPEN" || challenge.type === "CONTENT" || challenge.type === "DESIGN"
+    challenge.type === "OPEN" || challenge.type === "CONTENT" || challenge.type === "DESIGN";
 
   async function handleJoin() {
     if (!user) {
-      toast.error("Login required")
-      return
+      toast.error("Login required");
+      return;
     }
-    joinMutation.mutate()
+    joinMutation.mutate();
   }
 
   async function handleSubmitEntry() {
     if (!submissionUrl.trim()) {
-      toast.error("Please enter a submission URL")
-      return
+      toast.error("Please enter a submission URL");
+      return;
     }
     if (!myParticipation) {
-      toast.error("You must join the challenge first")
-      return
+      toast.error("You must join the challenge first");
+      return;
     }
-    setSubmitting(true)
+    setSubmitting(true);
     try {
       await apiUpdate(
         "challenge_participants",
         { submission_url: submissionUrl.trim(), status: "submitted" },
-        { id: myParticipation.id }
-      )
+        { id: myParticipation.id },
+      );
       queryClient.invalidateQueries({
         queryKey: ["challenge-submissions", challengeId],
-      })
-      queryClient.invalidateQueries({ queryKey: ["challenge", challengeId] })
-      toast.success("Submission received!")
-      setSubmissionUrl("")
+      });
+      queryClient.invalidateQueries({ queryKey: ["challenge", challengeId] });
+      toast.success("Submission received!");
+      setSubmissionUrl("");
     } catch (err: any) {
-      toast.error(err?.message || "Failed to submit")
+      toast.error(err?.message || "Failed to submit");
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
@@ -298,10 +285,10 @@ function ChallengeDetailPage() {
       navigator.share({
         title: challenge.title,
         url: window.location.href,
-      })
+      });
     } else {
-      navigator.clipboard.writeText(window.location.href)
-      toast.success("Link copied!")
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied!");
     }
   }
 
@@ -330,9 +317,7 @@ function ChallengeDetailPage() {
             </Badge>
           )}
           {challenge.status === "active" && phase === "live" && (
-            <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-              LIVE
-            </Badge>
+            <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">LIVE</Badge>
           )}
           {phase === "past" && (
             <Badge variant="outline" className="bg-muted text-muted-foreground border-border">
@@ -381,11 +366,7 @@ function ChallengeDetailPage() {
                 </p>
                 <p className="text-2xl font-bold tabular-nums">
                   {participantCount}
-                  {max > 0 && (
-                    <span className="text-lg text-muted-foreground">
-                      /{max}
-                    </span>
-                  )}
+                  {max > 0 && <span className="text-lg text-muted-foreground">/{max}</span>}
                 </p>
               </div>
             </div>
@@ -403,9 +384,7 @@ function ChallengeDetailPage() {
                   Joined
                 </Badge>
               )}
-              {isFull && !hasJoined && (
-                <Button disabled>Full</Button>
-              )}
+              {isFull && !hasJoined && <Button disabled>Full</Button>}
               <Button variant="outline" onClick={handleShare}>
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
@@ -474,9 +453,7 @@ function ChallengeDetailPage() {
                   {myParticipation?.submission_url && (
                     <div className="mt-3 flex items-center gap-2 text-sm">
                       <CheckCircle className="h-4 w-4 text-emerald-400" />
-                      <span className="text-muted-foreground">
-                        Submitted:{" "}
-                      </span>
+                      <span className="text-muted-foreground">Submitted: </span>
                       <a
                         href={myParticipation.submission_url}
                         target="_blank"
@@ -497,20 +474,21 @@ function ChallengeDetailPage() {
               <Card className="border-border bg-card">
                 <CardContent className="p-6">
                   <h2 className="text-headline-sm mb-4">
-                    Submissions ({allSubmissions.filter((s: any) => s.status === "submitted").length})
+                    Submissions (
+                    {allSubmissions.filter((s: any) => s.status === "submitted").length})
                   </h2>
                   {allSubmissions.filter((s: any) => s.status === "submitted").length > 0 ? (
                     <div className="grid gap-3">
                       {allSubmissions
                         .filter((s: any) => s.status === "submitted")
                         .map((sub: any) => {
-                          const participant = sub.participant
-                          const name = participant?.full_name || "Anonymous"
+                          const participant = sub.participant;
+                          const name = participant?.full_name || "Anonymous";
                           const initials = name
                             .split(" ")
                             .map((n: string) => n[0])
                             .join("")
-                            .slice(0, 2)
+                            .slice(0, 2);
                           return (
                             <div
                               key={sub.id}
@@ -518,9 +496,7 @@ function ChallengeDetailPage() {
                             >
                               <Avatar className="h-10 w-10 shrink-0">
                                 <AvatarImage src={participant?.avatar_url} />
-                                <AvatarFallback className="text-xs">
-                                  {initials}
-                                </AvatarFallback>
+                                <AvatarFallback className="text-xs">{initials}</AvatarFallback>
                               </Avatar>
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium">{name}</p>
@@ -570,7 +546,7 @@ function ChallengeDetailPage() {
                                 </div>
                               )}
                             </div>
-                          )
+                          );
                         })}
                     </div>
                   ) : (
@@ -607,18 +583,16 @@ function ChallengeDetailPage() {
             {isAutomated && participantList.length > 0 && (
               <Card className="border-border bg-card">
                 <CardContent className="p-6">
-                  <h2 className="text-headline-sm mb-4">
-                    Participants ({participantList.length})
-                  </h2>
+                  <h2 className="text-headline-sm mb-4">Participants ({participantList.length})</h2>
                   <div className="space-y-2">
                     {participantList.map((p: any) => {
-                      const participant = p.participant
-                      const name = participant?.full_name || "Anonymous"
+                      const participant = p.participant;
+                      const name = participant?.full_name || "Anonymous";
                       const initials = name
                         .split(" ")
                         .map((n: string) => n[0])
                         .join("")
-                        .slice(0, 2)
+                        .slice(0, 2);
                       return (
                         <div
                           key={p.id}
@@ -626,9 +600,7 @@ function ChallengeDetailPage() {
                         >
                           <Avatar className="h-8 w-8">
                             <AvatarImage src={participant?.avatar_url} />
-                            <AvatarFallback className="text-xs">
-                              {initials}
-                            </AvatarFallback>
+                            <AvatarFallback className="text-xs">{initials}</AvatarFallback>
                           </Avatar>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium">{name}</p>
@@ -666,7 +638,7 @@ function ChallengeDetailPage() {
                             </a>
                           )}
                         </div>
-                      )
+                      );
                     })}
                   </div>
                 </CardContent>
@@ -680,9 +652,7 @@ function ChallengeDetailPage() {
                   <div className="flex items-center gap-3">
                     <Trophy className="h-8 w-8 text-amber-400" />
                     <div>
-                      <h2 className="text-headline-sm text-amber-400">
-                        Challenge Completed
-                      </h2>
+                      <h2 className="text-headline-sm text-amber-400">Challenge Completed</h2>
                       <p className="text-sm text-amber-400/80 mt-1">
                         Winner has been announced. Total prize pool: {pointsPool} points.
                       </p>
@@ -702,16 +672,12 @@ function ChallengeDetailPage() {
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={creator?.avatar_url} />
-                    <AvatarFallback className="text-sm">
-                      {creatorInitials}
-                    </AvatarFallback>
+                    <AvatarFallback className="text-sm">{creatorInitials}</AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm font-medium">{creatorName}</p>
                     {creator?.department && (
-                      <p className="text-xs text-muted-foreground">
-                        {creator.department}
-                      </p>
+                      <p className="text-xs text-muted-foreground">{creator.department}</p>
                     )}
                   </div>
                 </div>
@@ -749,9 +715,7 @@ function ChallengeDetailPage() {
                   <div className="flex items-start gap-3">
                     <Coins className="h-4 w-4 mt-0.5 text-primary shrink-0" />
                     <div>
-                      <p className="font-medium">
-                        {challenge.stake_points || 0} points stake
-                      </p>
+                      <p className="font-medium">{challenge.stake_points || 0} points stake</p>
                       <p className="text-muted-foreground">Per participant</p>
                     </div>
                   </div>
@@ -779,9 +743,7 @@ function ChallengeDetailPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Stake per entry</span>
-                    <span className="font-semibold">
-                      {challenge.stake_points || 0} pts
-                    </span>
+                    <span className="font-semibold">{challenge.stake_points || 0} pts</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Total entries</span>
@@ -819,7 +781,5 @@ function ChallengeDetailPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-

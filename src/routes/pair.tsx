@@ -35,12 +35,7 @@ import {
   History,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
-import {
-  apiQueryAll,
-  apiInsert,
-  apiUpdate,
-  apiLogCommunityActivity,
-} from "@/lib/api-client";
+import { apiQueryAll, apiInsert, apiUpdate, apiLogCommunityActivity } from "@/lib/api-client";
 
 export const Route = createFileRoute("/pair")({
   head: () => ({
@@ -132,7 +127,11 @@ function PairPageContent({ userId }: { userId: string }) {
   async function handleComplete(session: PairSession) {
     setCompleting(session.id);
     try {
-      await apiUpdate("pair_sessions", { status: "completed", completed_at: new Date().toISOString() }, { id: session.id });
+      await apiUpdate(
+        "pair_sessions",
+        { status: "completed", completed_at: new Date().toISOString() },
+        { id: session.id },
+      );
       await apiLogCommunityActivity("pair_programming", "Completed pair programming session", 5);
       toast.success("Session completed! +5 community points earned.");
       queryClient.invalidateQueries({ queryKey: ["pair-sessions", userId] });
@@ -143,7 +142,9 @@ function PairPageContent({ userId }: { userId: string }) {
     }
   }
 
-  const activeSessions = (sessions || []).filter((s) => s.status === "waiting" || s.status === "matched");
+  const activeSessions = (sessions || []).filter(
+    (s) => s.status === "waiting" || s.status === "matched",
+  );
   const historySessions = (sessions || []).filter((s) => s.status === "completed");
 
   if (isLoading) return <PairSkeleton />;
@@ -167,7 +168,8 @@ function PairPageContent({ userId }: { userId: string }) {
           Find a Partner
         </Button>
         <Badge variant="secondary" className="text-xs gap-1">
-          <Star className="h-3 w-3" />+5 points per completed session
+          <Star className="h-3 w-3" />
+          +5 points per completed session
         </Badge>
       </div>
 
@@ -237,7 +239,10 @@ function PairPageContent({ userId }: { userId: string }) {
                         )}
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">
+                        <Badge
+                          variant="outline"
+                          className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]"
+                        >
                           <CheckCircle2 className="mr-1 h-3 w-3" />
                           Completed
                         </Badge>
@@ -270,8 +275,8 @@ function PairPageContent({ userId }: { userId: string }) {
           <DialogHeader>
             <DialogTitle>Find a Partner</DialogTitle>
             <DialogDescription>
-              Create a pairing session and wait for a partner to join. You can practice
-              together on any coding problem.
+              Create a pairing session and wait for a partner to join. You can practice together on
+              any coding problem.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -366,15 +371,16 @@ function ActiveSessionCard({
               >
                 {isWaiting ? "Waiting" : "Matched"}
               </Badge>
-              <span className="text-xs text-muted-foreground">
-                {session.duration_minutes} min
-              </span>
+              <span className="text-xs text-muted-foreground">{session.duration_minutes} min</span>
             </div>
 
             {isMatched && (
               <div className="mt-2">
                 <p className="text-sm font-medium">
-                  Partner: {mySession ? session.partner_name || session.partner_id : session.user_name || session.user_id}
+                  Partner:{" "}
+                  {mySession
+                    ? session.partner_name || session.partner_id
+                    : session.user_name || session.user_id}
                 </p>
                 {session.problem_link && (
                   <a
@@ -391,9 +397,7 @@ function ActiveSessionCard({
             )}
 
             {isWaiting && (
-              <p className="mt-2 text-sm text-muted-foreground">
-                Waiting for a partner to join...
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">Waiting for a partner to join...</p>
             )}
           </div>
 
@@ -404,9 +408,7 @@ function ActiveSessionCard({
                   <Clock className="h-5 w-5 text-primary" />
                   {formatTimeLeft(timeLeft)}
                 </div>
-                {timeLeft === 0 && (
-                  <p className="text-xs text-red-400 mt-1">Time is up!</p>
-                )}
+                {timeLeft === 0 && <p className="text-xs text-red-400 mt-1">Time is up!</p>}
               </div>
             )}
 
@@ -436,5 +438,3 @@ interface PairSession {
   completed_at: string | null;
   created_at: string;
 }
-
-

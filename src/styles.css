@@ -56,7 +56,7 @@
 /* ─── LIGHT (DEFAULT) ─────────────────────────── */
 :root {
   --background: #f5f0ff;
-  --foreground: #1A031B;
+  --foreground: #1a031b;
 
   --surface: #f5f0ff;
   --surface-low: #ede6ff;
@@ -64,34 +64,34 @@
   --surface-highest: #cec2ea;
 
   --card: #ffffff;
-  --card-foreground: #1A031B;
+  --card-foreground: #1a031b;
   --popover: #ffffff;
-  --popover-foreground: #1A031B;
+  --popover-foreground: #1a031b;
 
-  --primary: #1A031B;
+  --primary: #1a031b;
   --primary-foreground: #ffffff;
 
   --secondary: #ddd3f5;
-  --secondary-foreground: #1A031B;
+  --secondary-foreground: #1a031b;
 
   --muted: #ede6ff;
   --muted-foreground: #4a3860;
 
   --accent: #ddd3f5;
-  --accent-foreground: #1A031B;
+  --accent-foreground: #1a031b;
 
   --destructive: #ba1a1a;
   --destructive-foreground: #ffffff;
 
   --border: #c0b3d4;
   --input: #c0b3d4;
-  --ring: #1A031B;
+  --ring: #1a031b;
 
   --outline: #716583;
   --outline-variant: #c0b3d4;
   --on-surface-variant: #4a3860;
 
-  --brand: #1A031B;
+  --brand: #1a031b;
   --brand-foreground: #ffffff;
 
   --radius: 0.375rem;
@@ -99,7 +99,7 @@
 
 /* ─── DARK ────────────────────────────────────── */
 .dark {
-  --background: #1A031B;
+  --background: #1a031b;
   --foreground: #ffffff;
 
   --surface: #200522;
@@ -113,7 +113,7 @@
   --popover-foreground: #ffffff;
 
   --primary: #ffffff;
-  --primary-foreground: #1A031B;
+  --primary-foreground: #1a031b;
 
   --secondary: #300a33;
   --secondary-foreground: #ffffff;
@@ -128,7 +128,7 @@
   --destructive-foreground: #690005;
 
   --border: rgb(255 255 255 / 0.08);
-  --input: rgb(255 255 255 / 0.10);
+  --input: rgb(255 255 255 / 0.1);
   --ring: #c4a8f0;
 
   --outline: #8a70a0;
@@ -136,7 +136,7 @@
   --on-surface-variant: #b8a0d0;
 
   --brand: #c4a8f0;
-  --brand-foreground: #1A031B;
+  --brand-foreground: #1a031b;
 }
 
 /* ─── BASE ────────────────────────────────────── */
@@ -154,8 +154,16 @@
     color: var(--color-foreground);
     /* Technical grid background */
     background-image:
-      linear-gradient(to right, color-mix(in srgb, var(--color-primary) 5%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--color-primary) 5%, transparent) 1px, transparent 1px);
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-primary) 5%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-primary) 5%, transparent) 1px,
+        transparent 1px
+      );
     background-size: 64px 64px;
   }
 }

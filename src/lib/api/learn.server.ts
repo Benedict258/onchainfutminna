@@ -1,6 +1,6 @@
-import { createServerFn } from '@tanstack/react-start';
-import { z } from 'zod';
-import { supabase, query } from '@/lib/supabase';
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { supabase, query } from "@/lib/supabase";
 
 function slugify(text: string): string {
   return text
@@ -35,22 +35,22 @@ function computeModulesPerPhase(modules: { order: number }[], phaseCount: number
   return counts;
 }
 
-export const getTracks = createServerFn({ method: 'GET' })
+export const getTracks = createServerFn({ method: "GET" })
   .inputValidator(
     z.object({
-      ecosystem: z.enum(['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL']).optional(),
-      difficulty: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).optional(),
-    })
+      ecosystem: z.enum(["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"]).optional(),
+      difficulty: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]).optional(),
+    }),
   )
   .handler(async ({ data }) => {
     const filters: Record<string, unknown> = { is_published: true };
     if (data.ecosystem) filters.ecosystem = data.ecosystem;
     if (data.difficulty) filters.difficulty = data.difficulty;
 
-    const { data: tracks, error } = await query('tracks', {
-      select: '*, modules(id,order)',
+    const { data: tracks, error } = await query("tracks", {
+      select: "*, modules(id,order)",
       filters,
-      order: { column: 'order', ascending: true },
+      order: { column: "order", ascending: true },
     });
 
     if (error) throw error;
@@ -70,42 +70,42 @@ export const getTracks = createServerFn({ method: 'GET' })
     });
   });
 
-export const getTrackById = createServerFn({ method: 'GET' })
+export const getTrackById = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
-    const { data: track, error } = await query('tracks', {
-      select: '*, modules(*, quizzes(id, pass_mark, quiz_questions(id)))',
+    const { data: track, error } = await query("tracks", {
+      select: "*, modules(*, quizzes(id, pass_mark, quiz_questions(id)))",
       filters: { id: data.id },
       single: true,
     });
 
     if (error) throw error;
-    if (!track) throw new Error('Track not found');
+    if (!track) throw new Error("Track not found");
 
     return track;
   });
 
-export const getTrackProgress = createServerFn({ method: 'GET' })
+export const getTrackProgress = createServerFn({ method: "GET" })
   .inputValidator(
     z.object({
       trackId: z.string().uuid(),
       userId: z.string().uuid(),
       accessToken: z.string(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { trackId, userId } = data;
 
-    const { data: progress, error: progressError } = await query('course_progress', {
-      select: '*, modules(id, title, order)',
-      filters: { user_id: userId, 'modules.track_id': trackId },
+    const { data: progress, error: progressError } = await query("course_progress", {
+      select: "*, modules(id, title, order)",
+      filters: { user_id: userId, "modules.track_id": trackId },
     });
 
     if (progressError) throw progressError;
 
-    const { count: totalModules, error: countError } = await query('modules', {
-      select: 'id',
-      count: 'exact',
+    const { count: totalModules, error: countError } = await query("modules", {
+      select: "id",
+      count: "exact",
       head: true,
       filters: { track_id: trackId },
     });
@@ -123,34 +123,35 @@ export const getTrackProgress = createServerFn({ method: 'GET' })
     };
   });
 
-export const getModuleById = createServerFn({ method: 'GET' })
+export const getModuleById = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
-    const { data: mod, error } = await query('modules', {
-      select: '*, tracks(id, title, ecosystem), quizzes(*, quiz_questions(*, quiz_options(id, option_text)))',
+    const { data: mod, error } = await query("modules", {
+      select:
+        "*, tracks(id, title, ecosystem), quizzes(*, quiz_questions(*, quiz_options(id, option_text)))",
       filters: { id: data.id },
       single: true,
     });
 
     if (error) throw error;
-    if (!mod) throw new Error('Module not found');
+    if (!mod) throw new Error("Module not found");
 
     return mod;
   });
 
-export const completeModule = createServerFn({ method: 'POST' })
+export const completeModule = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       moduleId: z.string().uuid(),
       userId: z.string().uuid(),
       accessToken: z.string(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { moduleId, userId } = data;
 
-    const { data: existing } = await query('course_progress', {
-      select: 'id',
+    const { data: existing } = await query("course_progress", {
+      select: "id",
       filters: { user_id: userId, module_id: moduleId },
       single: true,
     });
@@ -159,15 +160,20 @@ export const completeModule = createServerFn({ method: 'POST' })
 
     if (existing) {
       const { data: updated, error } = await supabase
-        .from('course_progress')
+        .from("course_progress")
         .update({ completed: true, completed_at: new Date().toISOString() }, { id: existing.id });
 
       if (error) throw error;
       result = updated?.[0];
     } else {
       const { data: created, error } = await supabase
-        .from('course_progress')
-        .insert({ user_id: userId, module_id: moduleId, completed: true, completed_at: new Date().toISOString() });
+        .from("course_progress")
+        .insert({
+          user_id: userId,
+          module_id: moduleId,
+          completed: true,
+          completed_at: new Date().toISOString(),
+        });
 
       if (error) throw error;
       result = created?.[0];
@@ -176,22 +182,22 @@ export const completeModule = createServerFn({ method: 'POST' })
     return result;
   });
 
-export const getQuizById = createServerFn({ method: 'GET' })
+export const getQuizById = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
-    const { data: quiz, error } = await query('quizzes', {
-      select: '*, modules(id, title), quiz_questions(*, quiz_options(id, option_text))',
+    const { data: quiz, error } = await query("quizzes", {
+      select: "*, modules(id, title), quiz_questions(*, quiz_options(id, option_text))",
       filters: { id: data.id },
       single: true,
     });
 
     if (error) throw error;
-    if (!quiz) throw new Error('Quiz not found');
+    if (!quiz) throw new Error("Quiz not found");
 
     return quiz;
   });
 
-export const submitQuizAttempt = createServerFn({ method: 'POST' })
+export const submitQuizAttempt = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       quizId: z.string().uuid(),
@@ -201,20 +207,20 @@ export const submitQuizAttempt = createServerFn({ method: 'POST' })
         z.object({
           questionId: z.string().uuid(),
           optionId: z.string().uuid(),
-        })
+        }),
       ),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { quizId, userId, answers } = data;
 
-    const { data: quiz, error: quizError } = await query('quizzes', {
-      select: '*, quiz_questions(*, quiz_options(*))',
+    const { data: quiz, error: quizError } = await query("quizzes", {
+      select: "*, quiz_questions(*, quiz_options(*))",
       filters: { id: quizId },
       single: true,
     });
 
-    if (quizError || !quiz) throw new Error('Quiz not found');
+    if (quizError || !quiz) throw new Error("Quiz not found");
 
     const questions = quiz.quiz_questions || [];
     let correctCount = 0;
@@ -234,7 +240,7 @@ export const submitQuizAttempt = createServerFn({ method: 'POST' })
     const passed = score >= quiz.pass_mark;
 
     const { data: attempt, error: attemptError } = await supabase
-      .from('quiz_attempts')
+      .from("quiz_attempts")
       .insert({ user_id: userId, quiz_id: quizId, score, passed });
 
     if (attemptError) throw attemptError;
@@ -249,22 +255,22 @@ export const submitQuizAttempt = createServerFn({ method: 'POST' })
     };
   });
 
-export const getResources = createServerFn({ method: 'GET' })
+export const getResources = createServerFn({ method: "GET" })
   .inputValidator(
     z.object({
-      ecosystem: z.enum(['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL']).optional(),
+      ecosystem: z.enum(["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"]).optional(),
       type: z.string().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const filters: Record<string, unknown> = { is_published: true };
     if (data.ecosystem) filters.ecosystem = data.ecosystem;
     if (data.type) filters.type = data.type;
 
-    const { data: resources, error } = await query('resources', {
-      select: '*',
+    const { data: resources, error } = await query("resources", {
+      select: "*",
       filters,
-      order: { column: 'created_at', ascending: false },
+      order: { column: "created_at", ascending: false },
     });
 
     if (error) throw error;
@@ -272,52 +278,52 @@ export const getResources = createServerFn({ method: 'GET' })
     return resources || [];
   });
 
-export const createTrack = createServerFn({ method: 'POST' })
+export const createTrack = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       title: z.string().min(1),
       description: z.string().optional(),
-      ecosystem: z.enum(['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL']).default('GENERAL'),
-      difficulty: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).default('BEGINNER'),
+      ecosystem: z
+        .enum(["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"])
+        .default("GENERAL"),
+      difficulty: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]).default("BEGINNER"),
       iconUrl: z.string().url().optional(),
       isPublished: z.boolean().default(false),
       order: z.number().default(0),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, ...trackData } = data;
 
-    const { data: track, error } = await supabase
-      .from('tracks')
-      .insert({
-        title: trackData.title,
-        description: trackData.description,
-        ecosystem: trackData.ecosystem,
-        difficulty: trackData.difficulty,
-        icon_url: trackData.iconUrl,
-        is_published: trackData.isPublished,
-        order: trackData.order,
-      });
+    const { data: track, error } = await supabase.from("tracks").insert({
+      title: trackData.title,
+      description: trackData.description,
+      ecosystem: trackData.ecosystem,
+      difficulty: trackData.difficulty,
+      icon_url: trackData.iconUrl,
+      is_published: trackData.isPublished,
+      order: trackData.order,
+    });
 
     if (error) throw error;
 
     return track?.[0];
   });
 
-export const updateTrack = createServerFn({ method: 'POST' })
+export const updateTrack = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       id: z.string().uuid(),
       title: z.string().min(1).optional(),
       description: z.string().optional(),
-      ecosystem: z.enum(['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL']).optional(),
-      difficulty: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).optional(),
+      ecosystem: z.enum(["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"]).optional(),
+      difficulty: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]).optional(),
       iconUrl: z.string().url().optional(),
       isPublished: z.boolean().optional(),
       order: z.number().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, id, ...updateData } = data;
@@ -331,16 +337,14 @@ export const updateTrack = createServerFn({ method: 'POST' })
     if (updateData.isPublished !== undefined) processed.is_published = updateData.isPublished;
     if (updateData.order !== undefined) processed.order = updateData.order;
 
-    const { data: track, error } = await supabase
-      .from('tracks')
-      .update(processed, { id });
+    const { data: track, error } = await supabase.from("tracks").update(processed, { id });
 
     if (error) throw error;
 
     return track?.[0];
   });
 
-export const createModule = createServerFn({ method: 'POST' })
+export const createModule = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
@@ -350,28 +354,26 @@ export const createModule = createServerFn({ method: 'POST' })
       content: z.string().optional(),
       order: z.number().default(0),
       isPublished: z.boolean().default(false),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, ...moduleData } = data;
 
-    const { data: mod, error } = await supabase
-      .from('modules')
-      .insert({
-        track_id: moduleData.trackId,
-        title: moduleData.title,
-        description: moduleData.description,
-        content: moduleData.content,
-        order: moduleData.order,
-        is_published: moduleData.isPublished,
-      });
+    const { data: mod, error } = await supabase.from("modules").insert({
+      track_id: moduleData.trackId,
+      title: moduleData.title,
+      description: moduleData.description,
+      content: moduleData.content,
+      order: moduleData.order,
+      is_published: moduleData.isPublished,
+    });
 
     if (error) throw error;
 
     return mod?.[0];
   });
 
-export const updateModule = createServerFn({ method: 'POST' })
+export const updateModule = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
@@ -381,7 +383,7 @@ export const updateModule = createServerFn({ method: 'POST' })
       content: z.string().optional(),
       order: z.number().optional(),
       isPublished: z.boolean().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, id, ...updateData } = data;
@@ -393,16 +395,14 @@ export const updateModule = createServerFn({ method: 'POST' })
     if (updateData.order !== undefined) processed.order = updateData.order;
     if (updateData.isPublished !== undefined) processed.is_published = updateData.isPublished;
 
-    const { data: mod, error } = await supabase
-      .from('modules')
-      .update(processed, { id });
+    const { data: mod, error } = await supabase.from("modules").update(processed, { id });
 
     if (error) throw error;
 
     return mod?.[0];
   });
 
-export const createQuiz = createServerFn({ method: 'POST' })
+export const createQuiz = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
@@ -416,27 +416,27 @@ export const createQuiz = createServerFn({ method: 'POST' })
             z.object({
               optionText: z.string().min(1),
               isCorrect: z.boolean(),
-            })
+            }),
           ),
-        })
+        }),
       ),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, moduleId, passMark, questions } = data;
 
-    const { data: existingQuiz } = await query('quizzes', {
-      select: 'id',
+    const { data: existingQuiz } = await query("quizzes", {
+      select: "id",
       filters: { module_id: moduleId },
       single: true,
     });
 
     if (existingQuiz) {
-      throw new Error('Quiz already exists for this module');
+      throw new Error("Quiz already exists for this module");
     }
 
     const { data: quiz, error: quizError } = await supabase
-      .from('quizzes')
+      .from("quizzes")
       .insert({ module_id: moduleId, pass_mark: passMark });
 
     if (quizError) throw quizError;
@@ -445,7 +445,7 @@ export const createQuiz = createServerFn({ method: 'POST' })
 
     for (const q of questions) {
       const { data: question, error: qError } = await supabase
-        .from('quiz_questions')
+        .from("quiz_questions")
         .insert({ quiz_id: quizId, question_text: q.questionText, order: q.order });
 
       if (qError) throw qError;
@@ -453,22 +453,20 @@ export const createQuiz = createServerFn({ method: 'POST' })
       const questionId = question?.[0]?.id;
 
       if (q.options.length > 0) {
-        const { error: oError } = await supabase
-          .from('quiz_options')
-          .insert(
-            q.options.map((o) => ({
-              question_id: questionId,
-              option_text: o.optionText,
-              is_correct: o.isCorrect,
-            }))
-          );
+        const { error: oError } = await supabase.from("quiz_options").insert(
+          q.options.map((o) => ({
+            question_id: questionId,
+            option_text: o.optionText,
+            is_correct: o.isCorrect,
+          })),
+        );
 
         if (oError) throw oError;
       }
     }
 
-    const { data: fullQuiz } = await query('quizzes', {
-      select: '*, quiz_questions(*, quiz_options(*))',
+    const { data: fullQuiz } = await query("quizzes", {
+      select: "*, quiz_questions(*, quiz_options(*))",
       filters: { id: quizId },
       single: true,
     });
@@ -476,40 +474,41 @@ export const createQuiz = createServerFn({ method: 'POST' })
     return fullQuiz;
   });
 
-export const addResource = createServerFn({ method: 'POST' })
+export const addResource = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       title: z.string().min(1),
       url: z.string().url(),
       type: z.string().optional(),
-      ecosystem: z.enum(['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL']).default('GENERAL'),
+      ecosystem: z
+        .enum(["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"])
+        .default("GENERAL"),
       isPublished: z.boolean().default(false),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const { accessToken, ...resourceData } = data;
 
-    const { data: resource, error } = await supabase
-      .from('resources')
-      .insert({
-        title: resourceData.title,
-        url: resourceData.url,
-        type: resourceData.type,
-        ecosystem: resourceData.ecosystem,
-        is_published: resourceData.isPublished,
-      });
+    const { data: resource, error } = await supabase.from("resources").insert({
+      title: resourceData.title,
+      url: resourceData.url,
+      type: resourceData.type,
+      ecosystem: resourceData.ecosystem,
+      is_published: resourceData.isPublished,
+    });
 
     if (error) throw error;
 
     return resource?.[0];
   });
 
-export const getTrackBySlug = createServerFn({ method: 'GET' })
+export const getTrackBySlug = createServerFn({ method: "GET" })
   .inputValidator(z.object({ slug: z.string() }))
   .handler(async ({ data }) => {
-    const { data: tracks, error } = await query('tracks', {
-      select: '*, modules(id, title, description, content, phase, order, is_published, quizzes(id, pass_mark, quiz_questions(id, question_text)))',
+    const { data: tracks, error } = await query("tracks", {
+      select:
+        "*, modules(id, title, description, content, phase, order, is_published, quizzes(id, pass_mark, quiz_questions(id, question_text)))",
       filters: { is_published: true },
     });
 
@@ -518,32 +517,36 @@ export const getTrackBySlug = createServerFn({ method: 'GET' })
     function slugify(text: string) {
       return text
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
     }
 
     const track = (tracks || []).find((t: any) => slugify(t.title) === data.slug);
 
-    if (!track) throw new Error('Track not found');
+    if (!track) throw new Error("Track not found");
 
     const allModules = (track.modules || []).filter((m: any) => m.is_published);
     allModules.sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
 
     const phases: Record<number, any[]> = { 0: [], 1: [], 2: [], 3: [], 4: [] };
     const PHASE_NAMES: Record<number, string> = {
-      0: 'Foundation',
-      1: 'Core Concepts',
-      2: 'Advanced',
-      3: 'Mastery',
-      4: 'Capstone',
+      0: "Foundation",
+      1: "Core Concepts",
+      2: "Advanced",
+      3: "Mastery",
+      4: "Capstone",
     };
 
     for (const mod of allModules) {
-      const existingPhase = typeof mod.phase === 'number' ? mod.phase : null;
-      const computedPhase = allModules.length > 0
-        ? Math.min(4, Math.floor(((mod.order ?? 0) - 1) / Math.ceil(allModules.length / 5)))
-        : 0;
-      const p = existingPhase !== null ? Math.max(0, Math.min(4, existingPhase)) : Math.max(0, computedPhase);
+      const existingPhase = typeof mod.phase === "number" ? mod.phase : null;
+      const computedPhase =
+        allModules.length > 0
+          ? Math.min(4, Math.floor(((mod.order ?? 0) - 1) / Math.ceil(allModules.length / 5)))
+          : 0;
+      const p =
+        existingPhase !== null
+          ? Math.max(0, Math.min(4, existingPhase))
+          : Math.max(0, computedPhase);
       phases[p].push(mod);
     }
 
@@ -566,15 +569,15 @@ export const getTrackBySlug = createServerFn({ method: 'GET' })
     };
   });
 
-export const deleteResource = createServerFn({ method: 'POST' })
+export const deleteResource = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
       accessToken: z.string(),
       id: z.string().uuid(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
-    const { error } = await supabase.from('resources').delete({ id: data.id });
+    const { error } = await supabase.from("resources").delete({ id: data.id });
 
     if (error) throw error;
 

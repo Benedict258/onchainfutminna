@@ -1,33 +1,33 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
-import { useAuthStore } from '@/stores/auth-store';
-import { apiGetSettings, apiUpsertSettings } from '@/lib/api-client';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Save } from 'lucide-react';
-import { toast } from 'sonner';
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiGetSettings, apiUpsertSettings } from "@/lib/api-client";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Save } from "lucide-react";
+import { toast } from "sonner";
 
-export const Route = createFileRoute('/admin/settings')({
+export const Route = createFileRoute("/admin/settings")({
   component: AdminSettings,
 });
 
 const SETTING_KEYS = [
-  'club_name',
-  'club_description',
-  'contact_email',
-  'twitter_url',
-  'discord_url',
-  'telegram_url',
-  'github_url',
-  'instagram_url',
-  'linkedin_url',
-  'youtube_url',
-  'maintenance_mode',
+  "club_name",
+  "club_description",
+  "contact_email",
+  "twitter_url",
+  "discord_url",
+  "telegram_url",
+  "github_url",
+  "instagram_url",
+  "linkedin_url",
+  "youtube_url",
+  "maintenance_mode",
 ];
 
 interface SettingsForm {
@@ -35,17 +35,17 @@ interface SettingsForm {
 }
 
 const defaultForm: SettingsForm = {
-  club_name: '',
-  club_description: '',
-  contact_email: '',
-  twitter_url: '',
-  discord_url: '',
-  telegram_url: '',
-  github_url: '',
-  instagram_url: '',
-  linkedin_url: '',
-  youtube_url: '',
-  maintenance_mode: 'false',
+  club_name: "",
+  club_description: "",
+  contact_email: "",
+  twitter_url: "",
+  discord_url: "",
+  telegram_url: "",
+  github_url: "",
+  instagram_url: "",
+  linkedin_url: "",
+  youtube_url: "",
+  maintenance_mode: "false",
 };
 
 function AdminSettings() {
@@ -54,7 +54,7 @@ function AdminSettings() {
   const [form, setForm] = useState<SettingsForm>(defaultForm);
 
   const { data: settings, isLoading } = useQuery({
-    queryKey: ['admin-settings'],
+    queryKey: ["admin-settings"],
     queryFn: () => apiGetSettings(),
     enabled: !!accessToken,
   });
@@ -76,13 +76,13 @@ function AdminSettings() {
       apiUpsertSettings(
         Object.entries(form)
           .filter(([key]) => SETTING_KEYS.includes(key))
-          .map(([key, value]) => ({ key, value }))
+          .map(([key, value]) => ({ key, value })),
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-settings'] });
-      toast.success('Settings saved');
+      queryClient.invalidateQueries({ queryKey: ["admin-settings"] });
+      toast.success("Settings saved");
     },
-    onError: () => toast.error('Failed to save settings'),
+    onError: () => toast.error("Failed to save settings"),
   });
 
   if (isLoading) {
@@ -115,7 +115,7 @@ function AdminSettings() {
         </div>
         <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
           <Save className="mr-2 h-4 w-4" />
-          {saveMutation.isPending ? 'Saving...' : 'Save Changes'}
+          {saveMutation.isPending ? "Saving..." : "Save Changes"}
         </Button>
       </div>
 
@@ -237,7 +237,7 @@ function AdminSettings() {
               </p>
             </div>
             <Switch
-              checked={form.maintenance_mode === 'true'}
+              checked={form.maintenance_mode === "true"}
               onCheckedChange={(v) => setForm({ ...form, maintenance_mode: v.toString() })}
             />
           </div>
@@ -248,11 +248,9 @@ function AdminSettings() {
       <div className="flex justify-end">
         <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
           <Save className="mr-2 h-4 w-4" />
-          {saveMutation.isPending ? 'Saving...' : 'Save Changes'}
+          {saveMutation.isPending ? "Saving..." : "Save Changes"}
         </Button>
       </div>
     </div>
   );
 }
-
-

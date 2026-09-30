@@ -2,11 +2,7 @@ const SITE_URL = process.env.SITE_URL || "https://futminna.club";
 const SITE_NAME = "Blockchain Club FUTMinna";
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-default.png`;
 
-export function generateMetaTags(
-  title: string,
-  description: string,
-  image?: string
-) {
+export function generateMetaTags(title: string, description: string, image?: string) {
   const ogImage = image || DEFAULT_OG_IMAGE;
   const fullTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
 
@@ -30,11 +26,7 @@ export function generateMetaTags(
   };
 }
 
-export function generateOpenGraph(
-  title: string,
-  description: string,
-  image?: string
-) {
+export function generateOpenGraph(title: string, description: string, image?: string) {
   const ogImage = image || DEFAULT_OG_IMAGE;
 
   return {
@@ -59,10 +51,7 @@ export function generateOrganizationJsonLd() {
     logo: `${SITE_URL}/logo.png`,
     description:
       "FUTMinna's premier hub for blockchain innovation, decentralized development, and academic excellence.",
-    sameAs: [
-      "https://twitter.com/bcf_futminna",
-      "https://github.com/blockchainclub-futminna",
-    ],
+    sameAs: ["https://twitter.com/bcf_futminna", "https://github.com/blockchainclub-futminna"],
     address: {
       "@type": "PostalAddress",
       addressLocality: "Minna",

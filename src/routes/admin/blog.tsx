@@ -1,8 +1,8 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { useAuthStore } from '@/stores/auth-store';
-import { apiQuery, apiInsert, apiUpdate, apiDelete, apiAward } from '@/lib/api-client';
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiQuery, apiInsert, apiUpdate, apiDelete, apiAward } from "@/lib/api-client";
 import {
   Table,
   TableBody,
@@ -10,20 +10,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,9 +33,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+} from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   Pagination,
   PaginationContent,
@@ -43,11 +43,11 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
-import { Plus, Pencil, Trash2, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
+} from "@/components/ui/pagination";
+import { Plus, Pencil, Trash2, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
-export const Route = createFileRoute('/admin/blog')({
+export const Route = createFileRoute("/admin/blog")({
   component: AdminBlog,
 });
 
@@ -63,14 +63,14 @@ interface BlogForm {
 }
 
 const defaultForm: BlogForm = {
-  title: '',
-  slug: '',
-  excerpt: '',
-  content: '',
-  coverImage: '',
-  category: '',
+  title: "",
+  slug: "",
+  excerpt: "",
+  content: "",
+  coverImage: "",
+  category: "",
   isFeatured: false,
-  status: 'DRAFT',
+  status: "DRAFT",
 };
 
 function AdminBlog() {
@@ -84,28 +84,35 @@ function AdminBlog() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const formErrors = {
-    title: touched.title && !form.title ? 'Title is required' : '',
-    slug: touched.slug && !form.slug ? 'Slug is required' : '',
+    title: touched.title && !form.title ? "Title is required" : "",
+    slug: touched.slug && !form.slug ? "Slug is required" : "",
   };
   const isFormValid = !!form.title && !!form.slug;
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['admin-blog', page],
+    queryKey: ["admin-blog", page],
     queryFn: async () => {
       const from = (page - 1) * 20;
-      const res = await apiQuery('blog_posts', {
-        select: 'id,title,content,slug,excerpt,cover_image,category,is_featured,status,published_at,created_at,author_id,users(id,profiles(full_name,avatar_url)),blog_post_tags(*,tags(id,name))',
-        order: { column: 'published_at', ascending: false },
+      const res = await apiQuery("blog_posts", {
+        select:
+          "id,title,content,slug,excerpt,cover_image,category,is_featured,status,published_at,created_at,author_id,users(id,profiles(full_name,avatar_url)),blog_post_tags(*,tags(id,name))",
+        order: { column: "published_at", ascending: false },
         range: [from, from + 19],
-        count: 'exact',
+        count: "exact",
       });
-      return { posts: res.data || [], total: res.count || 0, page, limit: 20, totalPages: Math.ceil((res.count || 0) / 20) };
+      return {
+        posts: res.data || [],
+        total: res.count || 0,
+        page,
+        limit: 20,
+        totalPages: Math.ceil((res.count || 0) / 20),
+      };
     },
   });
 
   const createMutation = useMutation({
     mutationFn: () =>
-      apiInsert('blog_posts', {
+      apiInsert("blog_posts", {
         title: form.title,
         slug: form.slug,
         excerpt: form.excerpt || undefined,
@@ -116,68 +123,77 @@ function AdminBlog() {
         status: form.status,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-blog'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
       setDialogOpen(false);
       setForm(defaultForm);
-      toast.success('Blog post created');
+      toast.success("Blog post created");
     },
-    onError: () => toast.error('Failed to create blog post'),
+    onError: () => toast.error("Failed to create blog post"),
   });
 
   const updateMutation = useMutation({
     mutationFn: () =>
-      apiUpdate('blog_posts', {
-        title: form.title,
-        slug: form.slug,
-        excerpt: form.excerpt || undefined,
-        content: form.content || undefined,
-        cover_image: form.coverImage || undefined,
-        category: form.category || undefined,
-        is_featured: form.isFeatured,
-        status: form.status,
-      }, { id: editItem?.id as string }),
+      apiUpdate(
+        "blog_posts",
+        {
+          title: form.title,
+          slug: form.slug,
+          excerpt: form.excerpt || undefined,
+          content: form.content || undefined,
+          cover_image: form.coverImage || undefined,
+          category: form.category || undefined,
+          is_featured: form.isFeatured,
+          status: form.status,
+        },
+        { id: editItem?.id as string },
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-blog'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
       setDialogOpen(false);
       setEditItem(null);
       setForm(defaultForm);
-      toast.success('Blog post updated');
+      toast.success("Blog post updated");
     },
-    onError: () => toast.error('Failed to update blog post'),
+    onError: () => toast.error("Failed to update blog post"),
   });
 
   const publishMutation = useMutation({
     mutationFn: (variables: { id: string; publish: boolean }) =>
-      apiUpdate('blog_posts', {
-        status: variables.publish ? 'PUBLISHED' : 'DRAFT',
-        published_at: variables.publish ? new Date().toISOString() : undefined,
-      }, { id: variables.id }),
+      apiUpdate(
+        "blog_posts",
+        {
+          status: variables.publish ? "PUBLISHED" : "DRAFT",
+          published_at: variables.publish ? new Date().toISOString() : undefined,
+        },
+        { id: variables.id },
+      ),
     onSuccess: async (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['admin-blog'] });
-      toast.success('Post status updated');
+      queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
+      toast.success("Post status updated");
       if (variables.publish) {
-        try { await apiAward('blog-published', variables.id); } catch {}
+        try {
+          await apiAward("blog-published", variables.id);
+        } catch {}
       }
     },
-    onError: () => toast.error('Failed to update post status'),
+    onError: () => toast.error("Failed to update post status"),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: () =>
-      apiDelete('blog_posts', { id: deleteItem?.id as string }),
+    mutationFn: () => apiDelete("blog_posts", { id: deleteItem?.id as string }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-blog'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
       setDeleteItem(null);
-      toast.success('Blog post deleted');
+      toast.success("Blog post deleted");
     },
-    onError: () => toast.error('Failed to delete blog post'),
+    onError: () => toast.error("Failed to delete blog post"),
   });
 
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   };
 
   const openCreate = () => {
@@ -192,12 +208,12 @@ function AdminBlog() {
     setForm({
       title: post.title as string,
       slug: post.slug as string,
-      excerpt: (post.excerpt as string) || '',
-      content: (post.content as string) || '',
-      coverImage: (post.cover_image as string) || '',
-      category: (post.category as string) || '',
+      excerpt: (post.excerpt as string) || "",
+      content: (post.content as string) || "",
+      coverImage: (post.cover_image as string) || "",
+      category: (post.category as string) || "",
       isFeatured: (post.is_featured as boolean) || false,
-      status: (post.status as 'DRAFT' | 'PUBLISHED') || 'DRAFT',
+      status: (post.status as "DRAFT" | "PUBLISHED") || "DRAFT",
     });
     setDialogOpen(true);
   };
@@ -247,7 +263,9 @@ function AdminBlog() {
                     <AlertTitle>Failed to load blog posts</AlertTitle>
                     <AlertDescription className="flex items-center justify-between">
                       <span>Could not fetch blog posts. Please try again.</span>
-                      <Button variant="outline" size="sm" onClick={() => refetch()}>Retry</Button>
+                      <Button variant="outline" size="sm" onClick={() => refetch()}>
+                        Retry
+                      </Button>
                     </AlertDescription>
                   </Alert>
                 </TableCell>
@@ -257,7 +275,7 @@ function AdminBlog() {
                 <TableRow key={post.id}>
                   <TableCell className="font-medium">{post.title}</TableCell>
                   <TableCell className="text-muted-foreground">
-                    {post.users?.profiles?.full_name || 'Unknown'}
+                    {post.users?.profiles?.full_name || "Unknown"}
                   </TableCell>
                   <TableCell>
                     {post.category ? (
@@ -267,8 +285,8 @@ function AdminBlog() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={post.status === 'PUBLISHED' ? 'default' : 'secondary'}>
-                      {post.status || 'DRAFT'}
+                    <Badge variant={post.status === "PUBLISHED" ? "default" : "secondary"}>
+                      {post.status || "DRAFT"}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
@@ -276,11 +294,11 @@ function AdminBlog() {
                       ? new Date(post.published_at).toLocaleDateString()
                       : post.created_at
                         ? new Date(post.created_at).toLocaleDateString()
-                        : ''}
+                        : ""}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      {post.status === 'PUBLISHED' ? (
+                      {post.status === "PUBLISHED" ? (
                         <Button
                           variant="ghost"
                           size="icon"
@@ -335,7 +353,7 @@ function AdminBlog() {
             <PaginationItem>
               <PaginationPrevious
                 onClick={() => setPage(Math.max(1, page - 1))}
-                className={page === 1 ? 'pointer-events-none opacity-50' : ''}
+                className={page === 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
             {Array.from({ length: Math.min(5, data.totalPages) }).map((_, i) => {
@@ -352,7 +370,7 @@ function AdminBlog() {
             <PaginationItem>
               <PaginationNext
                 onClick={() => setPage(Math.min(data.totalPages, page + 1))}
-                className={page === data.totalPages ? 'pointer-events-none opacity-50' : ''}
+                className={page === data.totalPages ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
           </PaginationContent>
@@ -363,9 +381,9 @@ function AdminBlog() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editItem ? 'Edit Post' : 'New Post'}</DialogTitle>
+            <DialogTitle>{editItem ? "Edit Post" : "New Post"}</DialogTitle>
             <DialogDescription>
-              {editItem ? 'Update blog post' : 'Create a new blog post'}
+              {editItem ? "Update blog post" : "Create a new blog post"}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -383,9 +401,11 @@ function AdminBlog() {
                 }}
                 onBlur={() => setTouched({ ...touched, title: true })}
                 placeholder="Post title"
-                className={formErrors.title ? 'border-destructive' : ''}
+                className={formErrors.title ? "border-destructive" : ""}
               />
-              {formErrors.title && <p className="text-xs text-destructive mt-1">{formErrors.title}</p>}
+              {formErrors.title && (
+                <p className="text-xs text-destructive mt-1">{formErrors.title}</p>
+              )}
             </div>
             <div>
               <Label>Slug *</Label>
@@ -394,9 +414,11 @@ function AdminBlog() {
                 onChange={(e) => setForm({ ...form, slug: e.target.value })}
                 onBlur={() => setTouched({ ...touched, slug: true })}
                 placeholder="post-slug"
-                className={formErrors.slug ? 'border-destructive' : ''}
+                className={formErrors.slug ? "border-destructive" : ""}
               />
-              {formErrors.slug && <p className="text-xs text-destructive mt-1">{formErrors.slug}</p>}
+              {formErrors.slug && (
+                <p className="text-xs text-destructive mt-1">{formErrors.slug}</p>
+              )}
             </div>
             <div>
               <Label>Excerpt</Label>
@@ -444,8 +466,8 @@ function AdminBlog() {
               </div>
               <div className="flex items-center gap-2">
                 <Switch
-                  checked={form.status === 'PUBLISHED'}
-                  onCheckedChange={(v) => setForm({ ...form, status: v ? 'PUBLISHED' : 'DRAFT' })}
+                  checked={form.status === "PUBLISHED"}
+                  onCheckedChange={(v) => setForm({ ...form, status: v ? "PUBLISHED" : "DRAFT" })}
                 />
                 <Label>Published</Label>
               </div>
@@ -458,7 +480,7 @@ function AdminBlog() {
                 onClick={() => (editItem ? updateMutation.mutate() : createMutation.mutate())}
                 disabled={!isFormValid}
               >
-                {editItem ? 'Update' : 'Create'}
+                {editItem ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -476,14 +498,10 @@ function AdminBlog() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteMutation.mutate()}>
-              Delete
-            </AlertDialogAction>
+            <AlertDialogAction onClick={() => deleteMutation.mutate()}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
   );
 }
-
-

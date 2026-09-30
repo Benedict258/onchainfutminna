@@ -36,9 +36,8 @@ export function AdminGuard({ children }: AuthGuardProps) {
   }, [isHydrated, isAuthenticated, user, router]);
 
   if (!isHydrated) return null;
-  if (!isAuthenticated || !user || (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN")) return null;
+  if (!isAuthenticated || !user || (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN"))
+    return null;
 
   return <>{children}</>;
 }
-
-

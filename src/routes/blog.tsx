@@ -7,11 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   FileText,
   ArrowRight,
@@ -25,12 +21,7 @@ import {
 } from "lucide-react";
 import { getBlogPosts } from "@/lib/api/blog.server";
 
-type CategoryFilter =
-  | "all"
-  | "Announcement"
-  | "Tutorial"
-  | "Recap"
-  | "Build in Public";
+type CategoryFilter = "all" | "Announcement" | "Tutorial" | "Recap" | "Build in Public";
 
 const CATEGORY_LABELS: Record<string, string> = {
   Announcement: "Announcements",
@@ -59,10 +50,7 @@ function BlogSkeleton() {
   return (
     <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-lg border border-border bg-card overflow-hidden"
-        >
+        <div key={i} className="rounded-lg border border-border bg-card overflow-hidden">
           <Skeleton className="aspect-[16/9] w-full rounded-none" />
           <div className="p-5 space-y-3">
             <Skeleton className="h-4 w-20 rounded-full" />
@@ -110,12 +98,8 @@ function BlogPage() {
   });
 
   const posts = data?.posts ?? [];
-  const featured = posts.filter(
-    (p: { isFeatured: boolean }) => p.isFeatured
-  );
-  const regular = posts.filter(
-    (p: { isFeatured: boolean }) => !p.isFeatured
-  );
+  const featured = posts.filter((p: { isFeatured: boolean }) => p.isFeatured);
+  const regular = posts.filter((p: { isFeatured: boolean }) => !p.isFeatured);
 
   return (
     <div className="bg-background">
@@ -130,8 +114,8 @@ function BlogPage() {
             <span className="text-primary">Insights</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Event recaps, tutorials, build logs, and ecosystem deep-dives from
-            the BlockchainClub FUTMinna community.
+            Event recaps, tutorials, build logs, and ecosystem deep-dives from the BlockchainClub
+            FUTMinna community.
           </p>
         </div>
       </section>
@@ -139,10 +123,7 @@ function BlogPage() {
       {/* CATEGORY FILTER */}
       <section className="border-b border-border bg-surface-low">
         <div className="mx-auto max-w-[1400px] px-6 py-4">
-          <Tabs
-            value={category}
-            onValueChange={(v) => setCategory(v as CategoryFilter)}
-          >
+          <Tabs value={category} onValueChange={(v) => setCategory(v as CategoryFilter)}>
             <TabsList className="bg-background/50">
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="Announcement">Announcements</TabsTrigger>
@@ -161,9 +142,7 @@ function BlogPage() {
         ) : posts.length === 0 ? (
           <div className="text-center py-16">
             <FileText className="mx-auto h-12 w-12 text-muted-foreground/40" />
-            <p className="mt-4 text-lg text-muted-foreground">
-              No posts found.
-            </p>
+            <p className="mt-4 text-lg text-muted-foreground">No posts found.</p>
             <p className="mt-2 text-sm text-muted-foreground/60">
               Check back soon for new content!
             </p>
@@ -198,13 +177,11 @@ function BlogPage() {
                               variant="outline"
                               className={`text-[10px] ${CATEGORY_COLORS[post.category] || ""}`}
                             >
-                              {CATEGORY_LABELS[post.category] ||
-                                post.category}
+                              {CATEGORY_LABELS[post.category] || post.category}
                             </Badge>
                           )}
                           <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            3 min read
+                            <Clock className="h-3 w-3" />3 min read
                           </span>
                         </div>
                         <h3 className="mt-4 text-headline-lg group-hover:text-primary transition-colors">
@@ -219,11 +196,7 @@ function BlogPage() {
                         )}
                         <div className="mt-5 flex items-center gap-3">
                           <Avatar className="h-8 w-8">
-                            <AvatarImage
-                              src={
-                                post.author?.profile?.avatarUrl || undefined
-                              }
-                            />
+                            <AvatarImage src={post.author?.profile?.avatarUrl || undefined} />
                             <AvatarFallback className="text-xs">
                               {post.author?.profile?.fullName
                                 ?.split(" ")
@@ -247,8 +220,7 @@ function BlogPage() {
                           className="mt-5 self-start text-xs"
                         >
                           <Link to="/blog/$slug" params={{ slug: post.slug }}>
-                            Read More{" "}
-                            <ArrowRight className="ml-1 h-3 w-3" />
+                            Read More <ArrowRight className="ml-1 h-3 w-3" />
                           </Link>
                         </Button>
                       </div>
@@ -260,9 +232,7 @@ function BlogPage() {
 
             {/* POST GRID */}
             <h2 className="text-headline-md mb-5">
-              {category === "all"
-                ? "All Posts"
-                : CATEGORY_LABELS[category] || category}
+              {category === "all" ? "All Posts" : CATEGORY_LABELS[category] || category}
             </h2>
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {(featured.length > 0 ? regular : posts).map((post) => (
@@ -306,11 +276,7 @@ function BlogPage() {
                     <div className="mt-4 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar className="h-6 w-6">
-                          <AvatarImage
-                            src={
-                              post.author?.profile?.avatarUrl || undefined
-                            }
-                          />
+                          <AvatarImage src={post.author?.profile?.avatarUrl || undefined} />
                           <AvatarFallback className="text-[9px]">
                             {post.author?.profile?.fullName
                               ?.split(" ")
@@ -322,13 +288,10 @@ function BlogPage() {
                           {post.author?.profile?.fullName || "Anonymous"}
                         </span>
                       </div>
-                      <Button
-                        asChild
-                        variant="ghost"
-                        size="sm"
-                        className="text-xs"
-                      >
-                        <Link to="/blog/$slug" params={{ slug: post.slug }}>Read →</Link>
+                      <Button asChild variant="ghost" size="sm" className="text-xs">
+                        <Link to="/blog/$slug" params={{ slug: post.slug }}>
+                          Read →
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -377,14 +340,10 @@ function BlogPage() {
           <Users className="mx-auto h-10 w-10 text-primary" />
           <h2 className="mt-6 text-headline-lg">WANT TO CONTRIBUTE?</h2>
           <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
-            Share your knowledge with the community. Write a tutorial, recap an
-            event, or document your build journey.
+            Share your knowledge with the community. Write a tutorial, recap an event, or document
+            your build journey.
           </p>
-          <Button
-            asChild
-            size="lg"
-            className="mt-8 font-semibold tracking-wide"
-          >
+          <Button asChild size="lg" className="mt-8 font-semibold tracking-wide">
             <Link to="/join">
               Start Writing <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -394,5 +353,3 @@ function BlogPage() {
     </div>
   );
 }
-
-

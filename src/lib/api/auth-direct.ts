@@ -74,7 +74,7 @@ export async function register(data: {
   });
 
   const profileId = randomUUID();
-  
+
   // Parse DD-MM date of birth and store as ISO with dummy year 2000
   let dobIso = null;
   if (data.dateOfBirth) {
@@ -107,8 +107,8 @@ export async function register(data: {
     level: levelMap[data.level] || data.level,
     experience_level: data.experienceLevel,
     fun_fact: data.funFact || null,
-    x_link: normalizeSocial(data.xLink, 'https://x.com/') || null,
-    github_link: normalizeSocial(data.githubLink, 'https://github.com/') || null,
+    x_link: normalizeSocial(data.xLink, "https://x.com/") || null,
+    github_link: normalizeSocial(data.githubLink, "https://github.com/") || null,
     portfolio_link: data.portfolioLink || null,
     created_at: now,
     updated_at: now,

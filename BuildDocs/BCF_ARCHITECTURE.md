@@ -1,5 +1,7 @@
 # Architecture Document
+
 ## Blockchain Club FUTMINNA — Community Platform
+
 **Version:** 1.0
 **Prepared by:** Benedict Isaac (Technical Lead, Blockchain Club FUTMINNA)
 **Date:** June 2026
@@ -12,6 +14,7 @@
 The Blockchain Club FUTMINNA platform is built as a **monorepo full-stack web application** using a modern JAMstack-adjacent architecture. It separates concerns cleanly across a React frontend, a Node.js/Express API backend, and a managed PostgreSQL database — all deployable on free-tier or low-cost infrastructure to match the club's current budget constraints.
 
 The system is designed to:
+
 - Serve fast, SEO-optimised public pages to unauthenticated visitors
 - Deliver authenticated, personalised experiences to registered members
 - Give admins a full CMS-like dashboard without touching code
@@ -64,56 +67,56 @@ The system is designed to:
 
 ### 3.1 Frontend
 
-| Technology | Choice | Reason |
-|---|---|---|
-| Framework | **Next.js 14 (App Router)** | SSR/SSG for SEO, fast public pages, file-based routing, API routes |
-| Language | **TypeScript** | Type safety across the codebase |
-| Styling | **Tailwind CSS** | Utility-first, fast to build, easy to maintain brand tokens |
-| UI Components | **shadcn/ui** | Accessible, unstyled-base components — customisable to brand |
-| State Management | **Zustand** | Lightweight global state (auth session, user profile) |
-| Data Fetching | **TanStack Query (React Query)** | Server state, caching, background refetching |
-| Forms | **React Hook Form + Zod** | Form handling + schema validation |
-| Animations | **Framer Motion** | Hero animations, page transitions, counter effects |
-| Rich Text | **TipTap** | Blog post editor in admin dashboard |
-| Charts | **Recharts** | Admin analytics dashboard |
-| Icons | **Lucide React** | Consistent iconography |
+| Technology       | Choice                           | Reason                                                             |
+| ---------------- | -------------------------------- | ------------------------------------------------------------------ |
+| Framework        | **Next.js 14 (App Router)**      | SSR/SSG for SEO, fast public pages, file-based routing, API routes |
+| Language         | **TypeScript**                   | Type safety across the codebase                                    |
+| Styling          | **Tailwind CSS**                 | Utility-first, fast to build, easy to maintain brand tokens        |
+| UI Components    | **shadcn/ui**                    | Accessible, unstyled-base components — customisable to brand       |
+| State Management | **Zustand**                      | Lightweight global state (auth session, user profile)              |
+| Data Fetching    | **TanStack Query (React Query)** | Server state, caching, background refetching                       |
+| Forms            | **React Hook Form + Zod**        | Form handling + schema validation                                  |
+| Animations       | **Framer Motion**                | Hero animations, page transitions, counter effects                 |
+| Rich Text        | **TipTap**                       | Blog post editor in admin dashboard                                |
+| Charts           | **Recharts**                     | Admin analytics dashboard                                          |
+| Icons            | **Lucide React**                 | Consistent iconography                                             |
 
 ### 3.2 Backend
 
-| Technology | Choice | Reason |
-|---|---|---|
-| Runtime | **Node.js** | JavaScript full-stack consistency |
-| Framework | **Express.js** | Lightweight, flexible, well-understood |
-| Language | **TypeScript** | Shared types with frontend via a shared package |
-| ORM | **Prisma** | Type-safe DB queries, clean schema migrations |
-| Auth | **JWT (access + refresh tokens)** | Stateless, scalable, no vendor lock-in |
-| Password Hashing | **bcryptjs** | Industry standard |
-| File Uploads | **Multer + Cloudinary SDK** | Handle multipart form uploads and CDN storage |
-| Email | **Resend SDK** | Simple transactional email, generous free tier |
-| Validation | **Zod** | Shared validation schemas between FE and BE |
-| API Docs | **Swagger / OpenAPI** | Auto-document all endpoints |
+| Technology       | Choice                            | Reason                                          |
+| ---------------- | --------------------------------- | ----------------------------------------------- |
+| Runtime          | **Node.js**                       | JavaScript full-stack consistency               |
+| Framework        | **Express.js**                    | Lightweight, flexible, well-understood          |
+| Language         | **TypeScript**                    | Shared types with frontend via a shared package |
+| ORM              | **Prisma**                        | Type-safe DB queries, clean schema migrations   |
+| Auth             | **JWT (access + refresh tokens)** | Stateless, scalable, no vendor lock-in          |
+| Password Hashing | **bcryptjs**                      | Industry standard                               |
+| File Uploads     | **Multer + Cloudinary SDK**       | Handle multipart form uploads and CDN storage   |
+| Email            | **Resend SDK**                    | Simple transactional email, generous free tier  |
+| Validation       | **Zod**                           | Shared validation schemas between FE and BE     |
+| API Docs         | **Swagger / OpenAPI**             | Auto-document all endpoints                     |
 
 ### 3.3 Database
 
-| Technology | Choice | Reason |
-|---|---|---|
-| Database | **PostgreSQL (via Supabase)** | Relational, robust, free tier available |
-| ORM | **Prisma** | Schema-first, type-safe, great migration tooling |
-| Storage | **Supabase Storage** | Profile photos, event media, project assets |
+| Technology | Choice                        | Reason                                           |
+| ---------- | ----------------------------- | ------------------------------------------------ |
+| Database   | **PostgreSQL (via Supabase)** | Relational, robust, free tier available          |
+| ORM        | **Prisma**                    | Schema-first, type-safe, great migration tooling |
+| Storage    | **Supabase Storage**          | Profile photos, event media, project assets      |
 
 ### 3.4 Infrastructure & DevOps
 
-| Concern | Tool | Notes |
-|---|---|---|
-| Frontend Hosting | **Vercel** | Free tier, auto-deploy from GitHub, edge network |
-| Backend Hosting | **Railway** | Free tier available, easy Node.js deploy |
-| Database | **Supabase** | Free tier PostgreSQL + Storage |
-| Email | **Resend** | 3,000 emails/month free |
-| File CDN | **Cloudinary** | 25GB free, image transformations |
-| Version Control | **GitHub** | Monorepo with PR-based workflow |
-| CI/CD | **GitHub Actions** | Lint, type-check, test on PR; auto-deploy on merge to main |
-| Environment Management | **dotenv** | `.env.local` for dev, Vercel/Railway env vars for production |
-| Domain | **Custom domain** (TBD) | e.g., `blockchainfutminna.xyz` or `onchainfutminna.dev` |
+| Concern                | Tool                    | Notes                                                        |
+| ---------------------- | ----------------------- | ------------------------------------------------------------ |
+| Frontend Hosting       | **Vercel**              | Free tier, auto-deploy from GitHub, edge network             |
+| Backend Hosting        | **Railway**             | Free tier available, easy Node.js deploy                     |
+| Database               | **Supabase**            | Free tier PostgreSQL + Storage                               |
+| Email                  | **Resend**              | 3,000 emails/month free                                      |
+| File CDN               | **Cloudinary**          | 25GB free, image transformations                             |
+| Version Control        | **GitHub**              | Monorepo with PR-based workflow                              |
+| CI/CD                  | **GitHub Actions**      | Lint, type-check, test on PR; auto-deploy on merge to main   |
+| Environment Management | **dotenv**              | `.env.local` for dev, Vercel/Railway env vars for production |
+| Domain                 | **Custom domain** (TBD) | e.g., `blockchainfutminna.xyz` or `onchainfutminna.dev`      |
 
 ---
 
@@ -693,12 +696,14 @@ model SiteSettings {
 ## 6. API Design
 
 ### 6.1 Base URL
+
 ```
 Production:  https://api.blockchainfutminna.xyz/v1
 Development: http://localhost:4000/v1
 ```
 
 ### 6.2 Authentication Headers
+
 ```
 Authorization: Bearer <access_token>
 ```
@@ -706,6 +711,7 @@ Authorization: Bearer <access_token>
 ### 6.3 Endpoint Summary
 
 #### Auth
+
 ```
 POST   /auth/register          Create account
 POST   /auth/login             Login, returns access + refresh tokens
@@ -717,6 +723,7 @@ GET    /auth/verify-email/:token  Activate account
 ```
 
 #### Members
+
 ```
 GET    /members                List all members (public, paginated)
 GET    /members/:id            Get member profile (public)
@@ -726,6 +733,7 @@ DELETE /members/:id            Delete account (super admin)
 ```
 
 #### Events
+
 ```
 GET    /events                 List events (filter: upcoming/past)
 GET    /events/:id             Get event detail
@@ -740,6 +748,7 @@ POST   /events/:id/resources   Add resource to event
 ```
 
 #### Learn
+
 ```
 GET    /tracks                 List all tracks
 GET    /tracks/:id             Get track + modules
@@ -760,6 +769,7 @@ DELETE /resources/:id          Remove resource
 ```
 
 #### Projects
+
 ```
 GET    /projects               List approved projects
 GET    /projects/:id           Get project detail
@@ -771,6 +781,7 @@ DELETE /projects/:id           Remove project
 ```
 
 #### Opportunities
+
 ```
 GET    /opportunities          List (filter: type, status, ecosystem)
 GET    /opportunities/:id      Get detail
@@ -781,6 +792,7 @@ DELETE /opportunities/:id      Delete
 ```
 
 #### Blog
+
 ```
 GET    /blog                   List published posts
 GET    /blog/:slug             Get post by slug
@@ -792,6 +804,7 @@ DELETE /blog/:id               Delete post
 ```
 
 #### Partners
+
 ```
 GET    /partners               List active partners
 --- Admin ---
@@ -801,6 +814,7 @@ DELETE /partners/:id           Remove partner
 ```
 
 #### Leaderboard
+
 ```
 GET    /leaderboard            Full ranked list (filter: period, ecosystem)
 GET    /leaderboard/:userId    Get single member entry
@@ -809,6 +823,7 @@ PATCH  /leaderboard/:userId    Manually adjust points
 ```
 
 #### Admin
+
 ```
 GET    /admin/analytics        Site-wide stats
 GET    /admin/members          Full member list with filters
@@ -869,23 +884,24 @@ PATCH  /admin/settings         Update site settings
 
 Points are awarded automatically by the API when triggering events occur.
 
-| Action | Points |
-|---|---|
-| Complete profile (all fields) | 50 |
-| Attend an event | 30 |
-| RSVP to an event | 5 |
-| Complete a module | 20 |
-| Pass a quiz (first attempt) | 30 |
-| Pass a quiz (retry) | 15 |
-| Complete a full track | 100 |
-| Submit a project (approved) | 80 |
-| Project featured by admin | 50 bonus |
-| Build-in-public post linked | 20 |
-| Manual admin award | variable |
+| Action                        | Points   |
+| ----------------------------- | -------- |
+| Complete profile (all fields) | 50       |
+| Attend an event               | 30       |
+| RSVP to an event              | 5        |
+| Complete a module             | 20       |
+| Pass a quiz (first attempt)   | 30       |
+| Pass a quiz (retry)           | 15       |
+| Complete a full track         | 100      |
+| Submit a project (approved)   | 80       |
+| Project featured by admin     | 50 bonus |
+| Build-in-public post linked   | 20       |
+| Manual admin award            | variable |
 
 Points are split into categories (eventPoints, learnPoints, buildPoints, communityPoints) for filtered leaderboard views.
 
 Badges are string identifiers stored in the `badges` array on LeaderboardEntry:
+
 - `top_builder` — most buildPoints this month
 - `top_learner` — most learnPoints this month
 - `event_champion` — attended 5+ events
@@ -896,31 +912,31 @@ Badges are string identifiers stored in the `badges` array on LeaderboardEntry:
 
 ## 9. Frontend Rendering Strategy
 
-| Page Type | Strategy | Reason |
-|---|---|---|
-| Home, About, Partners | **SSG** (Static Site Generation) | Content rarely changes, maximum performance |
-| Events, Blog, Projects, Opportunities | **ISR** (Incremental Static Regeneration, 60s) | Frequently updated, still fast |
-| Learn tracks (public view) | **SSR** | SEO important, content changes |
-| Member Profile | **SSR** | Dynamic, user-specific |
-| Leaderboard | **SSR + client polling** | Real-time feel, updates frequently |
-| Admin Dashboard | **CSR** (Client-Side Rendering) | No SEO needed, highly dynamic |
+| Page Type                             | Strategy                                       | Reason                                      |
+| ------------------------------------- | ---------------------------------------------- | ------------------------------------------- |
+| Home, About, Partners                 | **SSG** (Static Site Generation)               | Content rarely changes, maximum performance |
+| Events, Blog, Projects, Opportunities | **ISR** (Incremental Static Regeneration, 60s) | Frequently updated, still fast              |
+| Learn tracks (public view)            | **SSR**                                        | SEO important, content changes              |
+| Member Profile                        | **SSR**                                        | Dynamic, user-specific                      |
+| Leaderboard                           | **SSR + client polling**                       | Real-time feel, updates frequently          |
+| Admin Dashboard                       | **CSR** (Client-Side Rendering)                | No SEO needed, highly dynamic               |
 
 ---
 
 ## 10. Security Considerations
 
-| Concern | Mitigation |
-|---|---|
-| Authentication | JWT with short-lived access tokens (15min) + rotating refresh tokens |
-| Password storage | bcrypt with salt rounds = 12 |
-| SQL injection | Prisma ORM parameterised queries |
-| XSS | React's default escaping; DOMPurify for rendered Markdown |
-| CSRF | SameSite cookie policy on refresh token; CSRF token on state-changing forms |
-| Rate limiting | express-rate-limit on auth routes (5 req/15min) |
-| File uploads | Type validation + size limit (5MB) before Cloudinary upload |
-| Admin routes | Role middleware on all /admin/** routes |
-| Environment secrets | Never committed to git; managed via Vercel/Railway env vars |
-| HTTPS | Enforced on all production routes via Vercel/Railway |
+| Concern             | Mitigation                                                                  |
+| ------------------- | --------------------------------------------------------------------------- |
+| Authentication      | JWT with short-lived access tokens (15min) + rotating refresh tokens        |
+| Password storage    | bcrypt with salt rounds = 12                                                |
+| SQL injection       | Prisma ORM parameterised queries                                            |
+| XSS                 | React's default escaping; DOMPurify for rendered Markdown                   |
+| CSRF                | SameSite cookie policy on refresh token; CSRF token on state-changing forms |
+| Rate limiting       | express-rate-limit on auth routes (5 req/15min)                             |
+| File uploads        | Type validation + size limit (5MB) before Cloudinary upload                 |
+| Admin routes        | Role middleware on all /admin/** routes                                     |
+| Environment secrets | Never committed to git; managed via Vercel/Railway env vars                 |
+| HTTPS               | Enforced on all production routes via Vercel/Railway                        |
 
 ---
 
@@ -971,6 +987,7 @@ Badges are string identifiers stored in the `badges` array on LeaderboardEntry:
 ## 12. Phase Roadmap
 
 ### Phase 1 — MVP (Launch)
+
 - All 13 pages built and functional
 - Auth (register, login, email verify)
 - Member profiles
@@ -986,6 +1003,7 @@ Badges are string identifiers stored in the `badges` array on LeaderboardEntry:
 - Deployed on Vercel + Railway + Supabase
 
 ### Phase 2 — Enhancement
+
 - On-chain certifications (NFT/SBT on Sui or Solana)
 - Wallet connect login
 - Live event streaming integration
@@ -994,6 +1012,7 @@ Badges are string identifiers stored in the `badges` array on LeaderboardEntry:
 - Advanced analytics for admins
 
 ### Phase 3 — Ecosystem Expansion
+
 - Mobile app (React Native)
 - DAO governance for club decisions
 - Multi-club federation (other Nigerian university blockchain clubs)
@@ -1002,4 +1021,4 @@ Badges are string identifiers stored in the `badges` array on LeaderboardEntry:
 
 ---
 
-*End of Architecture Document v1.0*
+_End of Architecture Document v1.0_

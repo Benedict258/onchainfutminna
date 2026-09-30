@@ -1,16 +1,16 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/stores/auth-store';
-import { apiAnalytics } from '@/lib/api-client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiAnalytics } from "@/lib/api-client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, LineChart, Line, CartesianGrid } from 'recharts';
+} from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, LineChart, Line, CartesianGrid } from "recharts";
 import {
   Users,
   Calendar,
@@ -20,31 +20,31 @@ import {
   Briefcase,
   Handshake,
   TrendingUp,
-} from 'lucide-react';
+} from "lucide-react";
 
-export const Route = createFileRoute('/admin/analytics')({
+export const Route = createFileRoute("/admin/analytics")({
   component: AdminAnalytics,
 });
 
 const memberChartConfig = {
   members: {
-    label: 'Members',
-    color: 'hsl(var(--primary))',
+    label: "Members",
+    color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig;
 
 const activityChartConfig = {
   events: {
-    label: 'Events',
-    color: 'hsl(var(--primary))',
+    label: "Events",
+    color: "hsl(var(--primary))",
   },
   posts: {
-    label: 'Blog Posts',
-    color: 'hsl(142, 76%, 36%)',
+    label: "Blog Posts",
+    color: "hsl(142, 76%, 36%)",
   },
   projects: {
-    label: 'Projects',
-    color: 'hsl(262, 83%, 58%)',
+    label: "Projects",
+    color: "hsl(262, 83%, 58%)",
   },
 } satisfies ChartConfig;
 
@@ -52,7 +52,7 @@ function AdminAnalytics() {
   const { accessToken } = useAuthStore();
 
   const { data: analytics, isLoading } = useQuery({
-    queryKey: ['admin-analytics'],
+    queryKey: ["admin-analytics"],
     queryFn: () => apiAnalytics(),
     enabled: !!accessToken,
   });
@@ -88,23 +88,23 @@ function AdminAnalytics() {
   }
 
   const memberData = [
-    { label: 'Total', value: analytics?.totalMembers || 0 },
-    { label: 'Active', value: analytics?.activeMembers || 0 },
-    { label: 'Approved', value: analytics?.approvedMembers || 0 },
+    { label: "Total", value: analytics?.totalMembers || 0 },
+    { label: "Active", value: analytics?.activeMembers || 0 },
+    { label: "Approved", value: analytics?.approvedMembers || 0 },
   ];
 
   const roleData =
     analytics?.roleDistribution?.map((r: { role: string; _count: number }) => ({
-      role: r.role.replace('_', ' '),
+      role: r.role.replace("_", " "),
       count: r._count,
     })) || [];
 
   const activityData = [
-    { label: 'Events', value: analytics?.totalEvents || 0 },
-    { label: 'Blog Posts', value: analytics?.totalBlogPosts || 0 },
-    { label: 'Projects', value: analytics?.totalProjects || 0 },
-    { label: 'Tracks', value: analytics?.totalTracks || 0 },
-    { label: 'Opportunities', value: analytics?.totalOpportunities || 0 },
+    { label: "Events", value: analytics?.totalEvents || 0 },
+    { label: "Blog Posts", value: analytics?.totalBlogPosts || 0 },
+    { label: "Projects", value: analytics?.totalProjects || 0 },
+    { label: "Tracks", value: analytics?.totalTracks || 0 },
+    { label: "Opportunities", value: analytics?.totalOpportunities || 0 },
   ];
 
   return (
@@ -132,9 +132,7 @@ function AdminAnalytics() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Events
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Events</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -146,9 +144,7 @@ function AdminAnalytics() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Projects
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Projects</CardTitle>
             <FolderGit2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -160,9 +156,7 @@ function AdminAnalytics() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Blog Posts
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Blog Posts</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -206,9 +200,7 @@ function AdminAnalytics() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Partners
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Partners</CardTitle>
             <Handshake className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -297,14 +289,14 @@ function AdminAnalytics() {
                         <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold">
                           {member.profile?.fullName
                             ? member.profile.fullName
-                                .split(' ')
+                                .split(" ")
                                 .map((n: string) => n[0])
-                                .join('')
-                            : '?'}
+                                .join("")
+                            : "?"}
                         </div>
                         <div>
                           <p className="text-sm font-medium">
-                            {member.profile?.fullName || 'New Member'}
+                            {member.profile?.fullName || "New Member"}
                           </p>
                           <p className="text-xs text-muted-foreground">{member.email}</p>
                         </div>
@@ -313,7 +305,7 @@ function AdminAnalytics() {
                         {new Date(member.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                  )
+                  ),
                 )}
               </div>
             ) : (
@@ -327,5 +319,3 @@ function AdminAnalytics() {
     </div>
   );
 }
-
-

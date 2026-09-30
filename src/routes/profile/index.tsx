@@ -83,9 +83,9 @@ function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [reviewingId, setReviewingId] = useState<string | null>(null);
-  const [reviewFeedback, setReviewFeedback] = useState('');
-  const [reviewSuggestions, setReviewSuggestions] = useState('');
-  const [reviewPositives, setReviewPositives] = useState('');
+  const [reviewFeedback, setReviewFeedback] = useState("");
+  const [reviewSuggestions, setReviewSuggestions] = useState("");
+  const [reviewPositives, setReviewPositives] = useState("");
   const [submittingReview, setSubmittingReview] = useState(false);
 
   const profile = user?.profile;
@@ -208,7 +208,12 @@ function ProfilePage() {
         filters: { user_id: user.id },
         order: { column: "gate_number", ascending: true },
       });
-      return (rows || []) as { id: string; gate_number: number; status: string; checked_at: string | null }[];
+      return (rows || []) as {
+        id: string;
+        gate_number: number;
+        status: string;
+        checked_at: string | null;
+      }[];
     },
   });
 
@@ -229,7 +234,17 @@ function ProfilePage() {
         filters: { reviewer_id: user.id, status: "pending" },
         order: { column: "created_at", ascending: false },
       });
-      return (rows || []) as { id: string; submission_url: string; reviewee_id: string; reviewer_id: string; status: string; feedback: string; suggestions: string; positives: string; created_at: string }[];
+      return (rows || []) as {
+        id: string;
+        submission_url: string;
+        reviewee_id: string;
+        reviewer_id: string;
+        status: string;
+        feedback: string;
+        suggestions: string;
+        positives: string;
+        created_at: string;
+      }[];
     },
   });
 
@@ -240,7 +255,17 @@ function ProfilePage() {
         filters: { reviewee_id: user.id },
         order: { column: "created_at", ascending: false },
       });
-      return (rows || []) as { id: string; submission_url: string; reviewer_id: string; reviewee_id: string; status: string; feedback: string; suggestions: string; positives: string; created_at: string }[];
+      return (rows || []) as {
+        id: string;
+        submission_url: string;
+        reviewer_id: string;
+        reviewee_id: string;
+        status: string;
+        feedback: string;
+        suggestions: string;
+        positives: string;
+        created_at: string;
+      }[];
     },
   });
 
@@ -265,13 +290,17 @@ function ProfilePage() {
     if (!reviewingId || !reviewFeedback.trim()) return;
     setSubmittingReview(true);
     try {
-      await apiUpdate("peer_reviews", {
-        feedback: reviewFeedback.trim(),
-        suggestions: reviewSuggestions.trim(),
-        positives: reviewPositives.trim(),
-        status: "completed",
-        points_awarded: true,
-      }, { id: reviewingId });
+      await apiUpdate(
+        "peer_reviews",
+        {
+          feedback: reviewFeedback.trim(),
+          suggestions: reviewSuggestions.trim(),
+          positives: reviewPositives.trim(),
+          status: "completed",
+          points_awarded: true,
+        },
+        { id: reviewingId },
+      );
 
       await apiLogCommunityActivity("review", "Completed a peer review", 5);
 
@@ -288,7 +317,12 @@ function ProfilePage() {
     }
   }
 
-  function openReviewModal(reviewId: string, existingFeedback: string, existingSuggestions: string, existingPositives: string) {
+  function openReviewModal(
+    reviewId: string,
+    existingFeedback: string,
+    existingSuggestions: string,
+    existingPositives: string,
+  ) {
     setReviewingId(reviewId);
     setReviewFeedback(existingFeedback || "");
     setReviewSuggestions(existingSuggestions || "");
@@ -301,9 +335,7 @@ function ProfilePage() {
       <CardHeader className="text-center">
         <div className="flex justify-center mb-4 relative group">
           <Avatar className="h-24 w-24">
-            {profile?.avatarUrl && (
-              <AvatarImage src={profile.avatarUrl} alt={profile?.fullName} />
-            )}
+            {profile?.avatarUrl && <AvatarImage src={profile.avatarUrl} alt={profile?.fullName} />}
             <AvatarFallback className="bg-primary/20 text-primary text-3xl font-bold">
               {getInitials(profile?.fullName)}
             </AvatarFallback>
@@ -329,9 +361,7 @@ function ProfilePage() {
           />
         </div>
         <CardTitle className="text-2xl font-bold">{profile?.fullName || "Member"}</CardTitle>
-        {profile?.username && (
-          <p className="text-sm text-muted-foreground">@{profile.username}</p>
-        )}
+        {profile?.username && <p className="text-sm text-muted-foreground">@{profile.username}</p>}
         {profile?.nickname && (
           <p className="text-sm text-muted-foreground">&ldquo;{profile.nickname}&rdquo;</p>
         )}
@@ -340,9 +370,7 @@ function ProfilePage() {
           {profile?.phone && <Badge variant="secondary">{profile.phone}</Badge>}
           {profile?.department && <Badge variant="secondary">{profile.department}</Badge>}
           {profile?.level && <Badge variant="outline">Level {profile.level}</Badge>}
-          {profile?.experienceLevel && (
-            <Badge variant="outline">{profile.experienceLevel}</Badge>
-          )}
+          {profile?.experienceLevel && <Badge variant="outline">{profile.experienceLevel}</Badge>}
         </div>
       </CardHeader>
       <CardContent>
@@ -380,61 +408,83 @@ function ProfilePage() {
                       <button
                         key={review.id}
                         className="w-full flex items-center gap-2 rounded-lg border px-3 py-2 text-sm hover:bg-muted/50 transition-colors cursor-pointer text-left"
-                        onClick={() => openReviewModal(review.id, review.feedback, review.suggestions, review.positives)}
+                        onClick={() =>
+                          openReviewModal(
+                            review.id,
+                            review.feedback,
+                            review.suggestions,
+                            review.positives,
+                          )
+                        }
                       >
                         <div className="flex items-center gap-2 min-w-0 flex-1">
                           <FileText className="h-4 w-4 text-yellow-500 shrink-0" />
-                          <span className="truncate">Review submission by {reviewee?.full_name || "Unknown"}</span>
+                          <span className="truncate">
+                            Review submission by {reviewee?.full_name || "Unknown"}
+                          </span>
                         </div>
                         <Badge className="shrink-0 bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
                           Needs Review
                         </Badge>
                       </button>
-                    )
+                    );
                   })
                 ) : (
-                  <p className="text-sm text-muted-foreground">No pending reviews assigned to you.</p>
+                  <p className="text-sm text-muted-foreground">
+                    No pending reviews assigned to you.
+                  </p>
                 )}
-                {submittedReviews && submittedReviews.filter((r) => r.status !== "completed").length > 0 && (
-                  <div className="mt-3 pt-3 border-t">
-                    <p className="text-xs text-muted-foreground mb-2">Awaiting Review</p>
-                    {submittedReviews.filter((r) => r.status !== "completed").map((review) => {
-                      const reviewer = reviewProfileMap.get(review.reviewer_id);
-                      return (
-                        <div
-                          key={review.id}
-                          className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm"
-                        >
-                          <div className="flex items-center gap-2 min-w-0 flex-1">
-                            <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
-                            <span className="truncate">Under review by {reviewer?.full_name || "Unknown"}</span>
-                          </div>
-                          <Badge variant="outline" className="shrink-0">Pending</Badge>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
+                {submittedReviews &&
+                  submittedReviews.filter((r) => r.status !== "completed").length > 0 && (
+                    <div className="mt-3 pt-3 border-t">
+                      <p className="text-xs text-muted-foreground mb-2">Awaiting Review</p>
+                      {submittedReviews
+                        .filter((r) => r.status !== "completed")
+                        .map((review) => {
+                          const reviewer = reviewProfileMap.get(review.reviewer_id);
+                          return (
+                            <div
+                              key={review.id}
+                              className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm"
+                            >
+                              <div className="flex items-center gap-2 min-w-0 flex-1">
+                                <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
+                                <span className="truncate">
+                                  Under review by {reviewer?.full_name || "Unknown"}
+                                </span>
+                              </div>
+                              <Badge variant="outline" className="shrink-0">
+                                Pending
+                              </Badge>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  )}
                 {submittedReviews && submittedReviews.some((r) => r.status === "completed") && (
                   <div className="mt-3 pt-3 border-t">
                     <p className="text-xs text-muted-foreground mb-2">Completed Reviews</p>
-                    {submittedReviews.filter((r) => r.status === "completed").map((review) => {
-                      const reviewer = reviewProfileMap.get(review.reviewer_id);
-                      return (
-                        <div
-                          key={review.id}
-                          className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm"
-                        >
-                          <div className="flex items-center gap-2 min-w-0 flex-1">
-                            <MessageSquare className="h-4 w-4 text-green-500 shrink-0" />
-                            <span className="truncate">Reviewed by {reviewer?.full_name || "Unknown"}</span>
+                    {submittedReviews
+                      .filter((r) => r.status === "completed")
+                      .map((review) => {
+                        const reviewer = reviewProfileMap.get(review.reviewer_id);
+                        return (
+                          <div
+                            key={review.id}
+                            className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm"
+                          >
+                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                              <MessageSquare className="h-4 w-4 text-green-500 shrink-0" />
+                              <span className="truncate">
+                                Reviewed by {reviewer?.full_name || "Unknown"}
+                              </span>
+                            </div>
+                            <Badge className="shrink-0 bg-green-500/20 text-green-400 border-green-500/30">
+                              Completed
+                            </Badge>
                           </div>
-                          <Badge className="shrink-0 bg-green-500/20 text-green-400 border-green-500/30">
-                            Completed
-                          </Badge>
-                        </div>
-                      )
-                    })}
+                        );
+                      })}
                   </div>
                 )}
               </div>
@@ -820,9 +870,7 @@ function ProfilePage() {
         <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Submit Peer Review</DialogTitle>
-            <DialogDescription>
-              Provide constructive feedback on this submission.
-            </DialogDescription>
+            <DialogDescription>Provide constructive feedback on this submission.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -878,5 +926,3 @@ function ProfilePage() {
     </Card>
   );
 }
-
-

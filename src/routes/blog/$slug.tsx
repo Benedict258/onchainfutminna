@@ -68,7 +68,11 @@ function BlogPostDetailPage() {
   const slug = params.slug;
   const fetchPost = useServerFn(getBlogPostBySlug);
 
-  const { data: post, isLoading, error } = useQuery({
+  const {
+    data: post,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["blog-post", slug],
     queryFn: () => fetchPost({ data: { slug } }),
   });
@@ -114,21 +118,20 @@ function BlogPostDetailPage() {
           )}
         </div>
 
-        <h1 className="text-headline-xl md:text-display-sm tracking-tight mb-6">
-          {post.title}
-        </h1>
+        <h1 className="text-headline-xl md:text-display-sm tracking-tight mb-6">{post.title}</h1>
 
         <div className="flex items-center gap-4 mb-8 pb-8 border-b border-border">
           <Avatar className="h-12 w-12">
             <AvatarImage src={author?.avatar_url || undefined} />
             <AvatarFallback className="text-sm">
-              {author?.full_name?.split(" ").map((p: string) => p[0]).join("") || "A"}
+              {author?.full_name
+                ?.split(" ")
+                .map((p: string) => p[0])
+                .join("") || "A"}
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-medium text-foreground">
-              {author?.full_name || "Anonymous"}
-            </p>
+            <p className="font-medium text-foreground">{author?.full_name || "Anonymous"}</p>
             <p className="text-sm text-muted-foreground">
               {post.published_at ? formatDate(post.published_at) : "Draft"}
             </p>
@@ -141,11 +144,7 @@ function BlogPostDetailPage() {
 
         {post.cover_image && (
           <div className="aspect-[2/1] w-full rounded-xl overflow-hidden mb-10">
-            <img
-              src={post.cover_image}
-              alt={post.title}
-              className="w-full h-full object-cover"
-            />
+            <img src={post.cover_image} alt={post.title} className="w-full h-full object-cover" />
           </div>
         )}
 
@@ -179,16 +178,15 @@ function BlogPostDetailPage() {
             <Avatar className="h-14 w-14">
               <AvatarImage src={author?.avatar_url || undefined} />
               <AvatarFallback>
-                {author?.full_name?.split(" ").map((p: string) => p[0]).join("") || "A"}
+                {author?.full_name
+                  ?.split(" ")
+                  .map((p: string) => p[0])
+                  .join("") || "A"}
               </AvatarFallback>
             </Avatar>
             <div className="space-y-2">
-              <p className="font-medium text-foreground">
-                {author?.full_name || "Anonymous"}
-              </p>
-              {author?.bio && (
-                <p className="text-sm text-muted-foreground">{author.bio}</p>
-              )}
+              <p className="font-medium text-foreground">{author?.full_name || "Anonymous"}</p>
+              {author?.bio && <p className="text-sm text-muted-foreground">{author.bio}</p>}
               <div className="flex items-center gap-3">
                 {author?.github_link && (
                   <a
@@ -218,5 +216,3 @@ function BlogPostDetailPage() {
     </div>
   );
 }
-
-

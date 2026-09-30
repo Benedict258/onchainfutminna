@@ -1,18 +1,18 @@
-﻿import { createFileRoute } from "@tanstack/react-router"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -20,14 +20,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,7 +37,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import {
   Pagination,
   PaginationContent,
@@ -45,14 +45,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
-import {
-  apiQuery,
-  apiQueryAll,
-  apiUpdate,
-  apiDelete,
-} from "@/lib/api-client"
+} from "@/components/ui/pagination";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { apiQuery, apiQueryAll, apiUpdate, apiDelete } from "@/lib/api-client";
 import {
   CheckCircle,
   XCircle,
@@ -69,8 +64,8 @@ import {
   FileText,
   Search,
   Timer,
-} from "lucide-react"
-import { toast } from "sonner"
+} from "lucide-react";
+import { toast } from "sonner";
 
 const TYPE_LABELS: Record<string, string> = {
   CODE_DUEL: "Code Duel",
@@ -81,7 +76,7 @@ const TYPE_LABELS: Record<string, string> = {
   CONTENT: "Content",
   RESEARCH: "Research",
   SPEED: "Speed Sprint",
-}
+};
 
 const TYPE_COLORS: Record<string, string> = {
   CODE_DUEL: "bg-cyan-500/20 text-cyan-400",
@@ -92,39 +87,39 @@ const TYPE_COLORS: Record<string, string> = {
   CONTENT: "bg-violet-500/20 text-violet-400",
   RESEARCH: "bg-amber-500/20 text-amber-400",
   SPEED: "bg-blue-500/20 text-blue-400",
-}
+};
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "bg-amber-500/20 text-amber-400",
   active: "bg-emerald-500/20 text-emerald-400",
   completed: "bg-muted text-muted-foreground",
   rejected: "bg-red-500/20 text-red-400",
-}
+};
 
 export const Route = createFileRoute("/admin/challenges")({
   component: AdminChallenges,
-})
+});
 
 function AdminChallenges() {
-  const queryClient = useQueryClient()
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [typeFilter, setTypeFilter] = useState<string>("")
-  const [page, setPage] = useState(1)
-  const [selectedChallenge, setSelectedChallenge] = useState<any>(null)
-  const [detailOpen, setDetailOpen] = useState(false)
-  const [rejectTarget, setRejectTarget] = useState<any>(null)
+  const queryClient = useQueryClient();
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const [selectedChallenge, setSelectedChallenge] = useState<any>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [rejectTarget, setRejectTarget] = useState<any>(null);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["admin-challenges", statusFilter, typeFilter, page],
     queryFn: async () => {
-      const filters: Record<string, any> = {}
+      const filters: Record<string, any> = {};
       if (statusFilter !== "all") {
-        filters.status = statusFilter
+        filters.status = statusFilter;
       }
       if (typeFilter) {
-        filters.type = typeFilter
+        filters.type = typeFilter;
       }
-      const from = (page - 1) * 20
+      const from = (page - 1) * 20;
       const res = await apiQuery("challenges", {
         select:
           "*, creator:profiles!challenges_creator_id_fkey(full_name, avatar_url), challenge_participants(id)",
@@ -132,53 +127,51 @@ function AdminChallenges() {
         order: { column: "created_at", ascending: false },
         range: [from, from + 19],
         count: "exact",
-      })
+      });
       return {
         challenges: res.data || [],
         total: res.count || 0,
         page,
         limit: 20,
         totalPages: Math.ceil((res.count || 0) / 20),
-      }
+      };
     },
-  })
+  });
 
   const approveMutation = useMutation({
     mutationFn: (challengeId: string) =>
       apiUpdate("challenges", { status: "active" }, { id: challengeId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-challenges"] })
-      toast.success("Challenge approved")
+      queryClient.invalidateQueries({ queryKey: ["admin-challenges"] });
+      toast.success("Challenge approved");
     },
     onError: () => toast.error("Failed to approve challenge"),
-  })
+  });
 
   const rejectMutation = useMutation({
     mutationFn: (challengeId: string) =>
       apiUpdate("challenges", { status: "rejected" }, { id: challengeId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-challenges"] })
-      setRejectTarget(null)
-      toast.success("Challenge rejected")
+      queryClient.invalidateQueries({ queryKey: ["admin-challenges"] });
+      setRejectTarget(null);
+      toast.success("Challenge rejected");
     },
     onError: () => toast.error("Failed to reject challenge"),
-  })
+  });
 
-  const challenges = data?.challenges || []
+  const challenges = data?.challenges || [];
   const stats = {
     pending: challenges.filter((c: any) => c.status === "pending").length,
     active: challenges.filter((c: any) => c.status === "active").length,
     total: data?.total || 0,
-  }
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-headline-lg">Challenge Approval</h1>
-          <p className="text-muted-foreground">
-            Review and approve challenge submissions
-          </p>
+          <p className="text-muted-foreground">Review and approve challenge submissions</p>
         </div>
         <div className="flex items-center gap-3">
           {stats.pending > 0 && (
@@ -188,7 +181,10 @@ function AdminChallenges() {
             </Badge>
           )}
           {stats.active > 0 && (
-            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+            <Badge
+              variant="outline"
+              className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+            >
               {stats.active} active
             </Badge>
           )}
@@ -198,27 +194,25 @@ function AdminChallenges() {
       {/* Filters */}
       <div className="flex flex-col gap-4 sm:flex-row">
         <div className="flex gap-2">
-          {(["all", "pending", "active", "completed", "rejected"] as const).map(
-            (s) => (
-              <Button
-                key={s}
-                variant={statusFilter === s ? "default" : "outline"}
-                size="sm"
-                onClick={() => {
-                  setStatusFilter(s)
-                  setPage(1)
-                }}
-              >
-                {s.charAt(0).toUpperCase() + s.slice(1)}
-              </Button>
-            )
-          )}
+          {(["all", "pending", "active", "completed", "rejected"] as const).map((s) => (
+            <Button
+              key={s}
+              variant={statusFilter === s ? "default" : "outline"}
+              size="sm"
+              onClick={() => {
+                setStatusFilter(s);
+                setPage(1);
+              }}
+            >
+              {s.charAt(0).toUpperCase() + s.slice(1)}
+            </Button>
+          ))}
         </div>
         <Select
           value={typeFilter}
           onValueChange={(v) => {
-            setTypeFilter(v === "all" ? "" : v)
-            setPage(1)
+            setTypeFilter(v === "all" ? "" : v);
+            setPage(1);
           }}
         >
           <SelectTrigger className="w-[160px]">
@@ -268,11 +262,7 @@ function AdminChallenges() {
                     <AlertTitle>Failed to load challenges</AlertTitle>
                     <AlertDescription className="flex items-center justify-between">
                       <span>Could not fetch challenges.</span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => refetch()}
-                      >
+                      <Button variant="outline" size="sm" onClick={() => refetch()}>
                         Retry
                       </Button>
                     </AlertDescription>
@@ -285,13 +275,11 @@ function AdminChallenges() {
                   key={challenge.id}
                   className="cursor-pointer hover:bg-surface-low"
                   onClick={() => {
-                    setSelectedChallenge(challenge)
-                    setDetailOpen(true)
+                    setSelectedChallenge(challenge);
+                    setDetailOpen(true);
                   }}
                 >
-                  <TableCell className="font-medium">
-                    {challenge.title}
-                  </TableCell>
+                  <TableCell className="font-medium">{challenge.title}</TableCell>
                   <TableCell>
                     <Badge
                       className={TYPE_COLORS[challenge.type] || "bg-muted text-muted-foreground"}
@@ -315,9 +303,7 @@ function AdminChallenges() {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      className={STATUS_COLORS[challenge.status] || ""}
-                    >
+                    <Badge className={STATUS_COLORS[challenge.status] || ""}>
                       {challenge.status}
                     </Badge>
                   </TableCell>
@@ -330,8 +316,8 @@ function AdminChallenges() {
                             size="sm"
                             className="text-emerald-400 hover:text-emerald-300"
                             onClick={(e) => {
-                              e.stopPropagation()
-                              approveMutation.mutate(challenge.id)
+                              e.stopPropagation();
+                              approveMutation.mutate(challenge.id);
                             }}
                             disabled={approveMutation.isPending}
                           >
@@ -343,8 +329,8 @@ function AdminChallenges() {
                             size="sm"
                             className="text-destructive hover:text-destructive/80"
                             onClick={(e) => {
-                              e.stopPropagation()
-                              setRejectTarget(challenge)
+                              e.stopPropagation();
+                              setRejectTarget(challenge);
                             }}
                           >
                             <XCircle className="mr-1 h-4 w-4" />
@@ -356,9 +342,9 @@ function AdminChallenges() {
                         variant="ghost"
                         size="icon"
                         onClick={(e) => {
-                          e.stopPropagation()
-                          setSelectedChallenge(challenge)
-                          setDetailOpen(true)
+                          e.stopPropagation();
+                          setSelectedChallenge(challenge);
+                          setDetailOpen(true);
                         }}
                       >
                         <Eye className="h-4 w-4" />
@@ -369,10 +355,7 @@ function AdminChallenges() {
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={7}
-                  className="text-center py-8 text-muted-foreground"
-                >
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   No challenges found
                 </TableCell>
               </TableRow>
@@ -388,41 +371,26 @@ function AdminChallenges() {
             <PaginationItem>
               <PaginationPrevious
                 onClick={() => setPage(Math.max(1, page - 1))}
-                className={
-                  page === 1 ? "pointer-events-none opacity-50" : ""
-                }
+                className={page === 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
             {Array.from({
               length: Math.min(5, data.totalPages),
             }).map((_, i) => {
-              const pageNum =
-                Math.max(
-                  1,
-                  Math.min(page - 2, data.totalPages - 4)
-                ) + i
-              if (pageNum > data.totalPages) return null
+              const pageNum = Math.max(1, Math.min(page - 2, data.totalPages - 4)) + i;
+              if (pageNum > data.totalPages) return null;
               return (
                 <PaginationItem key={pageNum}>
-                  <PaginationLink
-                    onClick={() => setPage(pageNum)}
-                    isActive={pageNum === page}
-                  >
+                  <PaginationLink onClick={() => setPage(pageNum)} isActive={pageNum === page}>
                     {pageNum}
                   </PaginationLink>
                 </PaginationItem>
-              )
+              );
             })}
             <PaginationItem>
               <PaginationNext
-                onClick={() =>
-                  setPage(Math.min(data.totalPages, page + 1))
-                }
-                className={
-                  page === data.totalPages
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }
+                onClick={() => setPage(Math.min(data.totalPages, page + 1))}
+                className={page === data.totalPages ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
           </PaginationContent>
@@ -434,27 +402,19 @@ function AdminChallenges() {
         <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedChallenge?.title}</DialogTitle>
-            <DialogDescription>
-              Challenge details and rules
-            </DialogDescription>
+            <DialogDescription>Challenge details and rules</DialogDescription>
           </DialogHeader>
           {selectedChallenge && (
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge
                   className={
-                    TYPE_COLORS[selectedChallenge.type] ||
-                    "bg-muted text-muted-foreground"
+                    TYPE_COLORS[selectedChallenge.type] || "bg-muted text-muted-foreground"
                   }
                 >
-                  {TYPE_LABELS[selectedChallenge.type] ||
-                    selectedChallenge.type}
+                  {TYPE_LABELS[selectedChallenge.type] || selectedChallenge.type}
                 </Badge>
-                <Badge
-                  className={
-                    STATUS_COLORS[selectedChallenge.status] || ""
-                  }
-                >
+                <Badge className={STATUS_COLORS[selectedChallenge.status] || ""}>
                   {selectedChallenge.status}
                 </Badge>
               </div>
@@ -467,9 +427,7 @@ function AdminChallenges() {
               </div>
 
               <div>
-                <Label className="text-sm font-semibold">
-                  Rules & Guidelines
-                </Label>
+                <Label className="text-sm font-semibold">Rules & Guidelines</Label>
                 <div className="text-sm text-muted-foreground mt-1 whitespace-pre-line bg-surface-low rounded-lg p-3 font-mono">
                   {selectedChallenge.rules || "No rules specified"}
                 </div>
@@ -504,9 +462,7 @@ function AdminChallenges() {
                   <Label className="text-xs text-muted-foreground uppercase tracking-wider">
                     Stake Points
                   </Label>
-                  <p className="text-sm font-medium">
-                    {selectedChallenge.stake_points || 0} pts
-                  </p>
+                  <p className="text-sm font-medium">{selectedChallenge.stake_points || 0} pts</p>
                 </div>
                 <div>
                   <Label className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -531,8 +487,8 @@ function AdminChallenges() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setRejectTarget(selectedChallenge)
-                      setDetailOpen(false)
+                      setRejectTarget(selectedChallenge);
+                      setDetailOpen(false);
                     }}
                   >
                     <XCircle className="mr-2 h-4 w-4" />
@@ -540,8 +496,8 @@ function AdminChallenges() {
                   </Button>
                   <Button
                     onClick={() => {
-                      approveMutation.mutate(selectedChallenge.id)
-                      setDetailOpen(false)
+                      approveMutation.mutate(selectedChallenge.id);
+                      setDetailOpen(false);
                     }}
                     disabled={approveMutation.isPending}
                   >
@@ -556,33 +512,24 @@ function AdminChallenges() {
       </Dialog>
 
       {/* Reject Confirmation */}
-      <AlertDialog
-        open={!!rejectTarget}
-        onOpenChange={() => setRejectTarget(null)}
-      >
+      <AlertDialog open={!!rejectTarget} onOpenChange={() => setRejectTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Reject Challenge</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to reject &quot;
-              {rejectTarget?.title}&quot;? This will mark the challenge as
-              rejected and it will not be visible in the arena.
+              {rejectTarget?.title}&quot;? This will mark the challenge as rejected and it will not
+              be visible in the arena.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() =>
-                rejectMutation.mutate(rejectTarget.id)
-              }
-            >
+            <AlertDialogAction onClick={() => rejectMutation.mutate(rejectTarget.id)}>
               Reject
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  )
+  );
 }
-
-

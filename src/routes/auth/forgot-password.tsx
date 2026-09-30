@@ -7,7 +7,14 @@ import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -63,7 +70,7 @@ function ForgotPasswordPage() {
             </Link>
             <h2 className="text-headline-lg text-foreground">Forgot Password?</h2>
             <p className="mt-3 text-muted-foreground">
-              No worries  enter your email and we'll send you a reset link.
+              No worries enter your email and we'll send you a reset link.
             </p>
           </div>
         </div>
@@ -72,7 +79,9 @@ function ForgotPasswordPage() {
             <CardContent className="pt-8">
               <div className="mb-6 lg:hidden">
                 <h1 className="text-headline-md">Forgot Password</h1>
-                <p className="text-sm text-muted-foreground mt-1">Enter your email for a reset link</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Enter your email for a reset link
+                </p>
               </div>
               {sent ? (
                 <div className="text-center space-y-4">
@@ -118,5 +127,3 @@ function ForgotPasswordPage() {
     </div>
   );
 }
-
-

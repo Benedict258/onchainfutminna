@@ -2,21 +2,23 @@
 
 ## Decisions Summary
 
-| # | Question | Decision |
-|---|----------|----------|
-| 1 | Content management | Admin-side editor for all tracks. Manual code for technical. Non-technical: admin-editable + AI-drafted |
-| 2 | Active tracks | Build the full 6-track system now. Content populated later |
-| 3 | Intake assessment | Built-in web form (auto-scored) |
-| 4 | Gate checks | Mixed — automated where possible (quiz, DEVLOG count), manual where needed (code review, design critique) |
-| 5 | DEVLOG | Public by default — builds culture. Per-entry publish toggle for sensitive weeks |
-| 6 | Timeline | Build everything working → then launch cohort |
-| 7 | Cohorts | Manual assignment by admin. Cohort created per academic period |
-| 8 | SBT certification | Build now — on Sui, non-transferable objects |
-| 9 | MVP priority | Track pages → Modules → Intake → DEVLOG → Gates → Cohorts → SBTs |
-| 10 | Non-technical content | Structure now, technical from PDF, AI-draft non-technical for review |
+| #   | Question              | Decision                                                                                                  |
+| --- | --------------------- | --------------------------------------------------------------------------------------------------------- |
+| 1   | Content management    | Admin-side editor for all tracks. Manual code for technical. Non-technical: admin-editable + AI-drafted   |
+| 2   | Active tracks         | Build the full 6-track system now. Content populated later                                                |
+| 3   | Intake assessment     | Built-in web form (auto-scored)                                                                           |
+| 4   | Gate checks           | Mixed — automated where possible (quiz, DEVLOG count), manual where needed (code review, design critique) |
+| 5   | DEVLOG                | Public by default — builds culture. Per-entry publish toggle for sensitive weeks                          |
+| 6   | Timeline              | Build everything working → then launch cohort                                                             |
+| 7   | Cohorts               | Manual assignment by admin. Cohort created per academic period                                            |
+| 8   | SBT certification     | Build now — on Sui, non-transferable objects                                                              |
+| 9   | MVP priority          | Track pages → Modules → Intake → DEVLOG → Gates → Cohorts → SBTs                                          |
+| 10  | Non-technical content | Structure now, technical from PDF, AI-draft non-technical for review                                      |
 
 ### Additional: Blockchain Integration
+
 Add a Sui Move smart contract to the backend for:
+
 - Leaderboard state on-chain (public, verifiable)
 - SBT certification issuance
 - Points registry (immutable record)
@@ -26,52 +28,56 @@ Add a Sui Move smart contract to the backend for:
 ## Implementation Order
 
 ### Sprint 1: Curriculum Foundation (Now)
+
 **Goal:** Students can browse 6 tracks, view phases, read modules.
 
-| # | Task | Files | DB |
-|---|------|-------|----|
-| 1.1 | Create `curriculum_tracks` table + ALTER modules | SQL | 1 new table + 4 columns |
-| 1.2 | Seed 6 tracks + ~30 modules (admin writes via `/admin/learn`) | Admin UI | 6 track rows + modules |
-| 1.3 | Update `/learn` — phase bars on track cards, link to `/learn/$slug` | `learn/index.tsx` | - |
-| 1.4 | Create `/learn/$slug` — track detail page with phase timeline + inline modules | `learn/$slug.tsx` | - |
-| 1.5 | Module accordion — inline content rendering + Markdown display | `$slug.tsx` | - |
-| 1.6 | "Mark Complete" button — inserts into `user_module_progress` | `$slug.tsx` | - |
+| #   | Task                                                                           | Files             | DB                      |
+| --- | ------------------------------------------------------------------------------ | ----------------- | ----------------------- |
+| 1.1 | Create `curriculum_tracks` table + ALTER modules                               | SQL               | 1 new table + 4 columns |
+| 1.2 | Seed 6 tracks + ~30 modules (admin writes via `/admin/learn`)                  | Admin UI          | 6 track rows + modules  |
+| 1.3 | Update `/learn` — phase bars on track cards, link to `/learn/$slug`            | `learn/index.tsx` | -                       |
+| 1.4 | Create `/learn/$slug` — track detail page with phase timeline + inline modules | `learn/$slug.tsx` | -                       |
+| 1.5 | Module accordion — inline content rendering + Markdown display                 | `$slug.tsx`       | -                       |
+| 1.6 | "Mark Complete" button — inserts into `user_module_progress`                   | `$slug.tsx`       | -                       |
 
 ### Sprint 2: Intake + DEVLOG (Next)
+
 **Goal:** New members get lane-placed. Students log weekly.
 
-| # | Task | Files | DB |
-|---|------|-------|----|
-| 2.1 | Create `intake_assessments` table | SQL | 1 new table |
-| 2.2 | Build `/intake` — 10-question quiz + practical task + auto-score + lane result | `intake.tsx` | - |
-| 2.3 | Create `devlog_entries` table | SQL | 1 new table |
-| 2.4 | Build `/profile/devlog` — create/edit/delete entries, week grid, streak counter | `profile/devlog.tsx` | - |
-| 2.5 | Build `/members/$memberId/devlog` — public DEVLOG view | `members/$memberId/devlog.tsx` | - |
-| 2.6 | Auto-award +5 points per DEVLOG entry | modify auto-awards | - |
+| #   | Task                                                                            | Files                          | DB          |
+| --- | ------------------------------------------------------------------------------- | ------------------------------ | ----------- |
+| 2.1 | Create `intake_assessments` table                                               | SQL                            | 1 new table |
+| 2.2 | Build `/intake` — 10-question quiz + practical task + auto-score + lane result  | `intake.tsx`                   | -           |
+| 2.3 | Create `devlog_entries` table                                                   | SQL                            | 1 new table |
+| 2.4 | Build `/profile/devlog` — create/edit/delete entries, week grid, streak counter | `profile/devlog.tsx`           | -           |
+| 2.5 | Build `/members/$memberId/devlog` — public DEVLOG view                          | `members/$memberId/devlog.tsx` | -           |
+| 2.6 | Auto-award +5 points per DEVLOG entry                                           | modify auto-awards             | -           |
 
 ### Sprint 3: Gates + Cohorts (After)
+
 **Goal:** Admin tracks progression. Students see their status.
 
-| # | Task | Files | DB |
-|---|------|-------|----|
-| 3.1 | Create `gate_checks` table + `cohorts` table | SQL | 2 new tables |
-| 3.2 | Add cohort_id to users table | SQL | 1 column |
-| 3.3 | Build `/admin/gate-checks` — master grid, review modal, approve/reject | `admin/gate-checks.tsx` | - |
-| 3.4 | Build `/admin/cohorts` — list + create | `admin/cohorts.tsx` | - |
-| 3.5 | Build `/admin/cohorts/$id` — cohort dashboard + progress grid | `admin/cohorts/$id.tsx` | - |
-| 3.6 | Gate status display on profile + track detail pages | modify profile + $slug | - |
+| #   | Task                                                                   | Files                   | DB           |
+| --- | ---------------------------------------------------------------------- | ----------------------- | ------------ |
+| 3.1 | Create `gate_checks` table + `cohorts` table                           | SQL                     | 2 new tables |
+| 3.2 | Add cohort_id to users table                                           | SQL                     | 1 column     |
+| 3.3 | Build `/admin/gate-checks` — master grid, review modal, approve/reject | `admin/gate-checks.tsx` | -            |
+| 3.4 | Build `/admin/cohorts` — list + create                                 | `admin/cohorts.tsx`     | -            |
+| 3.5 | Build `/admin/cohorts/$id` — cohort dashboard + progress grid          | `admin/cohorts/$id.tsx` | -            |
+| 3.6 | Gate status display on profile + track detail pages                    | modify profile + $slug  | -            |
 
 ### Sprint 4: Blockchain + SBTs + Alumni (Final)
+
 **Goal:** On-chain certification. Alumni directory.
 
-| # | Task | Files | DB |
-|---|------|-------|----|
-| 4.1 | Create `certifications` table | SQL | 1 new table |
-| 4.2 | Write Sui Move smart contract — leaderboard registry + SBT minting | `contracts/sui/` | - |
-| 4.3 | Deploy contract to Sui Testnet | - | - |
-| 4.4 | Build `/admin/certifications` — issue SBT, generate PDF, track status | `admin/certifications.tsx` | - |
-| 4.5 | Build `/alumni` — directory of Tier 3 graduates | `alumni.tsx` | - |
-| 4.6 | Wire SBT display on student profiles | modify profile | - |
+| #   | Task                                                                  | Files                      | DB          |
+| --- | --------------------------------------------------------------------- | -------------------------- | ----------- |
+| 4.1 | Create `certifications` table                                         | SQL                        | 1 new table |
+| 4.2 | Write Sui Move smart contract — leaderboard registry + SBT minting    | `contracts/sui/`           | -           |
+| 4.3 | Deploy contract to Sui Testnet                                        | -                          | -           |
+| 4.4 | Build `/admin/certifications` — issue SBT, generate PDF, track status | `admin/certifications.tsx` | -           |
+| 4.5 | Build `/alumni` — directory of Tier 3 graduates                       | `alumni.tsx`               | -           |
+| 4.6 | Wire SBT display on student profiles                                  | modify profile             | -           |
 
 ---
 
@@ -79,11 +85,11 @@ Add a Sui Move smart contract to the backend for:
 
 ### What Goes On-Chain
 
-| Data | Why On-Chain | Implementation |
-|------|-------------|----------------|
+| Data               | Why On-Chain                  | Implementation                                          |
+| ------------------ | ----------------------------- | ------------------------------------------------------- |
 | Leaderboard scores | Public, verifiable, immutable | Move object: `LeaderboardEntry` per student with points |
-| SBT certifications | Non-transferable credential | Move object: `Certificate` as non-transferable NFT |
-| Points log | Audit trail of point awards | Events emitted on each award |
+| SBT certifications | Non-transferable credential   | Move object: `Certificate` as non-transferable NFT      |
+| Points log         | Audit trail of point awards   | Events emitted on each award                            |
 
 ### Smart Contract Architecture
 
@@ -112,7 +118,7 @@ Structs:
   }
 
 Functions:
-  register_student(student: address) 
+  register_student(student: address)
   award_points(student: address, category: u8, points: u64)
   issue_certificate(student: address, tier: u8, track: vector<u8>, cohort: u16, url: vector<u8>)
   get_leaderboard(): vector<LeaderboardEntry>
@@ -134,12 +140,14 @@ User Action → Platform API → Supabase (off-chain) + Sui Contract (on-chain)
 ```
 
 ### Wallet Requirement
+
 - Every student needs a Sui wallet address (added to profile)
 - Set up during Phase 0 (wallet safety module)
 - Admin wallet used for contract deployment and certificate issuance
 - Gas costs: testnet (free) during development, mainnet later
 
 ### Deployment Plan
+
 1. Write + test Move contract locally (`sui move test`)
 2. Deploy to Sui Testnet
 3. Integrate with platform API (server.ts calls Sui RPC)
@@ -151,6 +159,7 @@ User Action → Platform API → Supabase (off-chain) + Sui Contract (on-chain)
 ## Files Inventory — All Changes
 
 ### New Files (12)
+
 ```
 src/routes/learn/$slug.tsx              — Track detail page
 src/routes/intake.tsx                   — Intake assessment
@@ -167,6 +176,7 @@ contracts/sui/club_registry.move        — Sui Move contract
 ```
 
 ### Modified Files (6)
+
 ```
 src/routes/learn/index.tsx              — Phase bars + new links
 src/routes/profile.tsx                  — DEVLOG tab + gate status
@@ -177,6 +187,7 @@ src/server.ts                           — Sui RPC endpoints
 ```
 
 ### New Tables (6)
+
 ```
 curriculum_tracks    — Track registry with slugs
 intake_assessments   — Lane placement results
@@ -187,6 +198,7 @@ certifications       — On-chain SBT records
 ```
 
 ### Modified Tables (2)
+
 ```
 modules              — Add phase, slug, ecosystem, category columns
 users                — Add cohort_id column
@@ -284,11 +296,11 @@ CREATE TABLE IF NOT EXISTS certifications (
 
 ## Priority Execution
 
-| Sprint | Duration | Deliverable |
-|--------|----------|-------------|
-| Sprint 1 | Now | Curriculum structure + track/module pages + "Mark Complete" |
-| Sprint 2 | After | Intake assessment + DEVLOG system |
-| Sprint 3 | After | Gate checks + cohort management |
-| Sprint 4 | After | Sui contract + SBT issuance + alumni directory |
+| Sprint   | Duration | Deliverable                                                 |
+| -------- | -------- | ----------------------------------------------------------- |
+| Sprint 1 | Now      | Curriculum structure + track/module pages + "Mark Complete" |
+| Sprint 2 | After    | Intake assessment + DEVLOG system                           |
+| Sprint 3 | After    | Gate checks + cohort management                             |
+| Sprint 4 | After    | Sui contract + SBT issuance + alumni directory              |
 
 **Start with Sprint 1.** Ready to build when you say so.

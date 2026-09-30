@@ -93,14 +93,14 @@ function exportCSV(students: StudentRow[]) {
     s.track,
     s.phase,
     String(s.totalPoints),
-    s.modulesTotal > 0
-      ? String(Math.round((s.modulesDone / s.modulesTotal) * 100))
-      : "0",
+    s.modulesTotal > 0 ? String(Math.round((s.modulesDone / s.modulesTotal) * 100)) : "0",
     `${s.modulesDone}/${s.modulesTotal}`,
     s.gateStatus,
     s.lastActive,
   ]);
-  const csv = [header, ...rows].map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const csv = [header, ...rows]
+    .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
+    .join("\n");
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -149,7 +149,8 @@ function AdminStudents() {
     queryKey: ["admin-student-profiles"],
     queryFn: async () => {
       const res = await apiQuery("profiles", {
-        select: "user_id,full_name,avatar_url,username,department,level,experience_level,updated_at",
+        select:
+          "user_id,full_name,avatar_url,username,department,level,experience_level,updated_at",
         order: { column: "full_name", ascending: true },
       });
       return (res.data || []) as Record<string, unknown>[];
@@ -161,7 +162,8 @@ function AdminStudents() {
     queryKey: ["admin-student-leaderboard"],
     queryFn: async () => {
       const res = await apiQuery("leaderboard_entries", {
-        select: "user_id,total_points,event_points,learn_points,build_points,community_points,updated_at",
+        select:
+          "user_id,total_points,event_points,learn_points,build_points,community_points,updated_at",
       });
       return (res.data || []) as Record<string, unknown>[];
     },
@@ -485,7 +487,12 @@ function AdminStudents() {
                   <TableRow
                     key={student.userId}
                     className="cursor-pointer"
-                    onClick={() => navigate({ to: "/admin/students/$userId", params: { userId: student.userId } })}
+                    onClick={() =>
+                      navigate({
+                        to: "/admin/students/$userId",
+                        params: { userId: student.userId },
+                      })
+                    }
                   >
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -496,9 +503,7 @@ function AdminStudents() {
                         <span className="font-medium">{student.fullName}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-muted-foreground text-sm">
-                      {student.email}
-                    </TableCell>
+                    <TableCell className="text-muted-foreground text-sm">{student.email}</TableCell>
                     <TableCell className="text-sm">
                       {student.username ? `@${student.username}` : "-"}
                     </TableCell>
@@ -521,9 +526,7 @@ function AdminStudents() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">
-                      {student.lastActive
-                        ? new Date(student.lastActive).toLocaleDateString()
-                        : "-"}
+                      {student.lastActive ? new Date(student.lastActive).toLocaleDateString() : "-"}
                     </TableCell>
                   </TableRow>
                 );
@@ -571,5 +574,3 @@ function AdminStudents() {
     </div>
   );
 }
-
-

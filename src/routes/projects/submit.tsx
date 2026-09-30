@@ -35,11 +35,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useAuthStore } from "@/stores/auth-store";
 import { apiQuery } from "@/lib/api-client";
 import { ArrowLeft, Upload, X, ChevronsUpDown } from "lucide-react";
@@ -133,8 +129,9 @@ function SubmitProjectPage() {
     if (!memberSearch) return clubMembers;
     const search = memberSearch.toLowerCase();
     const scored = clubMembers
-      .filter((m: ClubMember) =>
-        m.username?.toLowerCase().includes(search) || m.fullName?.toLowerCase().includes(search)
+      .filter(
+        (m: ClubMember) =>
+          m.username?.toLowerCase().includes(search) || m.fullName?.toLowerCase().includes(search),
       )
       .map((m: ClubMember) => {
         const username = (m.username || "").toLowerCase();
@@ -297,7 +294,9 @@ function SubmitProjectPage() {
       <Card className="w-full max-w-lg border-border bg-card">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Submit Project</CardTitle>
-          <CardDescription>Share your project with the BlockchainClub FUTMinna community</CardDescription>
+          <CardDescription>
+            Share your project with the BlockchainClub FUTMinna community
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Button asChild variant="ghost" className="mb-4 -ml-2">
@@ -527,7 +526,7 @@ function SubmitProjectPage() {
                   <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
                     <Command>
                       <CommandInput
-                                                placeholder="Search by username or name..."
+                        placeholder="Search by username or name..."
                         value={memberSearch}
                         onValueChange={setMemberSearch}
                       />
@@ -583,5 +582,3 @@ function SubmitProjectPage() {
     </div>
   );
 }
-
-

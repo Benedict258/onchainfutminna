@@ -41,21 +41,21 @@ import {
 import { apiQueryAll } from "@/lib/api-client";
 
 const TRACK_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  "Security": Shield,
-  "Protocol": Code2,
+  Security: Shield,
+  Protocol: Code2,
   "Full-Stack": Globe,
   "Full Stack": Globe,
-  "Design": Palette,
-  "Marketing": Megaphone,
+  Design: Palette,
+  Marketing: Megaphone,
 };
 
 const TRACK_COLORS: Record<string, string> = {
-  "Security": "bg-red-500/10 text-red-400 border-red-500/20",
-  "Protocol": "bg-purple-500/10 text-purple-400 border-purple-500/20",
+  Security: "bg-red-500/10 text-red-400 border-red-500/20",
+  Protocol: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   "Full-Stack": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   "Full Stack": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  "Design": "bg-pink-500/10 text-pink-400 border-pink-500/20",
-  "Marketing": "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  Design: "bg-pink-500/10 text-pink-400 border-pink-500/20",
+  Marketing: "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
 
 const TIER_COLORS: Record<number, string> = {
@@ -351,7 +351,10 @@ function AlumniCard({ entry }: { entry: AlumniEntry }) {
             );
           })}
           {entry.cohortYear && (
-            <Badge variant="outline" className="text-[10px] bg-amber-500/10 text-amber-400 border-amber-500/20">
+            <Badge
+              variant="outline"
+              className="text-[10px] bg-amber-500/10 text-amber-400 border-amber-500/20"
+            >
               <Calendar className="mr-1 h-3 w-3" />
               {entry.cohortYear}
             </Badge>
@@ -438,11 +441,18 @@ function AlumniPage() {
   const entries: AlumniEntry[] = useMemo(() => {
     if (!certifications?.length) return [];
 
-    const grouped = new Map<string, { tiers: Set<number>; tracks: Set<string>; cohortYear: number | null }>();
+    const grouped = new Map<
+      string,
+      { tiers: Set<number>; tracks: Set<string>; cohortYear: number | null }
+    >();
     for (const cert of certifications) {
       const uid = cert.user_id;
       if (!grouped.has(uid)) {
-        grouped.set(uid, { tiers: new Set(), tracks: new Set(), cohortYear: cert.cohort_year || null });
+        grouped.set(uid, {
+          tiers: new Set(),
+          tracks: new Set(),
+          cohortYear: cert.cohort_year || null,
+        });
       }
       const g = grouped.get(uid)!;
       if (cert.tier) g.tiers.add(cert.tier);
@@ -517,7 +527,8 @@ function AlumniPage() {
             ALUMNI DIRECTORY
           </span>
           <h1 className="mt-8 text-display-lg md:text-[56px] md:leading-[60px] tracking-tight">
-            Alumni &mdash; Where<br />
+            Alumni &mdash; Where
+            <br />
             <span className="text-primary">Builders Become Legends</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
@@ -567,9 +578,7 @@ function AlumniPage() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
             <Search className="mx-auto h-12 w-12 text-muted-foreground/40" />
-            <p className="mt-4 text-lg text-muted-foreground">
-              No alumni match your filters.
-            </p>
+            <p className="mt-4 text-lg text-muted-foreground">No alumni match your filters.</p>
             <p className="mt-2 text-sm text-muted-foreground/60">
               Try adjusting your search criteria.
             </p>
@@ -602,5 +611,3 @@ function AlumniPage() {
     </div>
   );
 }
-
-

@@ -33,14 +33,24 @@ function VerifyBranding({ status }: { status: "idle" | "loading" | "success" | "
       <p className="mt-3 text-muted-foreground leading-relaxed">
         {status === "idle" && "Enter the 6-digit code we sent to your email."}
         {status === "loading" && "Checking your verification code..."}
-        {status === "success" && "Your email has been confirmed. Welcome to BlockchainClub FUTMinna."}
-        {status === "error" && "Something went wrong. The code may have expired or already been used."}
+        {status === "success" &&
+          "Your email has been confirmed. Welcome to BlockchainClub FUTMinna."}
+        {status === "error" &&
+          "Something went wrong. The code may have expired or already been used."}
       </p>
     </div>
   );
 }
 
-function OTPInput({ value, onChange, disabled }: { value: string; onChange: (v: string) => void; disabled: boolean }) {
+function OTPInput({
+  value,
+  onChange,
+  disabled,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  disabled: boolean;
+}) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [focused, setFocused] = useState<number | null>(null);
 
@@ -83,7 +93,9 @@ function OTPInput({ value, onChange, disabled }: { value: string; onChange: (v: 
       {Array.from({ length: 6 }).map((_, i) => (
         <input
           key={i}
-          ref={(el) => { inputRefs.current[i] = el; }}
+          ref={(el) => {
+            inputRefs.current[i] = el;
+          }}
           type="text"
           inputMode="numeric"
           maxLength={1}
@@ -177,7 +189,9 @@ function VerifyEmailPage() {
                   </div>
                   <div className="space-y-2">
                     <h2 className="text-headline-sm text-foreground">Missing User ID</h2>
-                    <p className="text-muted-foreground">No user ID was provided. Please return to registration.</p>
+                    <p className="text-muted-foreground">
+                      No user ID was provided. Please return to registration.
+                    </p>
                   </div>
                   <Button asChild className="w-full">
                     <Link to="/join">Return to Sign Up</Link>
@@ -219,14 +233,18 @@ function VerifyEmailPage() {
                 {(status === "idle" || status === "error") && (
                   <>
                     <div className="space-y-2">
-                      <p className="text-muted-foreground">Enter the 6-digit code we sent to your email</p>
+                      <p className="text-muted-foreground">
+                        Enter the 6-digit code we sent to your email
+                      </p>
                     </div>
                     <OTPInput value={code} onChange={setCode} disabled={false} />
-                    {status === "error" && (
-                      <p className="text-sm text-destructive">{message}</p>
-                    )}
+                    {status === "error" && <p className="text-sm text-destructive">{message}</p>}
                     <div className="space-y-3">
-                      <Button className="w-full" onClick={handleVerify} disabled={code.length !== 6}>
+                      <Button
+                        className="w-full"
+                        onClick={handleVerify}
+                        disabled={code.length !== 6}
+                      >
                         Verify Email
                       </Button>
                       <Button
@@ -279,5 +297,3 @@ function VerifyEmailPage() {
     </div>
   );
 }
-
-

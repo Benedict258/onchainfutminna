@@ -74,15 +74,16 @@ export function GlobalLoader({ show = true, inline = false }: GlobalLoaderProps)
 
   const spinner = (
     <div className="spinner" aria-busy="true" aria-label="Loading">
-      <div /><div /><div /><div /><div /><div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
     </div>
   );
 
   if (inline) return spinner;
 
-  return (
-    <div className="global-loader-wrapper">
-      {spinner}
-    </div>
-  );
+  return <div className="global-loader-wrapper">{spinner}</div>;
 }

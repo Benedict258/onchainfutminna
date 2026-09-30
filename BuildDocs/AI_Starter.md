@@ -12,11 +12,11 @@ fully understand the following project files:
 
 - [ ] `PRD.md` — Product Requirements Document. Understand what is being built and why.
 - [ ] `ARCHITECTURE.md` — Project Architecture. Understand the system structure,
-       patterns, and how components relate.
+      patterns, and how components relate.
 - [ ] `DEV_PLAN.md` — Development Phases & Plan. Know what phase we are on,
-       what is done, and what comes next.
+      what is done, and what comes next.
 - [ ] `Build-Context-Memory.json` — Read the LATEST session object.
-       This is your memory. It tells you exactly where the last session ended.
+      This is your memory. It tells you exactly where the last session ended.
 
 Do not proceed until all four files have been read. If any of these files are missing,
 stop and tell the developer which file is missing before continuing.
@@ -66,6 +66,7 @@ After every meaningful change, you MUST append a new session object to the
 `sessions` array in `Build-Context-Memory.json`.
 
 Rules for updating the memory file:
+
 - NEVER edit or delete a previous session object. Append only.
 - NEVER modify the `project_identity` object.
 - Create a new session object with a new `session_id` (e.g. session_002, session_003).
@@ -78,6 +79,7 @@ Rules for updating the memory file:
   direction for what comes next.
 
 Session object to append:
+
 ```json
 {
   "session_id": "session_00X",
@@ -134,8 +136,8 @@ If you are joining a project mid-way (new chat, new AI agent, new session):
 2. Read the last session object in `Build-Context-Memory.json`.
 3. Read the `next_steps` array from that session — that is your starting point.
 4. Check `known_issues` and `blocked` items before touching anything.
-5. Confirm with the developer: *"I've reviewed the last session. We left off at [X].
-   The next step is [Y]. Should I proceed?"*
+5. Confirm with the developer: _"I've reviewed the last session. We left off at [X].
+   The next step is [Y]. Should I proceed?"_
 
 Never assume. Always confirm before continuing.
 
@@ -152,5 +154,5 @@ Never assume. Always confirm before continuing.
 
 ---
 
-*This file is the contract between the developer and every AI agent on this project.
-Follow it completely, every session, without exception.*
+_This file is the contract between the developer and every AI agent on this project.
+Follow it completely, every session, without exception._

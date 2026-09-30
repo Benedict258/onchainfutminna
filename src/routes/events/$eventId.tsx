@@ -151,7 +151,7 @@ function EventDetailPage() {
 
         {event.cover_image && (
           <div className="aspect-[2/1] w-full rounded-xl overflow-hidden mb-8">
-            <img               src={event.cover_image} alt={event.title} className="w-full h-full object-cover" />
+            <img src={event.cover_image} alt={event.title} className="w-full h-full object-cover" />
           </div>
         )}
 
@@ -215,7 +215,7 @@ function EventDetailPage() {
                   <div className="flex items-start gap-3">
                     <Calendar className="h-4 w-4 mt-0.5 text-primary shrink-0" />
                     <div>
-                      <p className="font-medium">                      {formatDate(event.start_date)}</p>
+                      <p className="font-medium"> {formatDate(event.start_date)}</p>
                       <p className="text-muted-foreground">
                         {formatTime(event.start_date)}
                         {event.end_date && ` - ${formatTime(event.end_date)}`}
@@ -241,9 +241,7 @@ function EventDetailPage() {
                   {event.max_attendees && (
                     <div className="flex items-start gap-3">
                       <Clock className="h-4 w-4 mt-0.5 text-primary shrink-0" />
-                      <p className="font-medium">
-                        {event.max_attendees - rsvpCount} spots
-                      </p>
+                      <p className="font-medium">{event.max_attendees - rsvpCount} spots</p>
                     </div>
                   )}
                 </div>
@@ -253,7 +251,12 @@ function EventDetailPage() {
             {!isPast && (
               <>
                 {event.virtual_link && (
-                  <a href={event.virtual_link} target="_blank" rel="noopener noreferrer" className="w-full">
+                  <a
+                    href={event.virtual_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full"
+                  >
                     <Button className="w-full" size="lg">
                       RSVP Now
                     </Button>
@@ -295,5 +298,3 @@ function EventDetailPage() {
     </div>
   );
 }
-
-

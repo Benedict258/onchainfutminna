@@ -1,6 +1,7 @@
 # BlockchainClub FUTMinna — Architecture
 
 ## Stack
+
 - Frontend: TanStack Start (React 19 + Vite 7)
 - Database: Supabase (PostgreSQL + REST API)
 - Auth: JWT (7d access, 7d refresh)
@@ -9,6 +10,7 @@
 - Blockchain: Sui Move (points, badges, certificates)
 
 ## Route Structure
+
 - / — Landing
 - /auth — Login
 - /join — Register

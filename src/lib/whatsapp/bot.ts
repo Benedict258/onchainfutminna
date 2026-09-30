@@ -39,13 +39,47 @@ export type MessageClassification = "help" | "resource" | "event" | "discussion"
 export function classifyMessage(body: string): MessageClassification {
   const lower = body.toLowerCase();
 
-  const helpPatterns = ["help", "how to", "how do i", "explain", "anyone know", "can someone", "stuck", "issue", "problem", "error", "debug", "mentor"];
+  const helpPatterns = [
+    "help",
+    "how to",
+    "how do i",
+    "explain",
+    "anyone know",
+    "can someone",
+    "stuck",
+    "issue",
+    "problem",
+    "error",
+    "debug",
+    "mentor",
+  ];
   if (helpPatterns.some((p) => lower.includes(p))) return "help";
 
-  const resourcePatterns = ["http", "check this out", "read this", "article", "tutorial", "video", "resource", "link", "repo", "github"];
+  const resourcePatterns = [
+    "http",
+    "check this out",
+    "read this",
+    "article",
+    "tutorial",
+    "video",
+    "resource",
+    "link",
+    "repo",
+    "github",
+  ];
   if (resourcePatterns.some((p) => lower.includes(p))) return "resource";
 
-  const eventPatterns = ["confirm", "attending", "going", "rsvp", "event", "meetup", "workshop", "hackathon", "register"];
+  const eventPatterns = [
+    "confirm",
+    "attending",
+    "going",
+    "rsvp",
+    "event",
+    "meetup",
+    "workshop",
+    "hackathon",
+    "register",
+  ];
   if (eventPatterns.some((p) => lower.includes(p))) return "event";
 
   return "discussion";

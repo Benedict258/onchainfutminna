@@ -183,15 +183,7 @@ function AdminGateChecks() {
   };
 
   const updateMutation = useMutation({
-    mutationFn: ({
-      id,
-      status,
-      notes,
-    }: {
-      id: string;
-      status: string;
-      notes?: string;
-    }) =>
+    mutationFn: ({ id, status, notes }: { id: string; status: string; notes?: string }) =>
       apiUpdate(
         "gate_checks",
         {
@@ -325,11 +317,20 @@ function AdminGateChecks() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "passed":
-        return { variant: "default" as const, className: "bg-green-500/20 text-green-400 border-green-500/30" };
+        return {
+          variant: "default" as const,
+          className: "bg-green-500/20 text-green-400 border-green-500/30",
+        };
       case "pending":
-        return { variant: "default" as const, className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" };
+        return {
+          variant: "default" as const,
+          className: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+        };
       case "failed":
-        return { variant: "default" as const, className: "bg-red-500/20 text-red-400 border-red-500/30" };
+        return {
+          variant: "default" as const,
+          className: "bg-red-500/20 text-red-400 border-red-500/30",
+        };
       default:
         return { variant: "secondary" as const, className: "" };
     }
@@ -365,38 +366,62 @@ function AdminGateChecks() {
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <Select value={trackFilter} onValueChange={(v) => { setTrackFilter(v === "all" ? "" : v); setPage(1); }}>
+        <Select
+          value={trackFilter}
+          onValueChange={(v) => {
+            setTrackFilter(v === "all" ? "" : v);
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="All Tracks" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Tracks</SelectItem>
             {trackOptions.map((t) => (
-              <SelectItem key={t} value={t}>{t}</SelectItem>
+              <SelectItem key={t} value={t}>
+                {t}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
-        <Select value={gateFilter} onValueChange={(v) => { setGateFilter(v === "all" ? "" : v); setPage(1); }}>
+        <Select
+          value={gateFilter}
+          onValueChange={(v) => {
+            setGateFilter(v === "all" ? "" : v);
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-[160px]">
             <SelectValue placeholder="All Gates" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Gates</SelectItem>
             {GATES.map((g) => (
-              <SelectItem key={g} value={String(g)}>Gate {g}</SelectItem>
+              <SelectItem key={g} value={String(g)}>
+                Gate {g}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
-        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v === "all" ? "" : v); setPage(1); }}>
+        <Select
+          value={statusFilter}
+          onValueChange={(v) => {
+            setStatusFilter(v === "all" ? "" : v);
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-[160px]">
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>
             {STATUSES.map((s) => (
-              <SelectItem key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>
+              <SelectItem key={s} value={s}>
+                {s.charAt(0).toUpperCase() + s.slice(1)}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -423,7 +448,9 @@ function AdminGateChecks() {
               </SelectTrigger>
               <SelectContent>
                 {STATUSES.map((s) => (
-                  <SelectItem key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>
+                  <SelectItem key={s} value={s}>
+                    {s.charAt(0).toUpperCase() + s.slice(1)}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -466,11 +493,7 @@ function AdminGateChecks() {
               pagedRows.map((row) => {
                 const badge = getStatusBadge(row.status);
                 return (
-                  <TableRow
-                    key={row.id}
-                    className="cursor-pointer"
-                    onClick={() => openReview(row)}
-                  >
+                  <TableRow key={row.id} className="cursor-pointer" onClick={() => openReview(row)}>
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       <Checkbox
                         checked={selectedIds.has(row.id)}
@@ -507,13 +530,13 @@ function AdminGateChecks() {
                     <TableCell>
                       <Badge className={badge.className}>
                         {getStatusIcon(row.status)}
-                        <span className="ml-1">{row.status.charAt(0).toUpperCase() + row.status.slice(1)}</span>
+                        <span className="ml-1">
+                          {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+                        </span>
                       </Badge>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {row.submittedAt
-                        ? new Date(row.submittedAt).toLocaleDateString()
-                        : "-"}
+                      {row.submittedAt ? new Date(row.submittedAt).toLocaleDateString() : "-"}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {row.reviewedBy || "-"}
@@ -574,7 +597,15 @@ function AdminGateChecks() {
         </Pagination>
       )}
 
-      <Dialog open={!!reviewItem} onOpenChange={(open) => { if (!open) { setReviewItem(null); setReviewNotes(""); } }}>
+      <Dialog
+        open={!!reviewItem}
+        onOpenChange={(open) => {
+          if (!open) {
+            setReviewItem(null);
+            setReviewNotes("");
+          }
+        }}
+      >
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Gate Check Review</DialogTitle>
@@ -618,7 +649,9 @@ function AdminGateChecks() {
                 <div>
                   <span className="text-muted-foreground">Submitted:</span>
                   <span className="ml-1 font-medium">
-                    {reviewItem.submittedAt ? new Date(reviewItem.submittedAt).toLocaleDateString() : "-"}
+                    {reviewItem.submittedAt
+                      ? new Date(reviewItem.submittedAt).toLocaleDateString()
+                      : "-"}
                   </span>
                 </div>
               </div>
@@ -628,7 +661,10 @@ function AdminGateChecks() {
                   <h4 className="text-sm font-medium">Gate 1 Requirements</h4>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground">DEVLOG Count:</span>
-                    <Badge variant={reviewItem.devlogCount >= 3 ? "default" : "destructive"} className="text-xs">
+                    <Badge
+                      variant={reviewItem.devlogCount >= 3 ? "default" : "destructive"}
+                      className="text-xs"
+                    >
                       {reviewItem.devlogCount} / 3
                     </Badge>
                   </div>
@@ -656,7 +692,9 @@ function AdminGateChecks() {
                   </div>
                   <div className="text-sm">
                     <span className="text-muted-foreground">Test Results:</span>
-                    <span className="ml-1">{reviewItem.testResults || "No test results submitted"}</span>
+                    <span className="ml-1">
+                      {reviewItem.testResults || "No test results submitted"}
+                    </span>
                   </div>
                 </div>
               )}
@@ -666,7 +704,9 @@ function AdminGateChecks() {
                   <h4 className="text-sm font-medium">Gate 3 Requirements</h4>
                   <div className="text-sm">
                     <span className="text-muted-foreground">Test Results:</span>
-                    <span className="ml-1">{reviewItem.testResults || "No test results submitted"}</span>
+                    <span className="ml-1">
+                      {reviewItem.testResults || "No test results submitted"}
+                    </span>
                   </div>
                 </div>
               )}
@@ -688,13 +728,17 @@ function AdminGateChecks() {
               </div>
 
               <div>
-                <Label>Notes {reviewStatus === "failed" && <span className="text-destructive">*</span>}</Label>
+                <Label>
+                  Notes {reviewStatus === "failed" && <span className="text-destructive">*</span>}
+                </Label>
                 <Textarea
                   value={reviewNotes}
                   onChange={(e) => setReviewNotes(e.target.value)}
                   placeholder="Add review notes..."
                   rows={3}
-                  className={reviewStatus === "failed" && !reviewNotes.trim() ? "border-destructive" : ""}
+                  className={
+                    reviewStatus === "failed" && !reviewNotes.trim() ? "border-destructive" : ""
+                  }
                 />
               </div>
 
@@ -726,7 +770,9 @@ function AdminGateChecks() {
                 <Button
                   variant="destructive"
                   onClick={handleReject}
-                  disabled={updateMutation.isPending || (reviewStatus === "failed" && !reviewNotes.trim())}
+                  disabled={
+                    updateMutation.isPending || (reviewStatus === "failed" && !reviewNotes.trim())
+                  }
                 >
                   Reject
                 </Button>
@@ -746,5 +792,3 @@ function AdminGateChecks() {
     </div>
   );
 }
-
-

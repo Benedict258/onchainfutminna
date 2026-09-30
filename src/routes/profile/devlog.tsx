@@ -142,7 +142,7 @@ function DevlogPage() {
         await apiUpdate(
           "devlog_entries",
           { content, is_published: isPublished, updated_at: new Date().toISOString() },
-          { id: editingEntry.id }
+          { id: editingEntry.id },
         );
         toast.success("Entry updated");
       } else {
@@ -201,9 +201,7 @@ function DevlogPage() {
             </Badge>
           )}
           {longestStreak > 0 && (
-            <span className="text-xs text-muted-foreground">
-              Longest: {longestStreak}w
-            </span>
+            <span className="text-xs text-muted-foreground">Longest: {longestStreak}w</span>
           )}
           <Button onClick={() => openCreateModal()} size="sm">
             <Plus className="h-4 w-4" />
@@ -265,9 +263,7 @@ function DevlogPage() {
             <DialogTitle>
               {editingEntry ? `Edit Week ${weekNumber}` : `New Entry for Week ${weekNumber}`}
             </DialogTitle>
-            <DialogDescription>
-              Write your weekly DEVLOG entry in Markdown.
-            </DialogDescription>
+            <DialogDescription>Write your weekly DEVLOG entry in Markdown.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -300,11 +296,7 @@ function DevlogPage() {
               <label htmlFor="publish" className="text-sm font-medium cursor-pointer">
                 Publish
               </label>
-              <Switch
-                id="publish"
-                checked={isPublished}
-                onCheckedChange={setIsPublished}
-              />
+              <Switch id="publish" checked={isPublished} onCheckedChange={setIsPublished} />
             </div>
           </div>
           <DialogFooter className="flex justify-between">
@@ -345,5 +337,3 @@ function DevlogSkeleton() {
     </div>
   );
 }
-
-

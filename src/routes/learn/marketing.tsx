@@ -173,9 +173,7 @@ function MarketingPage() {
   const [resourceFilter, setResourceFilter] = useState<ResourceFilter>("all");
 
   const filteredResources =
-    resourceFilter === "all"
-      ? RESOURCES
-      : RESOURCES.filter((r) => r.type === resourceFilter);
+    resourceFilter === "all" ? RESOURCES : RESOURCES.filter((r) => r.type === resourceFilter);
 
   return (
     <div className="bg-background">
@@ -189,9 +187,8 @@ function MarketingPage() {
             Master <span className="text-primary">Marketing</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Growth hacking, brand strategy, and community building for Web3
-            projects. Learn how to attract users, build loyal communities, and
-            scale your marketing efforts.
+            Growth hacking, brand strategy, and community building for Web3 projects. Learn how to
+            attract users, build loyal communities, and scale your marketing efforts.
           </p>
         </div>
       </section>
@@ -204,9 +201,7 @@ function MarketingPage() {
               <Layers className="h-5 w-5 text-primary" />
               <div>
                 <div className="text-headline-sm">{TRACKS.length}</div>
-                <div className="text-xs text-muted-foreground">
-                  Learning Tracks
-                </div>
+                <div className="text-xs text-muted-foreground">Learning Tracks</div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-3">
@@ -222,9 +217,7 @@ function MarketingPage() {
               <GraduationCap className="h-5 w-5 text-primary" />
               <div>
                 <div className="text-headline-sm"></div>
-                <div className="text-xs text-muted-foreground">
-                  Quizzes Completed
-                </div>
+                <div className="text-xs text-muted-foreground">Quizzes Completed</div>
               </div>
             </div>
           </div>
@@ -280,8 +273,7 @@ function MarketingPage() {
                     className="mt-5 w-full font-semibold tracking-wide text-xs group-hover:border-primary/40"
                   >
                     <Link to="/learn">
-                      Start Learning{" "}
-                      <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                      Start Learning <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                     </Link>
                   </Button>
                 </div>
@@ -298,7 +290,10 @@ function MarketingPage() {
             <h2 className="text-headline-lg">Resources Library</h2>
           </div>
 
-          <Tabs value={resourceFilter} onValueChange={(v) => setResourceFilter(v as ResourceFilter)}>
+          <Tabs
+            value={resourceFilter}
+            onValueChange={(v) => setResourceFilter(v as ResourceFilter)}
+          >
             <TabsList className="mb-6 bg-background/50">
               <TabsTrigger value="all">All Types</TabsTrigger>
               <TabsTrigger value="ARTICLE">Articles</TabsTrigger>
@@ -309,8 +304,7 @@ function MarketingPage() {
             <TabsContent value={resourceFilter}>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {filteredResources.map((resource) => {
-                  const IconComp =
-                    RESOURCE_ICONS[resource.type] || FileText;
+                  const IconComp = RESOURCE_ICONS[resource.type] || FileText;
                   return (
                     <a
                       key={resource.id}
@@ -350,19 +344,14 @@ function MarketingPage() {
             MARKETING?
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Join the community and get access to all marketing tracks, mentorship,
-            and hands-on project opportunities.
+            Join the community and get access to all marketing tracks, mentorship, and hands-on
+            project opportunities.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" className="font-semibold tracking-wide">
               <Link to="/join">Join BlockchainClub FUTMinna</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="font-semibold tracking-wide"
-            >
+            <Button asChild size="lg" variant="outline" className="font-semibold tracking-wide">
               <Link to="/about">Learn More</Link>
             </Button>
           </div>
@@ -371,5 +360,3 @@ function MarketingPage() {
     </div>
   );
 }
-
-

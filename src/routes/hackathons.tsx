@@ -24,21 +24,9 @@ import {
 } from "@/components/ui/select";
 import { LoginPrompt } from "@/components/login-prompt";
 import { toast } from "sonner";
-import {
-  Trophy,
-  Users,
-  Calendar,
-  DollarSign,
-  Plus,
-  ArrowRight,
-  User,
-  Clock,
-} from "lucide-react";
+import { Trophy, Users, Calendar, DollarSign, Plus, ArrowRight, User, Clock } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
-import {
-  apiQueryAll,
-  apiInsert,
-} from "@/lib/api-client";
+import { apiQueryAll, apiInsert } from "@/lib/api-client";
 
 export const Route = createFileRoute("/hackathons")({
   head: () => ({
@@ -53,7 +41,10 @@ export const Route = createFileRoute("/hackathons")({
 const TEAM_STATUS_CONFIG: Record<string, { label: string; className: string }> = {
   forming: { label: "Forming", className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
   building: { label: "Building", className: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-  submitted: { label: "Submitted", className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
+  submitted: {
+    label: "Submitted",
+    className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  },
   won: { label: "Won", className: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" },
 };
 
@@ -156,9 +147,7 @@ function HackathonsPageContent({ userId }: { userId: string }) {
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
       <div className="mb-2">
-        <h1 className="text-display-sm md:text-display-md tracking-tight">
-          Hackathon Teams
-        </h1>
+        <h1 className="text-display-sm md:text-display-md tracking-tight">Hackathon Teams</h1>
         <p className="mt-2 text-muted-foreground">
           Join or create a team and compete in upcoming hackathons.
         </p>
@@ -179,14 +168,15 @@ function HackathonsPageContent({ userId }: { userId: string }) {
         {hackathons && hackathons.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {hackathons.map((h) => (
-              <Card key={h.id} className="border-border bg-card hover:border-primary/40 transition-all hover:-translate-y-0.5">
+              <Card
+                key={h.id}
+                className="border-border bg-card hover:border-primary/40 transition-all hover:-translate-y-0.5"
+              >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <CardTitle className="text-base">{h.title}</CardTitle>
                   </div>
-                  {h.organizer && (
-                    <p className="text-xs text-muted-foreground">by {h.organizer}</p>
-                  )}
+                  {h.organizer && <p className="text-xs text-muted-foreground">by {h.organizer}</p>}
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
@@ -208,9 +198,7 @@ function HackathonsPageContent({ userId }: { userId: string }) {
                     )}
                   </div>
                   {h.description && (
-                    <p className="text-xs text-muted-foreground line-clamp-2">
-                      {h.description}
-                    </p>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{h.description}</p>
                   )}
                 </CardContent>
               </Card>
@@ -249,7 +237,10 @@ function HackathonsPageContent({ userId }: { userId: string }) {
                         <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">
                           {team.name}
                         </h3>
-                        <Badge variant="outline" className={`text-[10px] ${statusConfig.className}`}>
+                        <Badge
+                          variant="outline"
+                          className={`text-[10px] ${statusConfig.className}`}
+                        >
                           {statusConfig.label}
                         </Badge>
                       </div>
@@ -375,5 +366,3 @@ interface TeamMember {
   user_id: string;
   role: string;
 }
-
-

@@ -7,5 +7,3 @@ export const Route = createFileRoute("/learn")({
 function LearnLayout() {
   return <Outlet />;
 }
-
-

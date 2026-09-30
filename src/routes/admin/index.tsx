@@ -1,12 +1,12 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/stores/auth-store';
-import { apiAnalytics } from '@/lib/api-client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiAnalytics } from "@/lib/api-client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   Users,
   Calendar,
@@ -17,10 +17,10 @@ import {
   Clock,
   Briefcase,
   AlertCircle,
-} from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+} from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/admin/')({
+export const Route = createFileRoute("/admin/")({
   component: AdminOverview,
 });
 
@@ -38,16 +38,12 @@ function StatCard({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
-          {title}
-        </CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
         <Icon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
-        {description && (
-          <p className="text-xs text-muted-foreground mt-1">{description}</p>
-        )}
+        {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
       </CardContent>
     </Card>
   );
@@ -56,8 +52,13 @@ function StatCard({
 function AdminOverview() {
   const { accessToken } = useAuthStore();
 
-  const { data: analytics, isLoading, isError, refetch } = useQuery({
-    queryKey: ['admin-analytics'],
+  const {
+    data: analytics,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["admin-analytics"],
     queryFn: () => apiAnalytics(),
     enabled: !!accessToken,
   });
@@ -95,7 +96,9 @@ function AdminOverview() {
           <AlertTitle>Failed to load dashboard</AlertTitle>
           <AlertDescription className="flex items-center justify-between">
             <span>Could not fetch analytics data. Please try again.</span>
-            <Button variant="outline" size="sm" onClick={() => refetch()}>Retry</Button>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              Retry
+            </Button>
           </AlertDescription>
         </Alert>
       </div>
@@ -187,11 +190,9 @@ function AdminOverview() {
                   >
                     <div>
                       <p className="text-sm font-medium">
-                        {member.profiles?.[0]?.full_name || member.email || 'New Member'}
+                        {member.profiles?.[0]?.full_name || member.email || "New Member"}
                       </p>
-                      <p className="text-xs text-muted-foreground">
-                        {member.email}
-                      </p>
+                      <p className="text-xs text-muted-foreground">{member.email}</p>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Clock className="h-3 w-3" />
@@ -233,9 +234,7 @@ function AdminOverview() {
             <Briefcase className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {analytics?.openOpportunities || 0}
-            </div>
+            <div className="text-2xl font-bold">{analytics?.openOpportunities || 0}</div>
             <p className="text-xs text-muted-foreground mt-1">
               {analytics?.totalOpportunities || 0} total
             </p>
@@ -249,9 +248,7 @@ function AdminOverview() {
             <Badge variant="secondary">{analytics?.totalPartners || 0}</Badge>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {analytics?.totalPartners || 0}
-            </div>
+            <div className="text-2xl font-bold">{analytics?.totalPartners || 0}</div>
             <p className="text-xs text-muted-foreground mt-1">Ecosystem partners</p>
           </CardContent>
         </Card>
@@ -259,5 +256,3 @@ function AdminOverview() {
     </div>
   );
 }
-
-

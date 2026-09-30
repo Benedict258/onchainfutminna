@@ -1,8 +1,8 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState, useRef } from 'react';
-import { useAuthStore } from '@/stores/auth-store';
-import { apiQuery, apiInsert, apiUpdate, apiDelete } from '@/lib/api-client';
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useRef } from "react";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiQuery, apiInsert, apiUpdate, apiDelete } from "@/lib/api-client";
 import {
   Table,
   TableBody,
@@ -10,27 +10,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,22 +40,30 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Plus, Pencil, Trash2, ExternalLink, Upload, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+} from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Plus, Pencil, Trash2, ExternalLink, Upload, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
-export const Route = createFileRoute('/admin/opportunities')({
+export const Route = createFileRoute("/admin/opportunities")({
   component: AdminOpportunities,
 });
 
-type OppType = 'HACKATHON' | 'GRANT' | 'BOUNTY' | 'JOB' | 'INTERNSHIP' | 'PROGRAM' | 'AMBASSADOR';
-type OppStatus = 'OPEN' | 'CLOSING_SOON' | 'CLOSED';
-type Ecosystem = 'EVM' | 'SUI_MOVE' | 'APTOS_MOVE' | 'SOLANA_RUST' | 'GENERAL';
+type OppType = "HACKATHON" | "GRANT" | "BOUNTY" | "JOB" | "INTERNSHIP" | "PROGRAM" | "AMBASSADOR";
+type OppStatus = "OPEN" | "CLOSING_SOON" | "CLOSED";
+type Ecosystem = "EVM" | "SUI_MOVE" | "APTOS_MOVE" | "SOLANA_RUST" | "GENERAL";
 
-const OPPORTUNITY_TYPES: OppType[] = ['HACKATHON', 'GRANT', 'BOUNTY', 'JOB', 'INTERNSHIP', 'PROGRAM', 'AMBASSADOR'];
-const STATUSES: OppStatus[] = ['OPEN', 'CLOSING_SOON', 'CLOSED'];
-const ECOSYSTEMS: Ecosystem[] = ['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL'];
+const OPPORTUNITY_TYPES: OppType[] = [
+  "HACKATHON",
+  "GRANT",
+  "BOUNTY",
+  "JOB",
+  "INTERNSHIP",
+  "PROGRAM",
+  "AMBASSADOR",
+];
+const STATUSES: OppStatus[] = ["OPEN", "CLOSING_SOON", "CLOSED"];
+const ECOSYSTEMS: Ecosystem[] = ["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"];
 
 interface OpportunityForm {
   title: string;
@@ -72,24 +80,24 @@ interface OpportunityForm {
 }
 
 const defaultForm: OpportunityForm = {
-  title: '',
-  organizer: '',
-  type: 'HACKATHON',
-  ecosystem: 'GENERAL',
-  description: '',
-  prize: '',
-  applyUrl: '',
-  deadline: '',
-  status: 'OPEN',
-  imageUrl: '',
+  title: "",
+  organizer: "",
+  type: "HACKATHON",
+  ecosystem: "GENERAL",
+  description: "",
+  prize: "",
+  applyUrl: "",
+  deadline: "",
+  status: "OPEN",
+  imageUrl: "",
   isPublished: false,
 };
 
 function AdminOpportunities() {
   const { accessToken } = useAuthStore();
   const queryClient = useQueryClient();
-  const [typeFilter, setTypeFilter] = useState<string>('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [typeFilter, setTypeFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editItem, setEditItem] = useState<Record<string, unknown> | null>(null);
   const [deleteItem, setDeleteItem] = useState<Record<string, unknown> | null>(null);
@@ -112,7 +120,7 @@ function AdminOpportunities() {
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Upload failed");
-      setForm(prev => ({ ...prev, imageUrl: result.url }));
+      setForm((prev) => ({ ...prev, imageUrl: result.url }));
       toast.success("Image uploaded");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Upload failed");
@@ -122,25 +130,31 @@ function AdminOpportunities() {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ['admin-opportunities', typeFilter, statusFilter],
+    queryKey: ["admin-opportunities", typeFilter, statusFilter],
     queryFn: async () => {
       const filters: Record<string, any> = {};
       if (typeFilter) filters.type = typeFilter;
       if (statusFilter) filters.status = statusFilter;
-      const res = await apiQuery('opportunities', {
-        select: '*',
+      const res = await apiQuery("opportunities", {
+        select: "*",
         filters,
-        order: { column: 'deadline', ascending: true },
+        order: { column: "deadline", ascending: true },
         range: [0, 49],
-        count: 'exact',
+        count: "exact",
       });
-      return { opportunities: res.data || [], total: res.count || 0, page: 1, limit: 50, totalPages: Math.ceil((res.count || 0) / 50) };
+      return {
+        opportunities: res.data || [],
+        total: res.count || 0,
+        page: 1,
+        limit: 50,
+        totalPages: Math.ceil((res.count || 0) / 50),
+      };
     },
   });
 
   const createMutation = useMutation({
     mutationFn: () =>
-      apiInsert('opportunities', {
+      apiInsert("opportunities", {
         title: form.title,
         organizer: form.organizer || undefined,
         type: form.type as OppType,
@@ -154,48 +168,51 @@ function AdminOpportunities() {
         is_published: form.isPublished,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-opportunities'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-opportunities"] });
       setDialogOpen(false);
       setForm(defaultForm);
-      toast.success('Opportunity created');
+      toast.success("Opportunity created");
     },
-    onError: () => toast.error('Failed to create opportunity'),
+    onError: () => toast.error("Failed to create opportunity"),
   });
 
   const updateMutation = useMutation({
     mutationFn: () =>
-      apiUpdate('opportunities', {
-        title: form.title,
-        organizer: form.organizer || undefined,
-        type: form.type as OppType,
-        ecosystem: form.ecosystem as Ecosystem,
-        description: form.description || undefined,
-        prize: form.prize || undefined,
-        apply_url: form.applyUrl || undefined,
-        deadline: form.deadline ? new Date(form.deadline).toISOString() : undefined,
-        status: form.status as OppStatus,
-        image_url: form.imageUrl || undefined,
-        is_published: form.isPublished,
-      }, { id: editItem?.id as string }),
+      apiUpdate(
+        "opportunities",
+        {
+          title: form.title,
+          organizer: form.organizer || undefined,
+          type: form.type as OppType,
+          ecosystem: form.ecosystem as Ecosystem,
+          description: form.description || undefined,
+          prize: form.prize || undefined,
+          apply_url: form.applyUrl || undefined,
+          deadline: form.deadline ? new Date(form.deadline).toISOString() : undefined,
+          status: form.status as OppStatus,
+          image_url: form.imageUrl || undefined,
+          is_published: form.isPublished,
+        },
+        { id: editItem?.id as string },
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-opportunities'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-opportunities"] });
       setDialogOpen(false);
       setEditItem(null);
       setForm(defaultForm);
-      toast.success('Opportunity updated');
+      toast.success("Opportunity updated");
     },
-    onError: () => toast.error('Failed to update opportunity'),
+    onError: () => toast.error("Failed to update opportunity"),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: () =>
-      apiDelete('opportunities', { id: deleteItem?.id as string }),
+    mutationFn: () => apiDelete("opportunities", { id: deleteItem?.id as string }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-opportunities'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-opportunities"] });
       setDeleteItem(null);
-      toast.success('Opportunity deleted');
+      toast.success("Opportunity deleted");
     },
-    onError: () => toast.error('Failed to delete opportunity'),
+    onError: () => toast.error("Failed to delete opportunity"),
   });
 
   const openCreate = () => {
@@ -208,17 +225,15 @@ function AdminOpportunities() {
     setEditItem(item);
     setForm({
       title: item.title as string,
-      organizer: (item.organizer as string) || '',
+      organizer: (item.organizer as string) || "",
       type: item.type as string,
       ecosystem: item.ecosystem as string,
-      description: (item.description as string) || '',
-      prize: (item.prize as string) || '',
-      applyUrl: (item.apply_url as string) || '',
-      deadline: item.deadline
-        ? new Date(item.deadline as string).toISOString().slice(0, 16)
-        : '',
+      description: (item.description as string) || "",
+      prize: (item.prize as string) || "",
+      applyUrl: (item.apply_url as string) || "",
+      deadline: item.deadline ? new Date(item.deadline as string).toISOString().slice(0, 16) : "",
       status: item.status as string,
-      imageUrl: (item.image_url as string) || '',
+      imageUrl: (item.image_url as string) || "",
       isPublished: (item.is_published as boolean) || false,
     });
     setDialogOpen(true);
@@ -226,11 +241,11 @@ function AdminOpportunities() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'OPEN':
+      case "OPEN":
         return <Badge className="bg-green-500/20 text-green-400">Open</Badge>;
-      case 'CLOSING_SOON':
+      case "CLOSING_SOON":
         return <Badge className="bg-yellow-500/20 text-yellow-400">Closing Soon</Badge>;
-      case 'CLOSED':
+      case "CLOSED":
         return <Badge variant="destructive">Closed</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
@@ -252,7 +267,7 @@ function AdminOpportunities() {
 
       {/* Filters */}
       <div className="flex flex-col gap-4 sm:flex-row">
-        <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v === 'all' ? '' : v)}>
+        <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v === "all" ? "" : v)}>
           <SelectTrigger className="w-[160px]">
             <SelectValue placeholder="All Types" />
           </SelectTrigger>
@@ -265,7 +280,7 @@ function AdminOpportunities() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v === 'all' ? '' : v)}>
+        <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}>
           <SelectTrigger className="w-[160px]">
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
@@ -323,24 +338,24 @@ function AdminOpportunities() {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {opp.organizer || 'N/A'}
-                  </TableCell>
+                  <TableCell className="text-muted-foreground">{opp.organizer || "N/A"}</TableCell>
                   <TableCell>
                     <Badge variant="outline">{opp.type}</Badge>
                   </TableCell>
                   <TableCell>{getStatusBadge(opp.status as string)}</TableCell>
                   <TableCell>
                     {opp.image_url ? (
-                      <img src={opp.image_url as string} alt="" className="h-8 w-8 rounded object-cover border border-border" />
+                      <img
+                        src={opp.image_url as string}
+                        alt=""
+                        className="h-8 w-8 rounded object-cover border border-border"
+                      />
                     ) : (
                       <span className="text-muted-foreground text-xs"></span>
                     )}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {opp.deadline
-                      ? new Date(opp.deadline).toLocaleDateString()
-                      : 'N/A'}
+                    {opp.deadline ? new Date(opp.deadline).toLocaleDateString() : "N/A"}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
@@ -369,9 +384,9 @@ function AdminOpportunities() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editItem ? 'Edit Opportunity' : 'Create Opportunity'}</DialogTitle>
+            <DialogTitle>{editItem ? "Edit Opportunity" : "Create Opportunity"}</DialogTitle>
             <DialogDescription>
-              {editItem ? 'Update opportunity details' : 'Add a new opportunity'}
+              {editItem ? "Update opportunity details" : "Add a new opportunity"}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -487,13 +502,33 @@ function AdminOpportunities() {
                   placeholder="https://... or upload below"
                   className="flex-1"
                 />
-                <Button type="button" variant="outline" size="icon" disabled={uploadingImage} onClick={() => fileInputRef.current?.click()}>
-                  {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  disabled={uploadingImage}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {uploadingImage ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Upload className="h-4 w-4" />
+                  )}
                 </Button>
-                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
               </div>
               {form.imageUrl && (
-                <img src={form.imageUrl} alt="Preview" className="mt-2 h-20 w-full object-cover rounded-md border border-border" />
+                <img
+                  src={form.imageUrl}
+                  alt="Preview"
+                  className="mt-2 h-20 w-full object-cover rounded-md border border-border"
+                />
               )}
             </div>
             <div className="flex items-center gap-2">
@@ -511,7 +546,7 @@ function AdminOpportunities() {
                 onClick={() => (editItem ? updateMutation.mutate() : createMutation.mutate())}
                 disabled={!form.title}
               >
-                {editItem ? 'Update' : 'Create'}
+                {editItem ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -529,14 +564,10 @@ function AdminOpportunities() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteMutation.mutate()}>
-              Delete
-            </AlertDialogAction>
+            <AlertDialogAction onClick={() => deleteMutation.mutate()}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
   );
 }
-
-

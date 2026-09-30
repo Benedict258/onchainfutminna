@@ -32,18 +32,14 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
     "The protocols and foundations that power our learning tracks and provide ecosystem support.",
   COMMUNITY:
     "Organizations and communities that collaborate with us on events, content, and outreach.",
-  SPONSOR:
-    "Companies and entities that financially support our mission and events.",
+  SPONSOR: "Companies and entities that financially support our mission and events.",
 };
 
 function PartnersSkeleton() {
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-lg border border-border bg-card p-6 space-y-4"
-        >
+        <div key={i} className="rounded-lg border border-border bg-card p-6 space-y-4">
           <Skeleton className="h-14 w-14 rounded-lg" />
           <Skeleton className="h-6 w-1/2" />
           <Skeleton className="h-4 w-full" />
@@ -60,8 +56,7 @@ export const Route = createFileRoute("/partners")({
       { title: "Partners | BlockchainClub FUTMinna" },
       {
         name: "description",
-        content:
-          "Ecosystem and community partners of Blockchain Club FUTMinna.",
+        content: "Ecosystem and community partners of Blockchain Club FUTMinna.",
       },
     ],
   }),
@@ -104,8 +99,8 @@ function PartnersPage() {
             Building <span className="text-primary">Together</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            The foundations, communities, and organizations that collaborate with
-            us to drive Web3 adoption from campus to the world.
+            The foundations, communities, and organizations that collaborate with us to drive Web3
+            adoption from campus to the world.
           </p>
         </div>
       </section>
@@ -116,10 +111,7 @@ function PartnersPage() {
         const partnerList = partners ?? [];
 
         return (
-          <section
-            key={key}
-            className="border-b border-border last:border-b-0"
-          >
+          <section key={key} className="border-b border-border last:border-b-0">
             <div className="mx-auto max-w-[1400px] px-6 py-16">
               <div className="flex items-center gap-3 mb-2">
                 <span className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface-high text-primary">
@@ -127,9 +119,7 @@ function PartnersPage() {
                 </span>
                 <h2 className="text-headline-lg">{CATEGORY_LABELS[key]}</h2>
               </div>
-              <p className="text-muted-foreground mb-8">
-                {CATEGORY_DESCRIPTIONS[key]}
-              </p>
+              <p className="text-muted-foreground mb-8">{CATEGORY_DESCRIPTIONS[key]}</p>
 
               {loading ? (
                 <PartnersSkeleton />
@@ -197,38 +187,24 @@ function PartnersPage() {
             <Handshake className="mx-auto h-10 w-10 text-primary" />
             <h2 className="mt-6 text-headline-lg">PARTNER WITH US</h2>
             <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-              We&apos;re always looking for partners who share our vision of
-              building Africa&apos;s next generation of Web3 talent. Let&apos;s
-              create impact together.
+              We&apos;re always looking for partners who share our vision of building Africa&apos;s
+              next generation of Web3 talent. Let&apos;s create impact together.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button
-                asChild
-                size="lg"
-                className="font-semibold tracking-wide"
-              >
+              <Button asChild size="lg" className="font-semibold tracking-wide">
                 <a href="mailto:partners@bcfutminna.org">
                   <Mail className="mr-2 h-4 w-4" />
                   Contact Us
                 </a>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="font-semibold tracking-wide"
-              >
+              <Button asChild size="lg" variant="outline" className="font-semibold tracking-wide">
                 <Link to="/about">Learn More About BlockchainClub FUTMinna</Link>
               </Button>
             </div>
-            <p className="mt-6 text-xs text-muted-foreground">
-              partners@bcfutminna.org
-            </p>
+            <p className="mt-6 text-xs text-muted-foreground">partners@bcfutminna.org</p>
           </div>
         </div>
       </section>
     </div>
   );
 }
-
-

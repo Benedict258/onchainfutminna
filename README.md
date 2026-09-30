@@ -33,30 +33,30 @@ npm run dev
 
 ## Environment Variables
 
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `JWT_SECRET` | Access token secret |
-| `JWT_REFRESH_SECRET` | Refresh token secret |
-| `SUPABASE_URL` | Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key |
-| `RESEND_API_KEY` | Resend API key |
-| `RESEND_FROM_EMAIL` | Sender email address |
-| `SITE_URL` | Canonical site URL |
+| Variable                    | Description                  |
+| --------------------------- | ---------------------------- |
+| `DATABASE_URL`              | PostgreSQL connection string |
+| `JWT_SECRET`                | Access token secret          |
+| `JWT_REFRESH_SECRET`        | Refresh token secret         |
+| `SUPABASE_URL`              | Supabase project URL         |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key    |
+| `RESEND_API_KEY`            | Resend API key               |
+| `RESEND_FROM_EMAIL`         | Sender email address         |
+| `SITE_URL`                  | Canonical site URL           |
 
 ## Available Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start development server |
-| `npm run build` | Production build |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run ESLint |
-| `npm run format` | Format with Prettier |
-| `npm run db:push` | Push Prisma schema to DB |
-| `npm run db:seed` | Seed database |
-| `npm run db:studio` | Open Prisma Studio |
-| `npm run db:generate` | Generate Prisma client |
+| Command               | Description              |
+| --------------------- | ------------------------ |
+| `npm run dev`         | Start development server |
+| `npm run build`       | Production build         |
+| `npm run preview`     | Preview production build |
+| `npm run lint`        | Run ESLint               |
+| `npm run format`      | Format with Prettier     |
+| `npm run db:push`     | Push Prisma schema to DB |
+| `npm run db:seed`     | Seed database            |
+| `npm run db:studio`   | Open Prisma Studio       |
+| `npm run db:generate` | Generate Prisma client   |
 
 ## Folder Structure
 

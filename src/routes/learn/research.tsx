@@ -322,5 +322,3 @@ function ResearchPage() {
     </div>
   );
 }
-
-

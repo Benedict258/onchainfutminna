@@ -1,9 +1,9 @@
-﻿import { createFileRoute, Link, Outlet } from '@tanstack/react-router';
-import { AdminGuard } from '@/components/auth-guard';
-import { useAuthStore } from '@/stores/auth-store';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+﻿import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { AdminGuard } from "@/components/auth-guard";
+import { useAuthStore } from "@/stores/auth-store";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   LayoutDashboard,
   Users,
@@ -19,25 +19,25 @@ import {
   LogOut,
   Menu,
   ShieldCheck,
-} from 'lucide-react';
-import { useState } from 'react';
+} from "lucide-react";
+import { useState } from "react";
 
-export const Route = createFileRoute('/admin')({
+export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
 
 const NAV_ITEMS = [
-  { to: '/admin', label: 'Overview', icon: LayoutDashboard },
-  { to: '/admin/members', label: 'Members', icon: Users },
-  { to: '/admin/events', label: 'Events', icon: Calendar },
-  { to: '/admin/learn', label: 'Learn', icon: BookOpen },
-  { to: '/admin/projects', label: 'Projects', icon: FolderGit2 },
-  { to: '/admin/opportunities', label: 'Opportunities', icon: Briefcase },
-  { to: '/admin/blog', label: 'Blog', icon: FileText },
-  { to: '/admin/partners', label: 'Partners', icon: Handshake },
-  { to: '/admin/leaderboard', label: 'Leaderboard', icon: Trophy },
-  { to: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-  { to: '/admin/settings', label: 'Settings', icon: Settings },
+  { to: "/admin", label: "Overview", icon: LayoutDashboard },
+  { to: "/admin/members", label: "Members", icon: Users },
+  { to: "/admin/events", label: "Events", icon: Calendar },
+  { to: "/admin/learn", label: "Learn", icon: BookOpen },
+  { to: "/admin/projects", label: "Projects", icon: FolderGit2 },
+  { to: "/admin/opportunities", label: "Opportunities", icon: Briefcase },
+  { to: "/admin/blog", label: "Blog", icon: FileText },
+  { to: "/admin/partners", label: "Partners", icon: Handshake },
+  { to: "/admin/leaderboard", label: "Leaderboard", icon: Trophy },
+  { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+  { to: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
@@ -55,12 +55,12 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             <Link
               key={item.to}
               to={item.to}
-              activeOptions={{ exact: item.to === '/admin' }}
+              activeOptions={{ exact: item.to === "/admin" }}
               activeProps={{
-                className: 'bg-primary/10 text-primary',
+                className: "bg-primary/10 text-primary",
               }}
               inactiveProps={{
-                className: 'text-muted-foreground hover:text-foreground hover:bg-muted',
+                className: "text-muted-foreground hover:text-foreground hover:bg-muted",
               }}
               onClick={onNavigate}
               className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors"
@@ -72,12 +72,8 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         </nav>
       </ScrollArea>
       <div className="border-t border-border p-4">
-        <div className="mb-2 text-xs text-muted-foreground">
-          Signed in as
-        </div>
-        <div className="text-sm font-medium truncate">
-          {user?.profile?.fullName || user?.email}
-        </div>
+        <div className="mb-2 text-xs text-muted-foreground">Signed in as</div>
+        <div className="text-sm font-medium truncate">{user?.profile?.fullName || user?.email}</div>
         <Button
           variant="ghost"
           size="sm"
@@ -125,5 +121,3 @@ function AdminLayout() {
     </AdminGuard>
   );
 }
-
-

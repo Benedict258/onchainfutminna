@@ -1,9 +1,11 @@
 # DEV_PLAN.md — Development Phases & Plan
+
 ## Blockchain Club FUTMINNA — Community Platform
 
 ---
 
 ## Phase 0: Foundation & Setup
+
 **Status: COMPLETE**
 
 - [x] Project scaffold (TanStack Start + Vite + Tailwind v4)
@@ -18,9 +20,11 @@
 ---
 
 ## Phase 1: Core Infrastructure
+
 **Status: COMPLETE**
 
 ### Auth System
+
 - [x] JWT utilities (access + refresh tokens)
 - [x] Login page (email + password, form validation)
 - [x] Sign Up / Join page (16-field registration form)
@@ -29,6 +33,7 @@
 - [x] Header updated with auth state (avatar dropdown when logged in)
 
 ### API Layer
+
 - [x] 53 server functions across 9 files:
   - `auth.server.ts` — register, login, logout, refreshToken, getMe
   - `members.server.ts` — getMembers, getMemberById, updateMember
@@ -44,6 +49,7 @@
 ---
 
 ## Phase 2: Feature Pages
+
 **Status: COMPLETE**
 
 - [x] Home page (hero, stats, pillars, events, projects, tracks, partners, CTA)
@@ -59,6 +65,7 @@
 ---
 
 ## Phase 3: Admin Dashboard
+
 **Status: COMPLETE**
 
 - [x] Admin layout (sidebar navigation + content area)
@@ -77,6 +84,7 @@
 ---
 
 ## Phase 4: Supporting Systems
+
 **Status: COMPLETE**
 
 - [x] File upload utility (Cloudinary integration)
@@ -89,6 +97,7 @@
 ---
 
 ## Phase 5: Integration & Testing
+
 **Status: NOT STARTED**
 
 - [ ] Wire all pages to live API server functions
@@ -103,6 +112,7 @@
 ---
 
 ## Phase 6: Content & Launch
+
 **Status: NOT STARTED**
 
 - [ ] Add real events via admin dashboard
@@ -119,6 +129,7 @@
 ---
 
 ## Phase 7: Enhancement (Post-Launch)
+
 **Status: NOT STARTED**
 
 - [ ] On-chain certifications (NFT/SBT on Sui or Solana)

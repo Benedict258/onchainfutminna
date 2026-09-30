@@ -1,8 +1,15 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { apiQuery, apiQueryAll, apiQuerySingle, apiInsert, apiUpdate, apiDelete } from '@/lib/api-client';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import {
+  apiQuery,
+  apiQueryAll,
+  apiQuerySingle,
+  apiInsert,
+  apiUpdate,
+  apiDelete,
+} from "@/lib/api-client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -10,27 +17,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,21 +47,21 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Plus, Pencil, Trash2, BookOpen, Layers, FileText, Link as LinkIcon } from 'lucide-react';
-import { toast } from 'sonner';
+} from "@/components/ui/alert-dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Plus, Pencil, Trash2, BookOpen, Layers, FileText, Link as LinkIcon } from "lucide-react";
+import { toast } from "sonner";
 
-export const Route = createFileRoute('/admin/learn')({
+export const Route = createFileRoute("/admin/learn")({
   component: AdminLearn,
 });
 
-type Ecosystem = 'EVM' | 'SUI_MOVE' | 'APTOS_MOVE' | 'SOLANA_RUST' | 'GENERAL';
-type Difficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+type Ecosystem = "EVM" | "SUI_MOVE" | "APTOS_MOVE" | "SOLANA_RUST" | "GENERAL";
+type Difficulty = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
 
-const ECOSYSTEMS: Ecosystem[] = ['EVM', 'SUI_MOVE', 'APTOS_MOVE', 'SOLANA_RUST', 'GENERAL'];
-const DIFFICULTIES: Difficulty[] = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
+const ECOSYSTEMS: Ecosystem[] = ["EVM", "SUI_MOVE", "APTOS_MOVE", "SOLANA_RUST", "GENERAL"];
+const DIFFICULTIES: Difficulty[] = ["BEGINNER", "INTERMEDIATE", "ADVANCED"];
 
 interface TrackForm {
   title: string;
@@ -67,11 +74,11 @@ interface TrackForm {
 }
 
 const defaultTrackForm: TrackForm = {
-  title: '',
-  description: '',
-  ecosystem: 'GENERAL',
-  difficulty: 'BEGINNER',
-  iconUrl: '',
+  title: "",
+  description: "",
+  ecosystem: "GENERAL",
+  difficulty: "BEGINNER",
+  iconUrl: "",
   isPublished: false,
   order: 0,
 };
@@ -86,10 +93,10 @@ interface ModuleForm {
 }
 
 const defaultModuleForm: ModuleForm = {
-  trackId: '',
-  title: '',
-  description: '',
-  content: '',
+  trackId: "",
+  title: "",
+  description: "",
+  content: "",
   order: 0,
   isPublished: false,
 };
@@ -103,10 +110,10 @@ interface ResourceForm {
 }
 
 const defaultResourceForm: ResourceForm = {
-  title: '',
-  url: '',
-  type: '',
-  ecosystem: 'GENERAL',
+  title: "",
+  url: "",
+  type: "",
+  ecosystem: "GENERAL",
   isPublished: false,
 };
 
@@ -127,7 +134,9 @@ function AdminLearn() {
   const [resourceDialogOpen, setResourceDialogOpen] = useState(false);
   const [editResource, setEditResource] = useState<Record<string, unknown> | null>(null);
   const [resourceForm, setResourceForm] = useState<ResourceForm>(defaultResourceForm);
-  const [deleteResourceItem, setDeleteResourceItem] = useState<Record<string, unknown> | null>(null);
+  const [deleteResourceItem, setDeleteResourceItem] = useState<Record<string, unknown> | null>(
+    null,
+  );
 
   // Delete states
   const [deleteTrackItem, setDeleteTrackItem] = useState<Record<string, unknown> | null>(null);
@@ -138,38 +147,43 @@ function AdminLearn() {
 
   // Queries
   const { data: tracks, isLoading: tracksLoading } = useQuery({
-    queryKey: ['admin-tracks'],
-    queryFn: () => apiQueryAll('tracks', {
-      select: '*,modules(id)',
-      order: { column: 'order', ascending: true },
-    }).then(tracks => tracks.map((track: any) => ({
-      ...track,
-      _count: { modules: track.modules?.length || 0 },
-      modules: undefined,
-    }))),
+    queryKey: ["admin-tracks"],
+    queryFn: () =>
+      apiQueryAll("tracks", {
+        select: "*,modules(id)",
+        order: { column: "order", ascending: true },
+      }).then((tracks) =>
+        tracks.map((track: any) => ({
+          ...track,
+          _count: { modules: track.modules?.length || 0 },
+          modules: undefined,
+        })),
+      ),
   });
 
   const { data: trackDetail } = useQuery({
-    queryKey: ['admin-track-detail', expandedTrack],
-    queryFn: () => apiQuerySingle('tracks', {
-      select: '*,modules(*,quizzes(id,pass_mark,quiz_questions(id)))',
-      filters: { id: expandedTrack! },
-    }),
+    queryKey: ["admin-track-detail", expandedTrack],
+    queryFn: () =>
+      apiQuerySingle("tracks", {
+        select: "*,modules(*,quizzes(id,pass_mark,quiz_questions(id)))",
+        filters: { id: expandedTrack! },
+      }),
     enabled: !!expandedTrack,
   });
 
   const { data: resources } = useQuery({
-    queryKey: ['admin-resources'],
-    queryFn: () => apiQueryAll('resources', {
-      select: '*',
-      order: { column: 'created_at', ascending: false },
-    }),
+    queryKey: ["admin-resources"],
+    queryFn: () =>
+      apiQueryAll("resources", {
+        select: "*",
+        order: { column: "created_at", ascending: false },
+      }),
   });
 
   // Track mutations
   const createTrackMutation = useMutation({
     mutationFn: () =>
-      apiInsert('tracks', {
+      apiInsert("tracks", {
         title: trackForm.title,
         description: trackForm.description || undefined,
         ecosystem: trackForm.ecosystem as Ecosystem,
@@ -179,39 +193,43 @@ function AdminLearn() {
         order: trackForm.order,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-tracks'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-tracks"] });
       setTrackDialogOpen(false);
       setTrackForm(defaultTrackForm);
-      toast.success('Track created');
+      toast.success("Track created");
     },
-    onError: () => toast.error('Failed to create track'),
+    onError: () => toast.error("Failed to create track"),
   });
 
   const updateTrackMutation = useMutation({
     mutationFn: () =>
-      apiUpdate('tracks', {
-        title: trackForm.title,
-        description: trackForm.description || undefined,
-        ecosystem: trackForm.ecosystem as Ecosystem,
-        difficulty: trackForm.difficulty as Difficulty,
-        icon_url: trackForm.iconUrl || undefined,
-        is_published: trackForm.isPublished,
-        order: trackForm.order,
-      }, { id: editTrack?.id as string }),
+      apiUpdate(
+        "tracks",
+        {
+          title: trackForm.title,
+          description: trackForm.description || undefined,
+          ecosystem: trackForm.ecosystem as Ecosystem,
+          difficulty: trackForm.difficulty as Difficulty,
+          icon_url: trackForm.iconUrl || undefined,
+          is_published: trackForm.isPublished,
+          order: trackForm.order,
+        },
+        { id: editTrack?.id as string },
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-tracks'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-tracks"] });
       setTrackDialogOpen(false);
       setEditTrack(null);
       setTrackForm(defaultTrackForm);
-      toast.success('Track updated');
+      toast.success("Track updated");
     },
-    onError: () => toast.error('Failed to update track'),
+    onError: () => toast.error("Failed to update track"),
   });
 
   // Module mutations
   const createModuleMutation = useMutation({
     mutationFn: () =>
-      apiInsert('modules', {
+      apiInsert("modules", {
         track_id: moduleForm.trackId,
         title: moduleForm.title,
         description: moduleForm.description || undefined,
@@ -220,37 +238,41 @@ function AdminLearn() {
         is_published: moduleForm.isPublished,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-track-detail'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-track-detail"] });
       setModuleDialogOpen(false);
       setModuleForm(defaultModuleForm);
-      toast.success('Module created');
+      toast.success("Module created");
     },
-    onError: () => toast.error('Failed to create module'),
+    onError: () => toast.error("Failed to create module"),
   });
 
   const updateModuleMutation = useMutation({
     mutationFn: () =>
-      apiUpdate('modules', {
-        title: moduleForm.title,
-        description: moduleForm.description || undefined,
-        content: moduleForm.content || undefined,
-        order: moduleForm.order,
-        is_published: moduleForm.isPublished,
-      }, { id: editModule?.id as string }),
+      apiUpdate(
+        "modules",
+        {
+          title: moduleForm.title,
+          description: moduleForm.description || undefined,
+          content: moduleForm.content || undefined,
+          order: moduleForm.order,
+          is_published: moduleForm.isPublished,
+        },
+        { id: editModule?.id as string },
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-track-detail'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-track-detail"] });
       setModuleDialogOpen(false);
       setEditModule(null);
       setModuleForm(defaultModuleForm);
-      toast.success('Module updated');
+      toast.success("Module updated");
     },
-    onError: () => toast.error('Failed to update module'),
+    onError: () => toast.error("Failed to update module"),
   });
 
   // Resource mutations
   const createResourceMutation = useMutation({
     mutationFn: () =>
-      apiInsert('resources', {
+      apiInsert("resources", {
         title: resourceForm.title,
         url: resourceForm.url,
         type: resourceForm.type || undefined,
@@ -258,65 +280,66 @@ function AdminLearn() {
         is_published: resourceForm.isPublished,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-resources'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-resources"] });
       setResourceDialogOpen(false);
       setResourceForm(defaultResourceForm);
-      toast.success('Resource added');
+      toast.success("Resource added");
     },
-    onError: () => toast.error('Failed to add resource'),
+    onError: () => toast.error("Failed to add resource"),
   });
 
   const deleteResourceMutation = useMutation({
-    mutationFn: () =>
-      apiDelete('resources', { id: deleteResourceItem?.id as string }),
+    mutationFn: () => apiDelete("resources", { id: deleteResourceItem?.id as string }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-resources'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-resources"] });
       setDeleteResourceItem(null);
-      toast.success('Resource deleted');
+      toast.success("Resource deleted");
     },
-    onError: () => toast.error('Failed to delete resource'),
+    onError: () => toast.error("Failed to delete resource"),
   });
 
   const updateResourceMutation = useMutation({
     mutationFn: () =>
-      apiUpdate('resources', {
-        title: resourceForm.title,
-        url: resourceForm.url,
-        type: resourceForm.type || undefined,
-        ecosystem: resourceForm.ecosystem as Ecosystem,
-        is_published: resourceForm.isPublished,
-      }, { id: editResource?.id as string }),
+      apiUpdate(
+        "resources",
+        {
+          title: resourceForm.title,
+          url: resourceForm.url,
+          type: resourceForm.type || undefined,
+          ecosystem: resourceForm.ecosystem as Ecosystem,
+          is_published: resourceForm.isPublished,
+        },
+        { id: editResource?.id as string },
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-resources'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-resources"] });
       setResourceDialogOpen(false);
       setEditResource(null);
       setResourceForm(defaultResourceForm);
-      toast.success('Resource updated');
+      toast.success("Resource updated");
     },
-    onError: () => toast.error('Failed to update resource'),
+    onError: () => toast.error("Failed to update resource"),
   });
 
   const deleteTrackMutation = useMutation({
-    mutationFn: () =>
-      apiDelete('tracks', { id: deleteTrackItem?.id as string }),
+    mutationFn: () => apiDelete("tracks", { id: deleteTrackItem?.id as string }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-tracks'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-tracks"] });
       setDeleteTrackItem(null);
       setExpandedTrack(null);
-      toast.success('Track deleted');
+      toast.success("Track deleted");
     },
-    onError: () => toast.error('Failed to delete track'),
+    onError: () => toast.error("Failed to delete track"),
   });
 
   const deleteModuleMutation = useMutation({
-    mutationFn: () =>
-      apiDelete('modules', { id: deleteModuleItem?.id as string }),
+    mutationFn: () => apiDelete("modules", { id: deleteModuleItem?.id as string }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-track-detail'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-track-detail"] });
       setDeleteModuleItem(null);
-      toast.success('Module deleted');
+      toast.success("Module deleted");
     },
-    onError: () => toast.error('Failed to delete module'),
+    onError: () => toast.error("Failed to delete module"),
   });
 
   const openCreateTrack = () => {
@@ -329,10 +352,10 @@ function AdminLearn() {
     setEditTrack(track);
     setTrackForm({
       title: track.title as string,
-      description: (track.description as string) || '',
+      description: (track.description as string) || "",
       ecosystem: track.ecosystem as string,
       difficulty: track.difficulty as string,
-      iconUrl: (track.icon_url as string) || '',
+      iconUrl: (track.icon_url as string) || "",
       isPublished: (track.is_published as boolean) || false,
       order: (track.order as number) || 0,
     });
@@ -348,10 +371,10 @@ function AdminLearn() {
   const openEditModule = (mod: Record<string, unknown>) => {
     setEditModule(mod);
     setModuleForm({
-      trackId: (mod.track_id as string) || '',
+      trackId: (mod.track_id as string) || "",
       title: mod.title as string,
-      description: (mod.description as string) || '',
-      content: (mod.content as string) || '',
+      description: (mod.description as string) || "",
+      content: (mod.content as string) || "",
       order: (mod.order as number) || 0,
       isPublished: (mod.is_published as boolean) || false,
     });
@@ -369,8 +392,8 @@ function AdminLearn() {
     setResourceForm({
       title: resource.title as string,
       url: resource.url as string,
-      type: (resource.type as string) || '',
-      ecosystem: (resource.ecosystem as string) || 'GENERAL',
+      type: (resource.type as string) || "",
+      ecosystem: (resource.ecosystem as string) || "GENERAL",
       isPublished: (resource.is_published as boolean) || false,
     });
     setResourceDialogOpen(true);
@@ -441,8 +464,8 @@ function AdminLearn() {
                       <TableCell>{track.difficulty}</TableCell>
                       <TableCell>{track._count?.modules || 0}</TableCell>
                       <TableCell>
-                        <Badge variant={track.is_published ? 'default' : 'secondary'}>
-                          {track.is_published ? 'Published' : 'Draft'}
+                        <Badge variant={track.is_published ? "default" : "secondary"}>
+                          {track.is_published ? "Published" : "Draft"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
@@ -450,7 +473,9 @@ function AdminLearn() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => setExpandedTrack(expandedTrack === track.id ? null : track.id)}
+                            onClick={() =>
+                              setExpandedTrack(expandedTrack === track.id ? null : track.id)
+                            }
                           >
                             <BookOpen className="h-4 w-4" />
                           </Button>
@@ -493,21 +518,30 @@ function AdminLearn() {
                 {trackDetail.modules && trackDetail.modules.length > 0 ? (
                   <div className="space-y-2">
                     {trackDetail.modules.map((mod: Record<string, unknown>) => (
-                      <div key={mod.id as string} className="flex items-center justify-between rounded border border-border p-3">
+                      <div
+                        key={mod.id as string}
+                        className="flex items-center justify-between rounded border border-border p-3"
+                      >
                         <div className="flex items-center gap-3">
                           <div>
                             <p className="font-medium">{mod.title as string}</p>
-                            <p className="text-xs text-muted-foreground">Order: {mod.order as number}</p>
+                            <p className="text-xs text-muted-foreground">
+                              Order: {mod.order as number}
+                            </p>
                           </div>
-                          <Badge variant={mod.is_published ? 'default' : 'secondary'}>
-                            {mod.is_published ? 'Published' : 'Draft'}
+                          <Badge variant={mod.is_published ? "default" : "secondary"}>
+                            {mod.is_published ? "Published" : "Draft"}
                           </Badge>
                         </div>
                         <div className="flex items-center gap-1">
                           <Button variant="ghost" size="icon" onClick={() => openEditModule(mod)}>
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" onClick={() => setDeleteModuleItem(mod)}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setDeleteModuleItem(mod)}
+                          >
                             <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
                         </div>
@@ -554,21 +588,31 @@ function AdminLearn() {
                   resources.map((resource) => (
                     <TableRow key={resource.id}>
                       <TableCell className="font-medium">{resource.title}</TableCell>
-                      <TableCell className="text-muted-foreground">{resource.type || 'N/A'}</TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {resource.type || "N/A"}
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline">{resource.ecosystem}</Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={resource.is_published ? 'default' : 'secondary'}>
-                          {resource.is_published ? 'Published' : 'Draft'}
+                        <Badge variant={resource.is_published ? "default" : "secondary"}>
+                          {resource.is_published ? "Published" : "Draft"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="icon" onClick={() => openEditResource(resource)}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => openEditResource(resource)}
+                          >
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" onClick={() => setDeleteResourceItem(resource)}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setDeleteResourceItem(resource)}
+                          >
                             <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
                         </div>
@@ -592,9 +636,9 @@ function AdminLearn() {
       <Dialog open={trackDialogOpen} onOpenChange={setTrackDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{editTrack ? 'Edit Track' : 'Create Track'}</DialogTitle>
+            <DialogTitle>{editTrack ? "Edit Track" : "Create Track"}</DialogTitle>
             <DialogDescription>
-              {editTrack ? 'Update track details' : 'Add a new learning track'}
+              {editTrack ? "Update track details" : "Add a new learning track"}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -666,7 +710,9 @@ function AdminLearn() {
                 <Input
                   type="number"
                   value={trackForm.order}
-                  onChange={(e) => setTrackForm({ ...trackForm, order: parseInt(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setTrackForm({ ...trackForm, order: parseInt(e.target.value) || 0 })
+                  }
                 />
               </div>
               <div className="flex items-center gap-2 pt-6">
@@ -682,10 +728,12 @@ function AdminLearn() {
                 Cancel
               </Button>
               <Button
-                onClick={() => (editTrack ? updateTrackMutation.mutate() : createTrackMutation.mutate())}
+                onClick={() =>
+                  editTrack ? updateTrackMutation.mutate() : createTrackMutation.mutate()
+                }
                 disabled={!trackForm.title}
               >
-                {editTrack ? 'Update' : 'Create'}
+                {editTrack ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -696,9 +744,9 @@ function AdminLearn() {
       <Dialog open={moduleDialogOpen} onOpenChange={setModuleDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{editModule ? 'Edit Module' : 'Create Module'}</DialogTitle>
+            <DialogTitle>{editModule ? "Edit Module" : "Create Module"}</DialogTitle>
             <DialogDescription>
-              {editModule ? 'Update module details' : 'Add a new module'}
+              {editModule ? "Update module details" : "Add a new module"}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -727,7 +775,9 @@ function AdminLearn() {
                 <Label>Track</Label>
                 <Input
                   value={
-                    (tracks || []).find((t) => t.id === (editModule?.track_id as string || moduleForm.trackId))?.title || moduleForm.trackId
+                    (tracks || []).find(
+                      (t) => t.id === ((editModule?.track_id as string) || moduleForm.trackId),
+                    )?.title || moduleForm.trackId
                   }
                   disabled
                 />
@@ -764,7 +814,9 @@ function AdminLearn() {
                 <Input
                   type="number"
                   value={moduleForm.order}
-                  onChange={(e) => setModuleForm({ ...moduleForm, order: parseInt(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setModuleForm({ ...moduleForm, order: parseInt(e.target.value) || 0 })
+                  }
                 />
               </div>
               <div className="flex items-center gap-2 pt-6">
@@ -780,10 +832,12 @@ function AdminLearn() {
                 Cancel
               </Button>
               <Button
-                onClick={() => (editModule ? updateModuleMutation.mutate() : createModuleMutation.mutate())}
+                onClick={() =>
+                  editModule ? updateModuleMutation.mutate() : createModuleMutation.mutate()
+                }
                 disabled={!moduleForm.title || !moduleForm.trackId}
               >
-                {editModule ? 'Update' : 'Create'}
+                {editModule ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -794,9 +848,9 @@ function AdminLearn() {
       <Dialog open={resourceDialogOpen} onOpenChange={setResourceDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{editResource ? 'Edit Resource' : 'Add Resource'}</DialogTitle>
+            <DialogTitle>{editResource ? "Edit Resource" : "Add Resource"}</DialogTitle>
             <DialogDescription>
-              {editResource ? 'Update resource details' : 'Add a learning resource'}
+              {editResource ? "Update resource details" : "Add a learning resource"}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -856,10 +910,12 @@ function AdminLearn() {
                 Cancel
               </Button>
               <Button
-                onClick={() => editResource ? updateResourceMutation.mutate() : createResourceMutation.mutate()}
+                onClick={() =>
+                  editResource ? updateResourceMutation.mutate() : createResourceMutation.mutate()
+                }
                 disabled={!resourceForm.title || !resourceForm.url}
               >
-                {editResource ? 'Update' : 'Add'}
+                {editResource ? "Update" : "Add"}
               </Button>
             </div>
           </div>
@@ -890,7 +946,8 @@ function AdminLearn() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Track</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete &quot;{deleteTrackItem?.title as string}&quot;? This will also delete all modules in this track.
+              Are you sure you want to delete &quot;{deleteTrackItem?.title as string}&quot;? This
+              will also delete all modules in this track.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -922,5 +979,3 @@ function AdminLearn() {
     </div>
   );
 }
-
-

@@ -68,7 +68,11 @@ function MemberProfilePage() {
   const memberId = params.memberId;
   const fetchMember = useServerFn(getMemberById);
 
-  const { data: member, isLoading, error } = useQuery({
+  const {
+    data: member,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["member", memberId],
     queryFn: () => fetchMember({ data: { id: memberId } }),
   });
@@ -105,16 +109,15 @@ function MemberProfilePage() {
           <Avatar className="h-24 w-24 border-4 border-primary/20">
             <AvatarImage src={member.avatar_url || undefined} />
             <AvatarFallback className="text-2xl">
-              {member.full_name?.split(" ").map((p: string) => p[0]).join("") || "M"}
+              {member.full_name
+                ?.split(" ")
+                .map((p: string) => p[0])
+                .join("") || "M"}
             </AvatarFallback>
           </Avatar>
           <div className="space-y-2">
-            <h1 className="text-headline-xl tracking-tight">
-              {member.full_name}
-            </h1>
-            {member.nickname && (
-              <p className="text-muted-foreground">"{member.nickname}"</p>
-            )}
+            <h1 className="text-headline-xl tracking-tight">{member.full_name}</h1>
+            {member.nickname && <p className="text-muted-foreground">"{member.nickname}"</p>}
             <div className="flex flex-wrap items-center gap-3">
               {member.department && (
                 <Badge variant="secondary" className="text-xs">
@@ -256,5 +259,3 @@ function MemberProfilePage() {
     </div>
   );
 }
-
-

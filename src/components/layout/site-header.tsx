@@ -81,12 +81,17 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 w-full border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 sm:gap-6 sm:px-6">
         {/* Logo  flush left in dark mode */}
-        <Link
-          to="/"
-          className="flex items-center gap-2.5 shrink-0"
-        >
-          <img src="/lightlogo.png" alt="BlockchainClub FUTMinna" className="h-8 md:h-10 w-auto dark:hidden" />
-          <img src="/darklogo.png" alt="BlockchainClub FUTMinna" className="h-8 md:h-10 w-auto hidden dark:block" />
+        <Link to="/" className="flex items-center gap-2.5 shrink-0">
+          <img
+            src="/lightlogo.png"
+            alt="BlockchainClub FUTMinna"
+            className="h-8 md:h-10 w-auto dark:hidden"
+          />
+          <img
+            src="/darklogo.png"
+            alt="BlockchainClub FUTMinna"
+            className="h-8 md:h-10 w-auto hidden dark:block"
+          />
         </Link>
 
         {/* Desktop nav */}
@@ -298,5 +303,3 @@ export function SiteHeader() {
     </header>
   );
 }
-
-

@@ -1,14 +1,14 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import { supabase, query } from '@/lib/supabase';
-import { randomUUID } from 'crypto';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { supabase, query } from "@/lib/supabase";
+import { randomUUID } from "crypto";
 
 export function getAuthSecret(): string {
-  return process.env.JWT_SECRET || 'bcf-futminna-jwt-secret-fallback';
+  return process.env.JWT_SECRET || "bcf-futminna-jwt-secret-fallback";
 }
 
 export function getRefreshSecret(): string {
-  return process.env.JWT_REFRESH_SECRET || 'bcf-futminna-refresh-secret-fallback';
+  return process.env.JWT_REFRESH_SECRET || "bcf-futminna-refresh-secret-fallback";
 }
 
 export async function hashPassword(password: string): Promise<string> {
@@ -20,27 +20,25 @@ export async function comparePassword(password: string, hash: string): Promise<b
 }
 
 export function generateAccessToken(userId: string, role: string): string {
-  return jwt.sign({ userId, role }, getAuthSecret(), { expiresIn: '7d' });
+  return jwt.sign({ userId, role }, getAuthSecret(), { expiresIn: "7d" });
 }
 
 export function generateRefreshToken(userId: string): string {
-  return jwt.sign({ userId }, getRefreshSecret(), { expiresIn: '7d' });
+  return jwt.sign({ userId }, getRefreshSecret(), { expiresIn: "7d" });
 }
 
 export async function storeRefreshToken(token: string, userId: string): Promise<void> {
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7);
 
-  const { error } = await supabase
-    .from('refresh_tokens')
-    .insert({
-      id: randomUUID(),
-      token,
-      user_id: userId,
-      expires_at: expiresAt.toISOString(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    });
+  const { error } = await supabase.from("refresh_tokens").insert({
+    id: randomUUID(),
+    token,
+    user_id: userId,
+    expires_at: expiresAt.toISOString(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
 
   if (error) throw new Error(error.message);
 }
@@ -58,15 +56,15 @@ export async function verifyRefreshToken(token: string): Promise<{ userId: strin
   try {
     const decoded = jwt.verify(token, getRefreshSecret()) as { userId: string };
 
-    const { data: storedToken } = await query('refresh_tokens', {
-      select: '*',
+    const { data: storedToken } = await query("refresh_tokens", {
+      select: "*",
       filters: { token },
       single: true,
     });
 
     if (!storedToken) return null;
     if (new Date() > new Date(storedToken.expires_at)) {
-      await supabase.from('refresh_tokens').delete({ token });
+      await supabase.from("refresh_tokens").delete({ token });
       return null;
     }
 
@@ -78,7 +76,7 @@ export async function verifyRefreshToken(token: string): Promise<{ userId: strin
 
 export async function deleteRefreshToken(token: string): Promise<void> {
   try {
-    await supabase.from('refresh_tokens').delete({ token });
+    await supabase.from("refresh_tokens").delete({ token });
   } catch {
     // Token already deleted
   }

@@ -164,8 +164,9 @@ function LeaderboardPage() {
             <span className="text-primary">Contributors</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Celebrating the most active and impactful members of the BlockchainClub FUTMinna community. Points are
-            earned through events, learning, building, and community engagement.
+            Celebrating the most active and impactful members of the BlockchainClub FUTMinna
+            community. Points are earned through events, learning, building, and community
+            engagement.
           </p>
         </div>
       </section>
@@ -247,7 +248,11 @@ function LeaderboardPage() {
                         </Avatar>
                       </Link>
                       <div>
-                        <Link to="/members/$memberId" params={{ memberId: entry.user.id }} className="hover:text-primary transition-colors">
+                        <Link
+                          to="/members/$memberId"
+                          params={{ memberId: entry.user.id }}
+                          className="hover:text-primary transition-colors"
+                        >
                           <p className="text-sm font-medium text-foreground">{name}</p>
                         </Link>
                         {profile?.department && (
@@ -336,7 +341,11 @@ function LeaderboardPage() {
           Earn points by attending events, completing learning tracks, shipping projects, and
           contributing to the community.
         </p>
-        <a href="https://chat.whatsapp.com/IZBSVUSyxayE0nTqO71HRt" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://chat.whatsapp.com/IZBSVUSyxayE0nTqO71HRt"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <Button size="lg" className="mt-8 font-semibold tracking-wide">
             Join the Community <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -345,5 +354,3 @@ function LeaderboardPage() {
     </div>
   );
 }
-
-

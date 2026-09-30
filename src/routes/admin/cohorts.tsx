@@ -1,32 +1,26 @@
-﻿import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { useAuthStore } from '@/stores/auth-store';
-import { apiQuery, apiInsert, apiUpdate } from '@/lib/api-client';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+﻿import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiQuery, apiInsert, apiUpdate } from "@/lib/api-client";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { Plus, Archive, Users, Calendar, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
+} from "@/components/ui/dialog";
+import { Plus, Archive, Users, Calendar, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
-export const Route = createFileRoute('/admin/cohorts')({
+export const Route = createFileRoute("/admin/cohorts")({
   component: AdminCohorts,
 });
 
@@ -37,15 +31,15 @@ interface CohortForm {
 }
 
 const defaultForm: CohortForm = {
-  name: '',
-  startDate: '',
-  endDate: '',
+  name: "",
+  startDate: "",
+  endDate: "",
 };
 
 function formatDateRange(start: string, end: string): string {
-  const opts: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
-  const startDate = new Date(start).toLocaleDateString('en-US', opts);
-  const endDate = new Date(end).toLocaleDateString('en-US', opts);
+  const opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", year: "numeric" };
+  const startDate = new Date(start).toLocaleDateString("en-US", opts);
+  const endDate = new Date(end).toLocaleDateString("en-US", opts);
   return `${startDate} - ${endDate}`;
 }
 
@@ -63,18 +57,23 @@ function AdminCohorts() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const formErrors = {
-    name: touched.name && !form.name ? 'Name is required' : '',
-    startDate: touched.startDate && !form.startDate ? 'Start date is required' : '',
-    endDate: touched.endDate && !form.endDate ? 'End date is required' : '',
+    name: touched.name && !form.name ? "Name is required" : "",
+    startDate: touched.startDate && !form.startDate ? "Start date is required" : "",
+    endDate: touched.endDate && !form.endDate ? "End date is required" : "",
   };
   const isFormValid = !!form.name && !!form.startDate && !!form.endDate;
 
-  const { data: cohorts, isLoading, isError, refetch } = useQuery({
-    queryKey: ['admin-cohorts'],
+  const {
+    data: cohorts,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["admin-cohorts"],
     queryFn: async () => {
-      const res = await apiQuery('cohorts', {
-        select: '*',
-        order: { column: 'created_at', ascending: false },
+      const res = await apiQuery("cohorts", {
+        select: "*",
+        order: { column: "created_at", ascending: false },
       });
       return (res.data || []) as Record<string, unknown>[];
     },
@@ -82,10 +81,10 @@ function AdminCohorts() {
   });
 
   const { data: cohortStudentCounts } = useQuery({
-    queryKey: ['admin-cohorts-student-counts'],
+    queryKey: ["admin-cohorts-student-counts"],
     queryFn: async () => {
-      const res = await apiQuery('users', {
-        select: 'id,cohort_id',
+      const res = await apiQuery("users", {
+        select: "id,cohort_id",
         filters: { is_active: true },
       });
       const users = (res.data || []) as Record<string, unknown>[];
@@ -103,29 +102,29 @@ function AdminCohorts() {
 
   const createMutation = useMutation({
     mutationFn: () =>
-      apiInsert('cohorts', {
+      apiInsert("cohorts", {
         name: form.name,
         start_date: new Date(form.startDate).toISOString(),
         end_date: new Date(form.endDate).toISOString(),
-        status: 'active',
+        status: "active",
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-cohorts'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-cohorts"] });
       setDialogOpen(false);
       setForm(defaultForm);
-      toast.success('Cohort created');
+      toast.success("Cohort created");
     },
-    onError: () => toast.error('Failed to create cohort'),
+    onError: () => toast.error("Failed to create cohort"),
   });
 
   const archiveMutation = useMutation({
     mutationFn: (cohortId: string) =>
-      apiUpdate('cohorts', { status: 'archived' }, { id: cohortId }),
+      apiUpdate("cohorts", { status: "archived" }, { id: cohortId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-cohorts'] });
-      toast.success('Cohort archived');
+      queryClient.invalidateQueries({ queryKey: ["admin-cohorts"] });
+      toast.success("Cohort archived");
     },
-    onError: () => toast.error('Failed to archive cohort'),
+    onError: () => toast.error("Failed to archive cohort"),
   });
 
   const openCreate = () => {
@@ -135,7 +134,7 @@ function AdminCohorts() {
   };
 
   const isActive = (cohort: Record<string, unknown>): boolean => {
-    return (cohort.status as string) !== 'archived';
+    return (cohort.status as string) !== "archived";
   };
 
   return (
@@ -171,7 +170,9 @@ function AdminCohorts() {
           <AlertTitle>Failed to load cohorts</AlertTitle>
           <AlertDescription className="flex items-center justify-between">
             <span>Could not fetch cohorts. Please try again.</span>
-            <Button variant="outline" size="sm" onClick={() => refetch()}>Retry</Button>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              Retry
+            </Button>
           </AlertDescription>
         </Alert>
       ) : cohorts && cohorts.length > 0 ? (
@@ -189,13 +190,13 @@ function AdminCohorts() {
               <Card
                 key={id}
                 className="cursor-pointer transition-shadow hover:shadow-md"
-                onClick={() => navigate({ to: '/admin/cohorts/$id', params: { id } })}
+                onClick={() => navigate({ to: "/admin/cohorts/$id", params: { id } })}
               >
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
                     <CardTitle className="text-base">{name}</CardTitle>
-                    <Badge variant={active ? 'default' : 'secondary'}>
-                      {active ? 'Active' : 'Archived'}
+                    <Badge variant={active ? "default" : "secondary"}>
+                      {active ? "Active" : "Archived"}
                     </Badge>
                   </div>
                   <CardDescription className="flex items-center gap-1">
@@ -207,12 +208,14 @@ function AdminCohorts() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <Users className="h-4 w-4" />
-                      {studentCount} student{studentCount !== 1 ? 's' : ''}
+                      {studentCount} student{studentCount !== 1 ? "s" : ""}
                     </div>
                     {active && (
                       <div className="flex items-center gap-2">
-                        <span className={`text-xs ${daysLeft <= 0 ? 'text-destructive' : 'text-muted-foreground'}`}>
-                          {daysLeft > 0 ? `${daysLeft}d remaining` : 'Ended'}
+                        <span
+                          className={`text-xs ${daysLeft <= 0 ? "text-destructive" : "text-muted-foreground"}`}
+                        >
+                          {daysLeft > 0 ? `${daysLeft}d remaining` : "Ended"}
                         </span>
                         <Button
                           variant="ghost"
@@ -246,9 +249,7 @@ function AdminCohorts() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Create Cohort</DialogTitle>
-            <DialogDescription>
-              Create a new student cohort with a date range
-            </DialogDescription>
+            <DialogDescription>Create a new student cohort with a date range</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -258,9 +259,11 @@ function AdminCohorts() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 onBlur={() => setTouched({ ...touched, name: true })}
                 placeholder="e.g. Spring 2026 Cohort"
-                className={formErrors.name ? 'border-destructive' : ''}
+                className={formErrors.name ? "border-destructive" : ""}
               />
-              {formErrors.name && <p className="text-xs text-destructive mt-1">{formErrors.name}</p>}
+              {formErrors.name && (
+                <p className="text-xs text-destructive mt-1">{formErrors.name}</p>
+              )}
             </div>
             <div>
               <Label>Start Date *</Label>
@@ -269,9 +272,11 @@ function AdminCohorts() {
                 value={form.startDate}
                 onChange={(e) => setForm({ ...form, startDate: e.target.value })}
                 onBlur={() => setTouched({ ...touched, startDate: true })}
-                className={formErrors.startDate ? 'border-destructive' : ''}
+                className={formErrors.startDate ? "border-destructive" : ""}
               />
-              {formErrors.startDate && <p className="text-xs text-destructive mt-1">{formErrors.startDate}</p>}
+              {formErrors.startDate && (
+                <p className="text-xs text-destructive mt-1">{formErrors.startDate}</p>
+              )}
             </div>
             <div>
               <Label>End Date *</Label>
@@ -280,9 +285,11 @@ function AdminCohorts() {
                 value={form.endDate}
                 onChange={(e) => setForm({ ...form, endDate: e.target.value })}
                 onBlur={() => setTouched({ ...touched, endDate: true })}
-                className={formErrors.endDate ? 'border-destructive' : ''}
+                className={formErrors.endDate ? "border-destructive" : ""}
               />
-              {formErrors.endDate && <p className="text-xs text-destructive mt-1">{formErrors.endDate}</p>}
+              {formErrors.endDate && (
+                <p className="text-xs text-destructive mt-1">{formErrors.endDate}</p>
+              )}
             </div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setDialogOpen(false)}>
@@ -301,5 +308,3 @@ function AdminCohorts() {
     </div>
   );
 }
-
-

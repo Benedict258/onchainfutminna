@@ -1,8 +1,8 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { useAuthStore } from '@/stores/auth-store';
-import { apiQueryAll, apiInsert, apiUpdate, apiDelete } from '@/lib/api-client';
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiQueryAll, apiInsert, apiUpdate, apiDelete } from "@/lib/api-client";
 import {
   Table,
   TableBody,
@@ -10,27 +10,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,19 +40,19 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Plus, Pencil, Trash2, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
+} from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Plus, Pencil, Trash2, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
-export const Route = createFileRoute('/admin/partners')({
+export const Route = createFileRoute("/admin/partners")({
   component: AdminPartners,
 });
 
-type PartnerCategory = 'ECOSYSTEM' | 'COMMUNITY' | 'SPONSOR';
+type PartnerCategory = "ECOSYSTEM" | "COMMUNITY" | "SPONSOR";
 
-const CATEGORIES: PartnerCategory[] = ['ECOSYSTEM', 'COMMUNITY', 'SPONSOR'];
+const CATEGORIES: PartnerCategory[] = ["ECOSYSTEM", "COMMUNITY", "SPONSOR"];
 
 interface PartnerForm {
   name: string;
@@ -65,11 +65,11 @@ interface PartnerForm {
 }
 
 const defaultForm: PartnerForm = {
-  name: '',
-  logoUrl: '',
-  website: '',
-  description: '',
-  category: 'COMMUNITY',
+  name: "",
+  logoUrl: "",
+  website: "",
+  description: "",
+  category: "COMMUNITY",
   order: 0,
   isActive: true,
 };
@@ -77,7 +77,7 @@ const defaultForm: PartnerForm = {
 function AdminPartners() {
   const { accessToken } = useAuthStore();
   const queryClient = useQueryClient();
-  const [categoryFilter, setCategoryFilter] = useState<string>('');
+  const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editItem, setEditItem] = useState<Record<string, unknown> | null>(null);
   const [deleteItem, setDeleteItem] = useState<Record<string, unknown> | null>(null);
@@ -85,16 +85,22 @@ function AdminPartners() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const formErrors = {
-    name: touched.name && !form.name ? 'Name is required' : '',
+    name: touched.name && !form.name ? "Name is required" : "",
   };
   const isFormValid = !!form.name;
 
-  const { data: allPartners, isLoading, isError, refetch } = useQuery({
-    queryKey: ['admin-partners'],
-    queryFn: () => apiQueryAll('partners', {
-      select: '*',
-      order: { column: 'order', ascending: true },
-    }),
+  const {
+    data: allPartners,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["admin-partners"],
+    queryFn: () =>
+      apiQueryAll("partners", {
+        select: "*",
+        order: { column: "order", ascending: true },
+      }),
   });
 
   const partners = categoryFilter
@@ -103,7 +109,7 @@ function AdminPartners() {
 
   const createMutation = useMutation({
     mutationFn: () =>
-      apiInsert('partners', {
+      apiInsert("partners", {
         name: form.name,
         logo_url: form.logoUrl || undefined,
         website: form.website || undefined,
@@ -113,56 +119,63 @@ function AdminPartners() {
         is_active: form.isActive,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-partners'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-partners"] });
       setDialogOpen(false);
       setForm(defaultForm);
-      toast.success('Partner created');
+      toast.success("Partner created");
     },
-    onError: () => toast.error('Failed to create partner'),
+    onError: () => toast.error("Failed to create partner"),
   });
 
   const updateMutation = useMutation({
     mutationFn: () =>
-      apiUpdate('partners', {
-        name: form.name,
-        logo_url: form.logoUrl || undefined,
-        website: form.website || undefined,
-        description: form.description || undefined,
-        category: form.category as PartnerCategory,
-        order: form.order,
-        is_active: form.isActive,
-      }, { id: editItem?.id as string }),
+      apiUpdate(
+        "partners",
+        {
+          name: form.name,
+          logo_url: form.logoUrl || undefined,
+          website: form.website || undefined,
+          description: form.description || undefined,
+          category: form.category as PartnerCategory,
+          order: form.order,
+          is_active: form.isActive,
+        },
+        { id: editItem?.id as string },
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-partners'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-partners"] });
       setDialogOpen(false);
       setEditItem(null);
       setForm(defaultForm);
-      toast.success('Partner updated');
+      toast.success("Partner updated");
     },
-    onError: () => toast.error('Failed to update partner'),
+    onError: () => toast.error("Failed to update partner"),
   });
 
   const toggleActiveMutation = useMutation({
     mutationFn: (variables: { id: string; isActive: boolean }) =>
-      apiUpdate('partners', {
-        is_active: variables.isActive,
-      }, { id: variables.id }),
+      apiUpdate(
+        "partners",
+        {
+          is_active: variables.isActive,
+        },
+        { id: variables.id },
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-partners'] });
-      toast.success('Partner status updated');
+      queryClient.invalidateQueries({ queryKey: ["admin-partners"] });
+      toast.success("Partner status updated");
     },
-    onError: () => toast.error('Failed to update partner'),
+    onError: () => toast.error("Failed to update partner"),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: () =>
-      apiDelete('partners', { id: deleteItem?.id as string }),
+    mutationFn: () => apiDelete("partners", { id: deleteItem?.id as string }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-partners'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-partners"] });
       setDeleteItem(null);
-      toast.success('Partner deleted');
+      toast.success("Partner deleted");
     },
-    onError: () => toast.error('Failed to delete partner'),
+    onError: () => toast.error("Failed to delete partner"),
   });
 
   const openCreate = () => {
@@ -176,9 +189,9 @@ function AdminPartners() {
     setEditItem(partner);
     setForm({
       name: partner.name as string,
-      logoUrl: (partner.logo_url as string) || '',
-      website: (partner.website as string) || '',
-      description: (partner.description as string) || '',
+      logoUrl: (partner.logo_url as string) || "",
+      website: (partner.website as string) || "",
+      description: (partner.description as string) || "",
       category: partner.category as string,
       order: (partner.order as number) || 0,
       isActive: (partner.is_active as boolean) || false,
@@ -202,16 +215,16 @@ function AdminPartners() {
       {/* Filters */}
       <div className="flex gap-2">
         <Button
-          variant={categoryFilter === '' ? 'default' : 'outline'}
+          variant={categoryFilter === "" ? "default" : "outline"}
           size="sm"
-          onClick={() => setCategoryFilter('')}
+          onClick={() => setCategoryFilter("")}
         >
           All
         </Button>
         {CATEGORIES.map((c) => (
           <Button
             key={c}
-            variant={categoryFilter === c ? 'default' : 'outline'}
+            variant={categoryFilter === c ? "default" : "outline"}
             size="sm"
             onClick={() => setCategoryFilter(c)}
           >
@@ -251,7 +264,9 @@ function AdminPartners() {
                     <AlertTitle>Failed to load partners</AlertTitle>
                     <AlertDescription className="flex items-center justify-between">
                       <span>Could not fetch partners. Please try again.</span>
-                      <Button variant="outline" size="sm" onClick={() => refetch()}>Retry</Button>
+                      <Button variant="outline" size="sm" onClick={() => refetch()}>
+                        Retry
+                      </Button>
                     </AlertDescription>
                   </Alert>
                 </TableCell>
@@ -321,9 +336,9 @@ function AdminPartners() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{editItem ? 'Edit Partner' : 'Add Partner'}</DialogTitle>
+            <DialogTitle>{editItem ? "Edit Partner" : "Add Partner"}</DialogTitle>
             <DialogDescription>
-              {editItem ? 'Update partner details' : 'Add a new partner'}
+              {editItem ? "Update partner details" : "Add a new partner"}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -334,9 +349,11 @@ function AdminPartners() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 onBlur={() => setTouched({ ...touched, name: true })}
                 placeholder="Partner name"
-                className={formErrors.name ? 'border-destructive' : ''}
+                className={formErrors.name ? "border-destructive" : ""}
               />
-              {formErrors.name && <p className="text-xs text-destructive mt-1">{formErrors.name}</p>}
+              {formErrors.name && (
+                <p className="text-xs text-destructive mt-1">{formErrors.name}</p>
+              )}
             </div>
             <div>
               <Label>Logo URL</Label>
@@ -405,7 +422,7 @@ function AdminPartners() {
                 onClick={() => (editItem ? updateMutation.mutate() : createMutation.mutate())}
                 disabled={!isFormValid}
               >
-                {editItem ? 'Update' : 'Create'}
+                {editItem ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -423,14 +440,10 @@ function AdminPartners() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteMutation.mutate()}>
-              Delete
-            </AlertDialogAction>
+            <AlertDialogAction onClick={() => deleteMutation.mutate()}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
   );
 }
-
-

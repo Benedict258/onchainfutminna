@@ -7,5 +7,3 @@ export const Route = createFileRoute("/dev3pack-scholarship")({
     });
   },
 });
-
-

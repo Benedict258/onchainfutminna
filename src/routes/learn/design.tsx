@@ -196,9 +196,7 @@ function DesignLearnPage() {
   const filteredResources =
     resourceType === "all"
       ? DESIGN_RESOURCES
-      : DESIGN_RESOURCES.filter(
-          (r) => r.type.toLowerCase() === resourceType
-        );
+      : DESIGN_RESOURCES.filter((r) => r.type.toLowerCase() === resourceType);
 
   return (
     <div className="bg-background">
@@ -212,8 +210,8 @@ function DesignLearnPage() {
             Master <span className="text-primary">Design</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Learn to craft beautiful, intuitive interfaces for crypto and Web3
-            products. From UI fundamentals to building scalable design systems.
+            Learn to craft beautiful, intuitive interfaces for crypto and Web3 products. From UI
+            fundamentals to building scalable design systems.
           </p>
         </div>
       </section>
@@ -226,9 +224,7 @@ function DesignLearnPage() {
               <Layers className="h-5 w-5 text-primary" />
               <div>
                 <div className="text-headline-sm">{DESIGN_TRACKS.length}</div>
-                <div className="text-xs text-muted-foreground">
-                  Learning Tracks
-                </div>
+                <div className="text-xs text-muted-foreground">Learning Tracks</div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-3">
@@ -318,8 +314,7 @@ function DesignLearnPage() {
                     className="mt-5 w-full font-semibold tracking-wide text-xs group-hover:border-primary/40"
                   >
                     <Link to="/learn">
-                      Start Learning{" "}
-                      <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                      Start Learning <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                     </Link>
                   </Button>
                 </div>
@@ -365,9 +360,7 @@ function DesignLearnPage() {
                           <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
                             {resource.title}
                           </p>
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {resource.type}
-                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">{resource.type}</p>
                         </div>
                       </div>
                     </a>
@@ -390,19 +383,14 @@ function DesignLearnPage() {
             DESIGN JOURNEY?
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Join the community and get access to all learning tracks, mentorship,
-            and project opportunities.
+            Join the community and get access to all learning tracks, mentorship, and project
+            opportunities.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" className="font-semibold tracking-wide">
               <Link to="/join">Join BlockchainClub FUTMinna</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="font-semibold tracking-wide"
-            >
+            <Button asChild size="lg" variant="outline" className="font-semibold tracking-wide">
               <Link to="/about">Learn More</Link>
             </Button>
           </div>
@@ -411,5 +399,3 @@ function DesignLearnPage() {
     </div>
   );
 }
-
-

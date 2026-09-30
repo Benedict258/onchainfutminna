@@ -1,14 +1,14 @@
-﻿import { createFileRoute, Link } from "@tanstack/react-router"
-import { useQuery } from "@tanstack/react-query"
-import { useState, useEffect, useCallback } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { apiQueryAll, apiQuery, apiInsert } from "@/lib/api-client"
-import { useAuthStore } from "@/stores/auth-store"
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { apiQueryAll, apiQuery, apiInsert } from "@/lib/api-client";
+import { useAuthStore } from "@/stores/auth-store";
 import {
   Swords,
   Clock,
@@ -26,19 +26,11 @@ import {
   Flag,
   Plus,
   Crown,
-} from "lucide-react"
+} from "lucide-react";
 
-type ChallengeFilter = "all" | "live" | "upcoming" | "past"
+type ChallengeFilter = "all" | "live" | "upcoming" | "past";
 type ChallengeTypeFilter =
-  | "all"
-  | "CODE_DUEL"
-  | "TEAM_CLASH"
-  | "OPEN"
-  | "CTF"
-  | "DESIGN"
-  | "CONTENT"
-  | "RESEARCH"
-  | "SPEED"
+  "all" | "CODE_DUEL" | "TEAM_CLASH" | "OPEN" | "CTF" | "DESIGN" | "CONTENT" | "RESEARCH" | "SPEED";
 
 const TYPE_LABELS: Record<string, string> = {
   CODE_DUEL: "Code Duel",
@@ -49,7 +41,7 @@ const TYPE_LABELS: Record<string, string> = {
   CONTENT: "Content",
   RESEARCH: "Research",
   SPEED: "Speed Sprint",
-}
+};
 
 const TYPE_COLORS: Record<string, string> = {
   CODE_DUEL: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
@@ -60,7 +52,7 @@ const TYPE_COLORS: Record<string, string> = {
   CONTENT: "bg-violet-500/10 text-violet-400 border-violet-500/20",
   RESEARCH: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   SPEED: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-}
+};
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
   CODE_DUEL: <Code className="h-3.5 w-3.5" />,
@@ -71,7 +63,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
   CONTENT: <FileText className="h-3.5 w-3.5" />,
   RESEARCH: <Search className="h-3.5 w-3.5" />,
   SPEED: <Timer className="h-3.5 w-3.5" />,
-}
+};
 
 export const Route = createFileRoute("/arena")({
   head: () => ({
@@ -87,48 +79,45 @@ export const Route = createFileRoute("/arena")({
     ],
   }),
   component: ArenaPage,
-})
+});
 
 function formatCountdown(seconds: number) {
-  if (seconds <= 0) return "Ended"
-  const d = Math.floor(seconds / 86400)
-  const h = Math.floor((seconds % 86400) / 3600)
-  const m = Math.floor((seconds % 3600) / 60)
-  const s = seconds % 60
-  if (d > 0) return `${d}d ${h}h ${m}m`
-  if (h > 0) return `${h}h ${m}m ${s}s`
-  if (m > 0) return `${m}m ${s}s`
-  return `${s}s`
+  if (seconds <= 0) return "Ended";
+  const d = Math.floor(seconds / 86400);
+  const h = Math.floor((seconds % 86400) / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (d > 0) return `${d}d ${h}h ${m}m`;
+  if (h > 0) return `${h}h ${m}m ${s}s`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
 }
 
 function useCountdown(targetTime: string | null) {
-  const [now, setNow] = useState(Date.now())
+  const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(id)
-  }, [])
-  if (!targetTime) return { seconds: 0, isExpired: true }
-  const diff = Math.max(0, Math.floor((new Date(targetTime).getTime() - now) / 1000))
-  return { seconds: diff, isExpired: diff <= 0 }
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  if (!targetTime) return { seconds: 0, isExpired: true };
+  const diff = Math.max(0, Math.floor((new Date(targetTime).getTime() - now) / 1000));
+  return { seconds: diff, isExpired: diff <= 0 };
 }
 
 function getChallengeStatus(challenge: Record<string, any>) {
-  const now = new Date()
-  const start = new Date(challenge.start_time)
-  const end = new Date(challenge.end_time)
-  if (now < start) return "upcoming"
-  if (now >= start && now <= end) return "live"
-  return "past"
+  const now = new Date();
+  const start = new Date(challenge.start_time);
+  const end = new Date(challenge.end_time);
+  if (now < start) return "upcoming";
+  if (now >= start && now <= end) return "live";
+  return "past";
 }
 
 function ArenaSkeleton() {
   return (
     <div className="grid gap-5 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-lg border border-border bg-card overflow-hidden"
-        >
+        <div key={i} className="rounded-lg border border-border bg-card overflow-hidden">
           <div className="p-5 space-y-3">
             <Skeleton className="h-4 w-16" />
             <Skeleton className="h-6 w-3/4" />
@@ -142,23 +131,24 @@ function ArenaSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 function ArenaPage() {
-  const [statusFilter, setStatusFilter] = useState<ChallengeFilter>("all")
-  const [typeFilter, setTypeFilter] = useState<ChallengeTypeFilter>("all")
-  const { user } = useAuthStore()
+  const [statusFilter, setStatusFilter] = useState<ChallengeFilter>("all");
+  const [typeFilter, setTypeFilter] = useState<ChallengeTypeFilter>("all");
+  const { user } = useAuthStore();
 
   const { data: challenges, isLoading: challengesLoading } = useQuery({
     queryKey: ["arena-challenges"],
     queryFn: () =>
       apiQueryAll("challenges", {
-        select: "*, challenge_participants(id, user_id), creator:profiles!challenges_creator_id_fkey(full_name, avatar_url)",
+        select:
+          "*, challenge_participants(id, user_id), creator:profiles!challenges_creator_id_fkey(full_name, avatar_url)",
         order: { column: "start_time", ascending: true },
       }),
     refetchInterval: 15000,
-  })
+  });
 
   const { data: leaderboard } = useQuery({
     queryKey: ["arena-leaderboard"],
@@ -168,33 +158,29 @@ function ArenaPage() {
         order: { column: "total_points", ascending: false },
         limit: 10,
       }),
-  })
+  });
 
-  const allChallenges: any[] = challenges || []
+  const allChallenges: any[] = challenges || [];
 
-  const now = new Date()
+  const now = new Date();
   const liveChallenges = allChallenges.filter(
-    (c) => new Date(c.start_time) <= now && now <= new Date(c.end_time)
-  )
-  const upcomingChallenges = allChallenges.filter(
-    (c) => new Date(c.start_time) > now
-  )
-  const pastChallenges = allChallenges.filter(
-    (c) => new Date(c.end_time) < now
-  )
+    (c) => new Date(c.start_time) <= now && now <= new Date(c.end_time),
+  );
+  const upcomingChallenges = allChallenges.filter((c) => new Date(c.start_time) > now);
+  const pastChallenges = allChallenges.filter((c) => new Date(c.end_time) < now);
 
   const filteredChallenges = (() => {
-    let list: any[] = []
-    if (statusFilter === "live") list = liveChallenges
-    else if (statusFilter === "upcoming") list = upcomingChallenges
-    else if (statusFilter === "past") list = pastChallenges
-    else list = allChallenges
+    let list: any[] = [];
+    if (statusFilter === "live") list = liveChallenges;
+    else if (statusFilter === "upcoming") list = upcomingChallenges;
+    else if (statusFilter === "past") list = pastChallenges;
+    else list = allChallenges;
 
     if (typeFilter !== "all") {
-      list = list.filter((c) => c.type === typeFilter)
+      list = list.filter((c) => c.type === typeFilter);
     }
-    return list
-  })()
+    return list;
+  })();
 
   return (
     <div className="bg-background">
@@ -206,12 +192,13 @@ function ArenaPage() {
             CHALLENGE ARENA
           </span>
           <h1 className="mt-8 text-display-lg md:text-[56px] md:leading-[60px] tracking-tight">
-            Prove Your Skills,<br />
+            Prove Your Skills,
+            <br />
             <span className="text-primary">Earn Glory</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Stake points, compete in challenges, and climb the leaderboard. Win
-            duels, crush CTFs, and earn community recognition.
+            Stake points, compete in challenges, and climb the leaderboard. Win duels, crush CTFs,
+            and earn community recognition.
           </p>
           <div className="mt-8 flex items-center justify-center gap-3">
             <Button asChild size="lg" className="font-semibold">
@@ -274,9 +261,7 @@ function ArenaPage() {
             <div className="mb-8">
               <Tabs
                 value={typeFilter}
-                onValueChange={(v) =>
-                  setTypeFilter(v as ChallengeTypeFilter)
-                }
+                onValueChange={(v) => setTypeFilter(v as ChallengeTypeFilter)}
               >
                 <TabsList className="bg-background/50 flex-wrap h-auto gap-1 p-1">
                   {(
@@ -304,37 +289,29 @@ function ArenaPage() {
             </div>
 
             {/* LIVE NOW SECTION */}
-            {liveChallenges.length > 0 &&
-              (statusFilter === "all" || statusFilter === "live") && (
-                <div className="mb-10">
-                  <h2 className="text-headline-md mb-5 flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    Live Now
-                  </h2>
-                  <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                    {liveChallenges
-                      .filter((c) =>
-                        typeFilter === "all" ? true : c.type === typeFilter
-                      )
-                      .slice(0, 3)
-                      .map((challenge) => (
-                        <ChallengeCard
-                          key={challenge.id}
-                          challenge={challenge}
-                        />
-                      ))}
-                  </div>
+            {liveChallenges.length > 0 && (statusFilter === "all" || statusFilter === "live") && (
+              <div className="mb-10">
+                <h2 className="text-headline-md mb-5 flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Live Now
+                </h2>
+                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                  {liveChallenges
+                    .filter((c) => (typeFilter === "all" ? true : c.type === typeFilter))
+                    .slice(0, 3)
+                    .map((challenge) => (
+                      <ChallengeCard key={challenge.id} challenge={challenge} />
+                    ))}
                 </div>
-              )}
+              </div>
+            )}
 
             {/* UPCOMING SECTION */}
             {upcomingChallenges.length > 0 &&
               (statusFilter === "all" || statusFilter === "upcoming") && (
                 <div className="mb-10">
                   <h2 className="text-headline-md mb-5">
-                    {statusFilter === "all"
-                      ? "Upcoming"
-                      : "Upcoming Challenges"}
+                    {statusFilter === "all" ? "Upcoming" : "Upcoming Challenges"}
                   </h2>
                 </div>
               )}
@@ -345,9 +322,7 @@ function ArenaPage() {
             ) : filteredChallenges.length === 0 ? (
               <div className="text-center py-16">
                 <Swords className="mx-auto h-12 w-12 text-muted-foreground/40" />
-                <p className="mt-4 text-lg text-muted-foreground">
-                  No challenges found.
-                </p>
+                <p className="mt-4 text-lg text-muted-foreground">No challenges found.</p>
                 <p className="mt-2 text-sm text-muted-foreground/60">
                   Create one or check back soon!
                 </p>
@@ -358,10 +333,7 @@ function ArenaPage() {
             ) : (
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {filteredChallenges.map((challenge) => (
-                  <ChallengeCard
-                    key={challenge.id}
-                    challenge={challenge}
-                  />
+                  <ChallengeCard key={challenge.id} challenge={challenge} />
                 ))}
               </div>
             )}
@@ -379,19 +351,16 @@ function ArenaPage() {
                   <div className="space-y-3">
                     {leaderboard && leaderboard.length > 0 ? (
                       leaderboard.map((entry: any, i: number) => {
-                        const profile = entry.profiles
+                        const profile = entry.profiles;
                         const initials = profile?.full_name
                           ? profile.full_name
                               .split(" ")
                               .map((n: string) => n[0])
                               .join("")
                               .slice(0, 2)
-                          : "?"
+                          : "?";
                         return (
-                          <div
-                            key={entry.id}
-                            className="flex items-center gap-3"
-                          >
+                          <div key={entry.id} className="flex items-center gap-3">
                             <span
                               className={`w-6 text-center text-xs font-bold ${
                                 i === 0
@@ -406,12 +375,8 @@ function ArenaPage() {
                               {i + 1}
                             </span>
                             <Avatar className="h-8 w-8">
-                              <AvatarImage
-                                src={profile?.avatar_url}
-                              />
-                              <AvatarFallback className="text-xs">
-                                {initials}
-                              </AvatarFallback>
+                              <AvatarImage src={profile?.avatar_url} />
+                              <AvatarFallback className="text-xs">{initials}</AvatarFallback>
                             </Avatar>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium truncate">
@@ -433,7 +398,7 @@ function ArenaPage() {
                               />
                             )}
                           </div>
-                        )
+                        );
                       })
                     ) : (
                       <p className="text-sm text-muted-foreground text-center py-4">
@@ -441,12 +406,7 @@ function ArenaPage() {
                       </p>
                     )}
                   </div>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="sm"
-                    className="w-full mt-4"
-                  >
+                  <Button asChild variant="outline" size="sm" className="w-full mt-4">
                     <Link to="/leaderboard">
                       View Full Leaderboard
                       <ArrowRight className="ml-2 h-3.5 w-3.5" />
@@ -462,47 +422,36 @@ function ArenaPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-surface-low rounded-lg p-3 text-center">
                       <p className="text-2xl font-bold text-primary">
-                        {allChallenges.filter(
-                          (c) => c.status === "completed"
-                        ).length}
+                        {allChallenges.filter((c) => c.status === "completed").length}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Completed
+                      <p className="text-xs text-muted-foreground mt-1">Completed</p>
+                    </div>
+                    <div className="bg-surface-low rounded-lg p-3 text-center">
+                      <p className="text-2xl font-bold text-primary">
+                        {allChallenges
+                          .reduce(
+                            (sum, c) =>
+                              sum + (c.stake_points || 0) * (c.challenge_participants?.length || 0),
+                            0,
+                          )
+                          .toLocaleString()}
                       </p>
+                      <p className="text-xs text-muted-foreground mt-1">Points Staked</p>
+                    </div>
+                    <div className="bg-surface-low rounded-lg p-3 text-center">
+                      <p className="text-2xl font-bold text-primary">
+                        {allChallenges.filter((c) => c.status === "active").length}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">Active</p>
                     </div>
                     <div className="bg-surface-low rounded-lg p-3 text-center">
                       <p className="text-2xl font-bold text-primary">
                         {allChallenges.reduce(
-                          (sum, c) =>
-                            sum + ((c.stake_points || 0) * (c.challenge_participants?.length || 0)),
-                          0
-                        ).toLocaleString()}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Points Staked
-                      </p>
-                    </div>
-                    <div className="bg-surface-low rounded-lg p-3 text-center">
-                      <p className="text-2xl font-bold text-primary">
-                        {allChallenges.filter(
-                          (c) => c.status === "active"
-                        ).length}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Active
-                      </p>
-                    </div>
-                    <div className="bg-surface-low rounded-lg p-3 text-center">
-                      <p className="text-2xl font-bold text-primary">
-                        {allChallenges.reduce(
-                          (sum, c) =>
-                            sum + (c.challenge_participants?.length || 0),
-                          0
+                          (sum, c) => sum + (c.challenge_participants?.length || 0),
+                          0,
                         )}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Participants
-                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">Participants</p>
                     </div>
                   </div>
                 </CardContent>
@@ -517,18 +466,12 @@ function ArenaPage() {
         <div className="mx-auto max-w-[1400px] px-6 py-16 text-center">
           <div className="mx-auto max-w-xl">
             <Swords className="mx-auto h-10 w-10 text-primary" />
-            <h2 className="mt-6 text-headline-lg">
-              Ready to Challenge?
-            </h2>
+            <h2 className="mt-6 text-headline-lg">Ready to Challenge?</h2>
             <p className="mt-3 text-muted-foreground">
-              Create your own challenge or join an existing one. Stake points,
-              compete, and earn glory.
+              Create your own challenge or join an existing one. Stake points, compete, and earn
+              glory.
             </p>
-            <Button
-              asChild
-              size="lg"
-              className="mt-8 font-semibold tracking-wide"
-            >
+            <Button asChild size="lg" className="mt-8 font-semibold tracking-wide">
               <Link to="/arena/create">
                 Create Challenge <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -537,33 +480,28 @@ function ArenaPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }
 
 function ChallengeCard({ challenge }: { challenge: any }) {
-  const status = getChallengeStatus(challenge)
+  const status = getChallengeStatus(challenge);
   const { seconds, isExpired } = useCountdown(
-    status === "live"
-      ? challenge.end_time
-      : status === "upcoming"
-        ? challenge.start_time
-        : null
-  )
+    status === "live" ? challenge.end_time : status === "upcoming" ? challenge.start_time : null,
+  );
 
-  const participants = challenge.challenge_participants?.length || 0
-  const max = challenge.max_participants || 0
-  const pointsPool =
-    (challenge.stake_points || 0) * participants
-  const creator = challenge.creator
-  const creatorName = creator?.full_name || "Anonymous"
+  const participants = challenge.challenge_participants?.length || 0;
+  const max = challenge.max_participants || 0;
+  const pointsPool = (challenge.stake_points || 0) * participants;
+  const creator = challenge.creator;
+  const creatorName = creator?.full_name || "Anonymous";
   const creatorInitials = creator?.full_name
     ? creator.full_name
         .split(" ")
         .map((n: string) => n[0])
         .join("")
         .slice(0, 2)
-    : "?"
-  const isFull = max > 0 && participants >= max
+    : "?";
+  const isFull = max > 0 && participants >= max;
 
   return (
     <article className="group rounded-lg border border-border bg-card overflow-hidden transition-all hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-sm">
@@ -595,9 +533,7 @@ function ChallengeCard({ challenge }: { challenge: any }) {
         <div className="flex items-center gap-2 mb-4">
           <Avatar className="h-6 w-6">
             <AvatarImage src={creator?.avatar_url} />
-            <AvatarFallback className="text-[10px]">
-              {creatorInitials}
-            </AvatarFallback>
+            <AvatarFallback className="text-[10px]">{creatorInitials}</AvatarFallback>
           </Avatar>
           <span className="text-xs text-muted-foreground">{creatorName}</span>
         </div>
@@ -624,18 +560,13 @@ function ChallengeCard({ challenge }: { challenge: any }) {
               Starts in {formatCountdown(seconds)}
             </span>
           )}
-          {status === "past" && (
-            <span className="flex items-center gap-1">Ended</span>
-          )}
+          {status === "past" && <span className="flex items-center gap-1">Ended</span>}
         </div>
 
         <div className="flex items-center gap-2">
           {status === "live" && !isFull && (
             <Button asChild size="sm" className="text-xs flex-1">
-              <Link
-                to="/arena/$challengeId"
-                params={{ challengeId: challenge.id }}
-              >
+              <Link to="/arena/$challengeId" params={{ challengeId: challenge.id }}>
                 Join Now
               </Link>
             </Button>
@@ -647,36 +578,25 @@ function ChallengeCard({ challenge }: { challenge: any }) {
           )}
           {status === "upcoming" && (
             <Button asChild size="sm" variant="outline" className="text-xs flex-1">
-              <Link
-                to="/arena/$challengeId"
-                params={{ challengeId: challenge.id }}
-              >
+              <Link to="/arena/$challengeId" params={{ challengeId: challenge.id }}>
                 Register
               </Link>
             </Button>
           )}
           {status !== "live" && status !== "upcoming" && (
             <Button asChild size="sm" variant="outline" className="text-xs flex-1">
-              <Link
-                to="/arena/$challengeId"
-                params={{ challengeId: challenge.id }}
-              >
+              <Link to="/arena/$challengeId" params={{ challengeId: challenge.id }}>
                 View Results
               </Link>
             </Button>
           )}
           <Button asChild size="sm" variant="ghost" className="text-xs">
-            <Link
-              to="/arena/$challengeId"
-              params={{ challengeId: challenge.id }}
-            >
+            <Link to="/arena/$challengeId" params={{ challengeId: challenge.id }}>
               <Eye className="h-3.5 w-3.5" />
             </Link>
           </Button>
         </div>
       </div>
     </article>
-  )
+  );
 }
-
-

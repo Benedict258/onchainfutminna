@@ -62,52 +62,228 @@
         "Configured Caddy to proxy port 80 → Vite"
       ],
       "file_module_map": [
-        { "file": "prisma/schema.prisma", "purpose": "Database schema with 24 models and 12 enums", "last_modified": "2026-06-10" },
-        { "file": "prisma/seed.ts", "purpose": "Seed data (admin, tracks, events, partners)", "last_modified": "2026-06-10" },
-        { "file": "src/lib/db.ts", "purpose": "PrismaClient singleton", "last_modified": "2026-06-10" },
-        { "file": "src/lib/auth.ts", "purpose": "JWT and bcrypt utilities", "last_modified": "2026-06-10" },
-        { "file": "src/lib/validators/auth.ts", "purpose": "Zod schemas for auth forms", "last_modified": "2026-06-10" },
-        { "file": "src/stores/auth-store.ts", "purpose": "Zustand auth state store", "last_modified": "2026-06-10" },
-        { "file": "src/components/auth-guard.tsx", "purpose": "Auth and admin route protection", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/auth.server.ts", "purpose": "Auth server functions (register, login, logout, refresh)", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/members.server.ts", "purpose": "Member server functions", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/events.server.ts", "purpose": "Events server functions", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/learn.server.ts", "purpose": "Learn server functions", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/projects.server.ts", "purpose": "Projects server functions", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/opportunities.server.ts", "purpose": "Opportunities server functions", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/blog.server.ts", "purpose": "Blog server functions", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/partners.server.ts", "purpose": "Partners server functions", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/leaderboard.server.ts", "purpose": "Leaderboard server functions", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/admin.server.ts", "purpose": "Admin server functions", "last_modified": "2026-06-10" },
+        {
+          "file": "prisma/schema.prisma",
+          "purpose": "Database schema with 24 models and 12 enums",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "prisma/seed.ts",
+          "purpose": "Seed data (admin, tracks, events, partners)",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/db.ts",
+          "purpose": "PrismaClient singleton",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/auth.ts",
+          "purpose": "JWT and bcrypt utilities",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/validators/auth.ts",
+          "purpose": "Zod schemas for auth forms",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/stores/auth-store.ts",
+          "purpose": "Zustand auth state store",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/components/auth-guard.tsx",
+          "purpose": "Auth and admin route protection",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/auth.server.ts",
+          "purpose": "Auth server functions (register, login, logout, refresh)",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/members.server.ts",
+          "purpose": "Member server functions",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/events.server.ts",
+          "purpose": "Events server functions",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/learn.server.ts",
+          "purpose": "Learn server functions",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/projects.server.ts",
+          "purpose": "Projects server functions",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/opportunities.server.ts",
+          "purpose": "Opportunities server functions",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/blog.server.ts",
+          "purpose": "Blog server functions",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/partners.server.ts",
+          "purpose": "Partners server functions",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/leaderboard.server.ts",
+          "purpose": "Leaderboard server functions",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/admin.server.ts",
+          "purpose": "Admin server functions",
+          "last_modified": "2026-06-10"
+        },
         { "file": "src/routes/auth.tsx", "purpose": "Login page", "last_modified": "2026-06-10" },
-        { "file": "src/routes/join.tsx", "purpose": "Registration page", "last_modified": "2026-06-10" },
-        { "file": "src/routes/events.tsx", "purpose": "Events listing page", "last_modified": "2026-06-10" },
-        { "file": "src/routes/learn.tsx", "purpose": "Learn tracks page", "last_modified": "2026-06-10" },
-        { "file": "src/routes/projects.tsx", "purpose": "Projects showcase page", "last_modified": "2026-06-10" },
-        { "file": "src/routes/opportunities.tsx", "purpose": "Opportunities board page", "last_modified": "2026-06-10" },
+        {
+          "file": "src/routes/join.tsx",
+          "purpose": "Registration page",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/events.tsx",
+          "purpose": "Events listing page",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/learn.tsx",
+          "purpose": "Learn tracks page",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/projects.tsx",
+          "purpose": "Projects showcase page",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/opportunities.tsx",
+          "purpose": "Opportunities board page",
+          "last_modified": "2026-06-10"
+        },
         { "file": "src/routes/blog.tsx", "purpose": "Blog page", "last_modified": "2026-06-10" },
-        { "file": "src/routes/leaderboard.tsx", "purpose": "Leaderboard page", "last_modified": "2026-06-10" },
-        { "file": "src/routes/partners.tsx", "purpose": "Partners page", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin.tsx", "purpose": "Admin dashboard layout", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/index.tsx", "purpose": "Admin overview", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/members.tsx", "purpose": "Admin members management", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/events.tsx", "purpose": "Admin events management", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/learn.tsx", "purpose": "Admin learn management", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/projects.tsx", "purpose": "Admin projects review", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/opportunities.tsx", "purpose": "Admin opportunities management", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/blog.tsx", "purpose": "Admin blog management", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/partners.tsx", "purpose": "Admin partners management", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/leaderboard.tsx", "purpose": "Admin leaderboard management", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/analytics.tsx", "purpose": "Admin analytics dashboard", "last_modified": "2026-06-10" },
-        { "file": "src/routes/admin/settings.tsx", "purpose": "Admin settings", "last_modified": "2026-06-10" },
-        { "file": "src/lib/upload.ts", "purpose": "Cloudinary upload utilities", "last_modified": "2026-06-10" },
-        { "file": "src/lib/api/upload.server.ts", "purpose": "File upload server function", "last_modified": "2026-06-10" },
-        { "file": "src/lib/email.ts", "purpose": "Resend email service", "last_modified": "2026-06-10" },
-        { "file": "src/lib/seo.ts", "purpose": "SEO meta tag generators", "last_modified": "2026-06-10" },
-        { "file": ".env", "purpose": "Environment variables (Supabase, JWT, placeholders)", "last_modified": "2026-06-10" },
-        { "file": "supabase-schema.sql", "purpose": "Full SQL migration for Supabase dashboard", "last_modified": "2026-06-10" },
-        { "file": "vercel.json", "purpose": "Vercel deployment config", "last_modified": "2026-06-10" },
-        { "file": ".github/workflows/ci.yml", "purpose": "GitHub Actions CI pipeline", "last_modified": "2026-06-10" },
+        {
+          "file": "src/routes/leaderboard.tsx",
+          "purpose": "Leaderboard page",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/partners.tsx",
+          "purpose": "Partners page",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin.tsx",
+          "purpose": "Admin dashboard layout",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/index.tsx",
+          "purpose": "Admin overview",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/members.tsx",
+          "purpose": "Admin members management",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/events.tsx",
+          "purpose": "Admin events management",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/learn.tsx",
+          "purpose": "Admin learn management",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/projects.tsx",
+          "purpose": "Admin projects review",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/opportunities.tsx",
+          "purpose": "Admin opportunities management",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/blog.tsx",
+          "purpose": "Admin blog management",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/partners.tsx",
+          "purpose": "Admin partners management",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/leaderboard.tsx",
+          "purpose": "Admin leaderboard management",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/analytics.tsx",
+          "purpose": "Admin analytics dashboard",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/routes/admin/settings.tsx",
+          "purpose": "Admin settings",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/upload.ts",
+          "purpose": "Cloudinary upload utilities",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/api/upload.server.ts",
+          "purpose": "File upload server function",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/email.ts",
+          "purpose": "Resend email service",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "src/lib/seo.ts",
+          "purpose": "SEO meta tag generators",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": ".env",
+          "purpose": "Environment variables (Supabase, JWT, placeholders)",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "supabase-schema.sql",
+          "purpose": "Full SQL migration for Supabase dashboard",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": "vercel.json",
+          "purpose": "Vercel deployment config",
+          "last_modified": "2026-06-10"
+        },
+        {
+          "file": ".github/workflows/ci.yml",
+          "purpose": "GitHub Actions CI pipeline",
+          "last_modified": "2026-06-10"
+        },
         { "file": "README.md", "purpose": "Project documentation", "last_modified": "2026-06-10" }
       ],
       "decisions_log": [

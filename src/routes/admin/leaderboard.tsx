@@ -1,8 +1,8 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { useAuthStore } from '@/stores/auth-store';
-import { apiQueryAll, apiAdjustPoints } from '@/lib/api-client';
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiQueryAll, apiAdjustPoints } from "@/lib/api-client";
 import {
   Table,
   TableBody,
@@ -10,24 +10,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Trophy, Medal, Star, Pencil } from 'lucide-react';
-import { toast } from 'sonner';
+} from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Trophy, Medal, Star, Pencil } from "lucide-react";
+import { toast } from "sonner";
 
-export const Route = createFileRoute('/admin/leaderboard')({
+export const Route = createFileRoute("/admin/leaderboard")({
   component: AdminLeaderboard,
 });
 
@@ -41,12 +41,12 @@ interface PointsForm {
 }
 
 const defaultForm: PointsForm = {
-  userId: '',
-  eventPoints: '',
-  learnPoints: '',
-  buildPoints: '',
-  communityPoints: '',
-  reason: '',
+  userId: "",
+  eventPoints: "",
+  learnPoints: "",
+  buildPoints: "",
+  communityPoints: "",
+  reason: "",
 };
 
 function AdminLeaderboard() {
@@ -57,11 +57,11 @@ function AdminLeaderboard() {
   const [form, setForm] = useState<PointsForm>(defaultForm);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['admin-leaderboard'],
+    queryKey: ["admin-leaderboard"],
     queryFn: async () => {
-      const entries = await apiQueryAll('leaderboard_entries', {
-        select: '*,users(id,email,profiles(full_name,nickname,avatar_url,department,level))',
-        order: { column: 'total_points', ascending: false },
+      const entries = await apiQueryAll("leaderboard_entries", {
+        select: "*,users(id,email,profiles(full_name,nickname,avatar_url,department,level))",
+        order: { column: "total_points", ascending: false },
         limit: 50,
       });
       return entries.map((entry: any, index: number) => ({ rank: index + 1, ...entry }));
@@ -79,24 +79,24 @@ function AdminLeaderboard() {
         reason: form.reason,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-leaderboard'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-leaderboard"] });
       setAdjustDialogOpen(false);
       setSelectedEntry(null);
       setForm(defaultForm);
-      toast.success('Points adjusted');
+      toast.success("Points adjusted");
     },
-    onError: () => toast.error('Failed to adjust points'),
+    onError: () => toast.error("Failed to adjust points"),
   });
 
   const openAdjust = (entry: Record<string, unknown>) => {
     setSelectedEntry(entry);
     setForm({
       userId: (entry.user as Record<string, unknown>)?.id as string,
-      eventPoints: (entry.event_points as number)?.toString() || '',
-      learnPoints: (entry.learn_points as number)?.toString() || '',
-      buildPoints: (entry.build_points as number)?.toString() || '',
-      communityPoints: (entry.community_points as number)?.toString() || '',
-      reason: '',
+      eventPoints: (entry.event_points as number)?.toString() || "",
+      learnPoints: (entry.learn_points as number)?.toString() || "",
+      buildPoints: (entry.build_points as number)?.toString() || "",
+      communityPoints: (entry.community_points as number)?.toString() || "",
+      reason: "",
     });
     setAdjustDialogOpen(true);
   };
@@ -153,18 +153,16 @@ function AdminLeaderboard() {
                         <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold">
                           {profiles?.full_name
                             ? (profiles.full_name as string)
-                                .split(' ')
+                                .split(" ")
                                 .map((n: string) => n[0])
-                                .join('')
-                            : '?'}
+                                .join("")
+                            : "?"}
                         </div>
                         <div>
                           <p className="font-medium">
-                            {(profiles?.full_name as string) || 'Unknown'}
+                            {(profiles?.full_name as string) || "Unknown"}
                           </p>
-                          <p className="text-xs text-muted-foreground">
-                            {users?.email as string}
-                          </p>
+                          <p className="text-xs text-muted-foreground">{users?.email as string}</p>
                         </div>
                       </div>
                     </TableCell>
@@ -173,15 +171,9 @@ function AdminLeaderboard() {
                         {entry.total_points}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {entry.event_points}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {entry.learn_points}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {entry.build_points}
-                    </TableCell>
+                    <TableCell className="text-muted-foreground">{entry.event_points}</TableCell>
+                    <TableCell className="text-muted-foreground">{entry.learn_points}</TableCell>
+                    <TableCell className="text-muted-foreground">{entry.build_points}</TableCell>
                     <TableCell className="text-muted-foreground">
                       {entry.community_points}
                     </TableCell>
@@ -210,7 +202,8 @@ function AdminLeaderboard() {
           <DialogHeader>
             <DialogTitle>Adjust Points</DialogTitle>
             <DialogDescription>
-              Adjust points for {(selectedEntry?.user as Record<string, unknown>)?.email as string || 'user'}
+              Adjust points for{" "}
+              {((selectedEntry?.user as Record<string, unknown>)?.email as string) || "user"}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -265,10 +258,7 @@ function AdminLeaderboard() {
               <Button variant="outline" onClick={() => setAdjustDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button
-                onClick={() => adjustMutation.mutate()}
-                disabled={!form.reason}
-              >
+              <Button onClick={() => adjustMutation.mutate()} disabled={!form.reason}>
                 Save Changes
               </Button>
             </div>
@@ -278,5 +268,3 @@ function AdminLeaderboard() {
     </div>
   );
 }
-
-

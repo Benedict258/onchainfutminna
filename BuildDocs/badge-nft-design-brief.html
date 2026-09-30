@@ -1,227 +1,455 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>BlockchainClub FUTMinna — Badge NFT Design Brief</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Hanken Grotesk', sans-serif; background: #0D0014; color: #e0d6e8; line-height: 1.6; }
-  .page { max-width: 900px; margin: 0 auto; padding: 48px 32px; }
-  
-  h1 { font-size: 36px; font-weight: 700; color: #C084FC; margin-bottom: 8px; letter-spacing: -0.5px; }
-  .subtitle { font-size: 16px; color: rgba(255,255,255,0.5); margin-bottom: 40px; }
-  h2 { font-size: 24px; font-weight: 700; color: #ffffff; margin: 40px 0 12px 0; padding-bottom: 8px; border-bottom: 1px solid rgba(192,132,252,0.2); }
-  h3 { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin: 32px 0 16px 0; }
-  
-  .specs-box { background: #1A031B; border: 1px solid rgba(192,132,252,0.15); border-radius: 12px; padding: 24px; margin-bottom: 32px; }
-  .specs-box p { margin-bottom: 8px; color: rgba(255,255,255,0.6); font-size: 14px; }
-  .specs-box strong { color: rgba(255,255,255,0.8); }
-  .color-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 4px; vertical-align: middle; border: 1px solid rgba(255,255,255,0.1); }
-  
-  table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
-  th { text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.35); border-bottom: 1px solid rgba(192,132,252,0.1); }
-  td { padding: 14px 12px; font-size: 14px; border-bottom: 1px solid rgba(192,132,252,0.05); vertical-align: top; }
-  tr:hover td { background: rgba(192,132,252,0.03); }
-  .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.3); width: 30px; }
-  .name { font-weight: 600; color: #ffffff; white-space: nowrap; min-width: 130px; }
-  .earned { color: rgba(255,255,255,0.5); font-size: 13px; min-width: 180px; }
-  .color-cell { min-width: 90px; }
-  .color-cell span { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .concept { color: rgba(255,255,255,0.55); font-size: 13px; font-style: italic; }
-  
-  .swatch-orange { background: rgba(249,115,22,0.2); color: #f97316; }
-  .swatch-yellow { background: rgba(234,179,8,0.2); color: #eab308; }
-  .swatch-cyan { background: rgba(6,182,212,0.2); color: #06b6d4; }
-  .swatch-emerald { background: rgba(16,185,129,0.2); color: #10b981; }
-  .swatch-purple { background: rgba(168,85,247,0.2); color: #a855f7; }
-  .swatch-blue { background: rgba(59,130,246,0.2); color: #3b82f6; }
-  .swatch-amber { background: rgba(245,158,11,0.2); color: #f59e0b; }
-  .swatch-violet { background: rgba(139,92,246,0.2); color: #8b5cf6; }
-  .swatch-rose { background: rgba(244,63,94,0.2); color: #f43f5e; }
-  .swatch-red { background: rgba(239,68,68,0.2); color: #ef4444; }
-  .swatch-gold { background: rgba(234,179,8,0.2); color: #fbbf24; }
-  .swatch-green { background: rgba(34,197,94,0.2); color: #22c55e; }
-  .swatch-indigo { background: rgba(99,102,241,0.2); color: #6366f1; }
-  
-  .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(192,132,252,0.1); font-size: 12px; color: rgba(255,255,255,0.25); }
-  .footer a { color: rgba(192,132,252,0.5); }
-</style>
-</head>
-<body>
-<div class="page">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BlockchainClub FUTMinna — Badge NFT Design Brief</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap");
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Hanken Grotesk", sans-serif;
+        background: #0d0014;
+        color: #e0d6e8;
+        line-height: 1.6;
+      }
+      .page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 48px 32px;
+      }
 
-<h1>Badge NFT Design Brief</h1>
-<p class="subtitle">BlockchainClub FUTMinna — 18 Non-Transferable SBT Badges</p>
+      h1 {
+        font-size: 36px;
+        font-weight: 700;
+        color: #c084fc;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 40px;
+      }
+      h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 40px 0 12px 0;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(192, 132, 252, 0.2);
+      }
+      h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 32px 0 16px 0;
+      }
 
-<div class="specs-box">
-  <h3>Design Specifications</h3>
-  <p><strong>Format:</strong> Square 1:1 ratio — SVG preferred, high-res PNG minimum 512×512px</p>
-  <p><strong>Style:</strong> Dark theme — background <span class="color-swatch" style="background:#0D0014;"></span> #0D0014, accent <span class="color-swatch" style="background:#C084FC;"></span> #C084FC, border <span class="color-swatch" style="background:rgba(192,132,252,0.2);"></span> rgba(192,132,252,0.2)</p>
-  <p><strong>Container:</strong> All 18 badges share a consistent hexagonal or rounded-square frame with a unified border treatment</p>
-  <p><strong>Icon:</strong> Each badge has a unique central icon/symbol — no two badges should look alike</p>
-  <p><strong>NFT:</strong> Minted as non-transferable SBTs on Sui blockchain</p>
-  <p><strong>Color Usage:</strong> Colors below are the <em>dominant accent</em> for each badge. Designer has creative freedom within the dark theme palette.</p>
-  <p><strong>Variants:</strong> Two states per badge — Locked (greyscale/muted) and Unlocked (full color).</p>
-  <p><strong>Rarity tiers:</strong> Common (Achievement #1-8), Rare (#9-10), Epic (Challenge #11-16), Legendary (#17-18)</p>
-</div>
+      .specs-box {
+        background: #1a031b;
+        border: 1px solid rgba(192, 132, 252, 0.15);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 32px;
+      }
+      .specs-box p {
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+      }
+      .specs-box strong {
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .color-swatch {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        margin-right: 4px;
+        vertical-align: middle;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-<h2>Achievement Badges</h2>
-<p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:16px;">10 badges — earned through core platform activity (learning, building, events, community)</p>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+      }
+      th {
+        text-align: left;
+        padding: 10px 12px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.35);
+        border-bottom: 1px solid rgba(192, 132, 252, 0.1);
+      }
+      td {
+        padding: 14px 12px;
+        font-size: 14px;
+        border-bottom: 1px solid rgba(192, 132, 252, 0.05);
+        vertical-align: top;
+      }
+      tr:hover td {
+        background: rgba(192, 132, 252, 0.03);
+      }
+      .num {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.3);
+        width: 30px;
+      }
+      .name {
+        font-weight: 600;
+        color: #ffffff;
+        white-space: nowrap;
+        min-width: 130px;
+      }
+      .earned {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 13px;
+        min-width: 180px;
+      }
+      .color-cell {
+        min-width: 90px;
+      }
+      .color-cell span {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .concept {
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 13px;
+        font-style: italic;
+      }
 
-<table>
-  <tr><th>#</th><th>Name</th><th>Earned By</th><th>Color</th><th>Visual Concept</th></tr>
-  <tr>
-    <td class="num">1</td>
-    <td class="name">Pioneer</td>
-    <td class="earned">Registered when club had ≤ 10 members</td>
-    <td class="color-cell"><span class="swatch-orange">Orange</span></td>
-    <td class="concept">Torch, compass, or ship — first explorers blazing the trail</td>
-  </tr>
-  <tr>
-    <td class="num">2</td>
-    <td class="name">First Commit</td>
-    <td class="earned">Contributed to 1+ project</td>
-    <td class="color-cell"><span class="swatch-yellow">Yellow</span></td>
-    <td class="concept">Sprouting seed, sapling, or first block — genesis of creation</td>
-  </tr>
-  <tr>
-    <td class="num">3</td>
-    <td class="name">Team Player</td>
-    <td class="earned">Contributed to 3+ projects</td>
-    <td class="color-cell"><span class="swatch-cyan">Cyan</span></td>
-    <td class="concept">Interlocking puzzle pieces, chain links, or handshake — collaboration</td>
-  </tr>
-  <tr>
-    <td class="num">4</td>
-    <td class="name">Event Champion</td>
-    <td class="earned">Attended 5+ events</td>
-    <td class="color-cell"><span class="swatch-emerald">Emerald</span></td>
-    <td class="concept">Crown with calendar, or trophy with date markers — consistent presence</td>
-  </tr>
-  <tr>
-    <td class="num">5</td>
-    <td class="name">Top Builder</td>
-    <td class="earned">50+ build points</td>
-    <td class="color-cell"><span class="swatch-purple">Purple</span></td>
-    <td class="concept">Gear/cog, hammer, or anvil — maker and builder energy</td>
-  </tr>
-  <tr>
-    <td class="num">6</td>
-    <td class="name">Top Learner</td>
-    <td class="earned">50+ learn points</td>
-    <td class="color-cell"><span class="swatch-blue">Blue</span></td>
-    <td class="concept">Open book, lightbulb, or graduation cap — knowledge and study</td>
-  </tr>
-  <tr>
-    <td class="num">7</td>
-    <td class="name">Most Active</td>
-    <td class="earned">100+ total points</td>
-    <td class="color-cell"><span class="swatch-amber">Amber</span></td>
-    <td class="concept">Lightning bolt, pulse wave, or rocket — raw energy and momentum</td>
-  </tr>
-  <tr>
-    <td class="num">8</td>
-    <td class="name">Community Star</td>
-    <td class="earned">30+ community points</td>
-    <td class="color-cell"><span class="swatch-violet">Violet</span></td>
-    <td class="concept">Star surrounded by small dots/people — recognition from the community</td>
-  </tr>
-  <tr>
-    <td class="num">9</td>
-    <td class="name">Goal Setter</td>
-    <td class="earned">Passed Gate 1 — completed Phase 1</td>
-    <td class="color-cell"><span class="swatch-rose">Rose</span></td>
-    <td class="concept">Target with arrow piercing center, or milestone flag — precision and completion</td>
-  </tr>
-  <tr>
-    <td class="num">10</td>
-    <td class="name">Streak Master</td>
-    <td class="earned">4+ consecutive DEVLOG weeks</td>
-    <td class="color-cell"><span class="swatch-red">Red</span></td>
-    <td class="concept">Flame, chain links, or ascending graph — consistency and discipline</td>
-  </tr>
-</table>
+      .swatch-orange {
+        background: rgba(249, 115, 22, 0.2);
+        color: #f97316;
+      }
+      .swatch-yellow {
+        background: rgba(234, 179, 8, 0.2);
+        color: #eab308;
+      }
+      .swatch-cyan {
+        background: rgba(6, 182, 212, 0.2);
+        color: #06b6d4;
+      }
+      .swatch-emerald {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+      }
+      .swatch-purple {
+        background: rgba(168, 85, 247, 0.2);
+        color: #a855f7;
+      }
+      .swatch-blue {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+      }
+      .swatch-amber {
+        background: rgba(245, 158, 11, 0.2);
+        color: #f59e0b;
+      }
+      .swatch-violet {
+        background: rgba(139, 92, 246, 0.2);
+        color: #8b5cf6;
+      }
+      .swatch-rose {
+        background: rgba(244, 63, 94, 0.2);
+        color: #f43f5e;
+      }
+      .swatch-red {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+      .swatch-gold {
+        background: rgba(234, 179, 8, 0.2);
+        color: #fbbf24;
+      }
+      .swatch-green {
+        background: rgba(34, 197, 94, 0.2);
+        color: #22c55e;
+      }
+      .swatch-indigo {
+        background: rgba(99, 102, 241, 0.2);
+        color: #6366f1;
+      }
 
-<h2>Challenge Badges</h2>
-<p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:16px;">8 badges — earned through competitive arena battles, duels, and community challenges</p>
+      .footer {
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(192, 132, 252, 0.1);
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.25);
+      }
+      .footer a {
+        color: rgba(192, 132, 252, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>Badge NFT Design Brief</h1>
+      <p class="subtitle">BlockchainClub FUTMinna — 18 Non-Transferable SBT Badges</p>
 
-<table>
-  <tr><th>#</th><th>Name</th><th>Earned By</th><th>Color</th><th>Visual Concept</th></tr>
-  <tr>
-    <td class="num">11</td>
-    <td class="name">Duelist</td>
-    <td class="earned">Won 5 Code Duels (1v1)</td>
-    <td class="color-cell"><span class="swatch-red">Red</span></td>
-    <td class="concept">Two crossed swords — 1v1 combat and dueling spirit</td>
-  </tr>
-  <tr>
-    <td class="num">12</td>
-    <td class="name">Gladiator</td>
-    <td class="earned">Won 10 Code Duels</td>
-    <td class="color-cell"><span class="swatch-gold">Rose / Gold</span></td>
-    <td class="concept">Helmet, arena shield, or laurel wreath — veteran champion fighter</td>
-  </tr>
-  <tr>
-    <td class="num">13</td>
-    <td class="name">Challenger</td>
-    <td class="earned">Created 5 public challenges</td>
-    <td class="color-cell"><span class="swatch-blue">Blue</span></td>
-    <td class="concept">Raised flag, starting gun, or megaphone — initiative and leadership</td>
-  </tr>
-  <tr>
-    <td class="num">14</td>
-    <td class="name">Speed Demon</td>
-    <td class="earned">Won 3 Speed Sprints</td>
-    <td class="color-cell"><span class="swatch-amber">Amber</span></td>
-    <td class="concept">Stopwatch with wings, or lightning cheetah — blazing speed</td>
-  </tr>
-  <tr>
-    <td class="num">15</td>
-    <td class="name">CTF Hunter</td>
-    <td class="earned">Captured 10 flags in CTFs</td>
-    <td class="color-cell"><span class="swatch-green">Green</span></td>
-    <td class="concept">Crosshair, captured flag, or magnifying glass — security and precision</td>
-  </tr>
-  <tr>
-    <td class="num">16</td>
-    <td class="name">Crowd Favorite</td>
-    <td class="earned">Won 3 community-voted challenges</td>
-    <td class="color-cell"><span class="swatch-purple">Purple</span></td>
-    <td class="concept">Trophy with heart, or hands clapping — public acclaim and love</td>
-  </tr>
-  <tr>
-    <td class="num">17</td>
-    <td class="name">High Roller</td>
-    <td class="earned">Earned 100+ points from wagers</td>
-    <td class="color-cell"><span class="swatch-gold">Gold</span></td>
-    <td class="concept">Stacked coins, diamond, or poker chip — wealth and risk-taking</td>
-  </tr>
-  <tr>
-    <td class="num">18</td>
-    <td class="name">Versatile</td>
-    <td class="earned">Won in 3 different challenge categories</td>
-    <td class="color-cell"><span class="swatch-indigo">Indigo</span></td>
-    <td class="concept">Overlapping layers, prism, or Swiss Army knife — range and adaptability</td>
-  </tr>
-</table>
+      <div class="specs-box">
+        <h3>Design Specifications</h3>
+        <p>
+          <strong>Format:</strong> Square 1:1 ratio — SVG preferred, high-res PNG minimum 512×512px
+        </p>
+        <p>
+          <strong>Style:</strong> Dark theme — background
+          <span class="color-swatch" style="background: #0d0014"></span> #0D0014, accent
+          <span class="color-swatch" style="background: #c084fc"></span> #C084FC, border
+          <span class="color-swatch" style="background: rgba(192, 132, 252, 0.2)"></span>
+          rgba(192,132,252,0.2)
+        </p>
+        <p>
+          <strong>Container:</strong> All 18 badges share a consistent hexagonal or rounded-square
+          frame with a unified border treatment
+        </p>
+        <p>
+          <strong>Icon:</strong> Each badge has a unique central icon/symbol — no two badges should
+          look alike
+        </p>
+        <p><strong>NFT:</strong> Minted as non-transferable SBTs on Sui blockchain</p>
+        <p>
+          <strong>Color Usage:</strong> Colors below are the <em>dominant accent</em> for each
+          badge. Designer has creative freedom within the dark theme palette.
+        </p>
+        <p>
+          <strong>Variants:</strong> Two states per badge — Locked (greyscale/muted) and Unlocked
+          (full color).
+        </p>
+        <p>
+          <strong>Rarity tiers:</strong> Common (Achievement #1-8), Rare (#9-10), Epic (Challenge
+          #11-16), Legendary (#17-18)
+        </p>
+      </div>
 
-<div class="specs-box">
-  <h3>Rarity Tiers</h3>
-  <table>
-    <tr><th>Tier</th><th>Badges</th><th>Frame Treatment</th></tr>
-    <tr><td><strong>Common</strong></td><td>#1–8 (Pioneer → Community Star)</td><td>Simple border, muted glow</td></tr>
-    <tr><td><strong>Rare</strong></td><td>#9–10 (Goal Setter, Streak Master)</td><td>Double border, subtle glow</td></tr>
-    <tr><td><strong>Epic</strong></td><td>#11–16 (Duelist → Crowd Favorite)</td><td>Angular frame, animated pulse</td></tr>
-    <tr><td><strong>Legendary</strong></td><td>#17–18 (High Roller, Versatile)</td><td>Ornate frame, shimmer effect</td></tr>
-  </table>
-</div>
+      <h2>Achievement Badges</h2>
+      <p style="color: rgba(255, 255, 255, 0.4); font-size: 13px; margin-bottom: 16px">
+        10 badges — earned through core platform activity (learning, building, events, community)
+      </p>
 
-<div class="footer">
-  <p>BlockchainClub FUTMinna — Federal University of Technology, Minna</p>
-  <p>Contract deployed on Sui Testnet: <code style="color:rgba(192,132,252,0.5);">0xd4632758a5cf176469ef34d71808aeccbf3b30aea3bab18509e2a89930426d4a</code></p>
-</div>
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Earned By</th>
+          <th>Color</th>
+          <th>Visual Concept</th>
+        </tr>
+        <tr>
+          <td class="num">1</td>
+          <td class="name">Pioneer</td>
+          <td class="earned">Registered when club had ≤ 10 members</td>
+          <td class="color-cell"><span class="swatch-orange">Orange</span></td>
+          <td class="concept">Torch, compass, or ship — first explorers blazing the trail</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td class="name">First Commit</td>
+          <td class="earned">Contributed to 1+ project</td>
+          <td class="color-cell"><span class="swatch-yellow">Yellow</span></td>
+          <td class="concept">Sprouting seed, sapling, or first block — genesis of creation</td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td class="name">Team Player</td>
+          <td class="earned">Contributed to 3+ projects</td>
+          <td class="color-cell"><span class="swatch-cyan">Cyan</span></td>
+          <td class="concept">
+            Interlocking puzzle pieces, chain links, or handshake — collaboration
+          </td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="name">Event Champion</td>
+          <td class="earned">Attended 5+ events</td>
+          <td class="color-cell"><span class="swatch-emerald">Emerald</span></td>
+          <td class="concept">
+            Crown with calendar, or trophy with date markers — consistent presence
+          </td>
+        </tr>
+        <tr>
+          <td class="num">5</td>
+          <td class="name">Top Builder</td>
+          <td class="earned">50+ build points</td>
+          <td class="color-cell"><span class="swatch-purple">Purple</span></td>
+          <td class="concept">Gear/cog, hammer, or anvil — maker and builder energy</td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="name">Top Learner</td>
+          <td class="earned">50+ learn points</td>
+          <td class="color-cell"><span class="swatch-blue">Blue</span></td>
+          <td class="concept">Open book, lightbulb, or graduation cap — knowledge and study</td>
+        </tr>
+        <tr>
+          <td class="num">7</td>
+          <td class="name">Most Active</td>
+          <td class="earned">100+ total points</td>
+          <td class="color-cell"><span class="swatch-amber">Amber</span></td>
+          <td class="concept">Lightning bolt, pulse wave, or rocket — raw energy and momentum</td>
+        </tr>
+        <tr>
+          <td class="num">8</td>
+          <td class="name">Community Star</td>
+          <td class="earned">30+ community points</td>
+          <td class="color-cell"><span class="swatch-violet">Violet</span></td>
+          <td class="concept">
+            Star surrounded by small dots/people — recognition from the community
+          </td>
+        </tr>
+        <tr>
+          <td class="num">9</td>
+          <td class="name">Goal Setter</td>
+          <td class="earned">Passed Gate 1 — completed Phase 1</td>
+          <td class="color-cell"><span class="swatch-rose">Rose</span></td>
+          <td class="concept">
+            Target with arrow piercing center, or milestone flag — precision and completion
+          </td>
+        </tr>
+        <tr>
+          <td class="num">10</td>
+          <td class="name">Streak Master</td>
+          <td class="earned">4+ consecutive DEVLOG weeks</td>
+          <td class="color-cell"><span class="swatch-red">Red</span></td>
+          <td class="concept">
+            Flame, chain links, or ascending graph — consistency and discipline
+          </td>
+        </tr>
+      </table>
 
-</div>
-</body>
+      <h2>Challenge Badges</h2>
+      <p style="color: rgba(255, 255, 255, 0.4); font-size: 13px; margin-bottom: 16px">
+        8 badges — earned through competitive arena battles, duels, and community challenges
+      </p>
+
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Earned By</th>
+          <th>Color</th>
+          <th>Visual Concept</th>
+        </tr>
+        <tr>
+          <td class="num">11</td>
+          <td class="name">Duelist</td>
+          <td class="earned">Won 5 Code Duels (1v1)</td>
+          <td class="color-cell"><span class="swatch-red">Red</span></td>
+          <td class="concept">Two crossed swords — 1v1 combat and dueling spirit</td>
+        </tr>
+        <tr>
+          <td class="num">12</td>
+          <td class="name">Gladiator</td>
+          <td class="earned">Won 10 Code Duels</td>
+          <td class="color-cell"><span class="swatch-gold">Rose / Gold</span></td>
+          <td class="concept">Helmet, arena shield, or laurel wreath — veteran champion fighter</td>
+        </tr>
+        <tr>
+          <td class="num">13</td>
+          <td class="name">Challenger</td>
+          <td class="earned">Created 5 public challenges</td>
+          <td class="color-cell"><span class="swatch-blue">Blue</span></td>
+          <td class="concept">
+            Raised flag, starting gun, or megaphone — initiative and leadership
+          </td>
+        </tr>
+        <tr>
+          <td class="num">14</td>
+          <td class="name">Speed Demon</td>
+          <td class="earned">Won 3 Speed Sprints</td>
+          <td class="color-cell"><span class="swatch-amber">Amber</span></td>
+          <td class="concept">Stopwatch with wings, or lightning cheetah — blazing speed</td>
+        </tr>
+        <tr>
+          <td class="num">15</td>
+          <td class="name">CTF Hunter</td>
+          <td class="earned">Captured 10 flags in CTFs</td>
+          <td class="color-cell"><span class="swatch-green">Green</span></td>
+          <td class="concept">
+            Crosshair, captured flag, or magnifying glass — security and precision
+          </td>
+        </tr>
+        <tr>
+          <td class="num">16</td>
+          <td class="name">Crowd Favorite</td>
+          <td class="earned">Won 3 community-voted challenges</td>
+          <td class="color-cell"><span class="swatch-purple">Purple</span></td>
+          <td class="concept">Trophy with heart, or hands clapping — public acclaim and love</td>
+        </tr>
+        <tr>
+          <td class="num">17</td>
+          <td class="name">High Roller</td>
+          <td class="earned">Earned 100+ points from wagers</td>
+          <td class="color-cell"><span class="swatch-gold">Gold</span></td>
+          <td class="concept">Stacked coins, diamond, or poker chip — wealth and risk-taking</td>
+        </tr>
+        <tr>
+          <td class="num">18</td>
+          <td class="name">Versatile</td>
+          <td class="earned">Won in 3 different challenge categories</td>
+          <td class="color-cell"><span class="swatch-indigo">Indigo</span></td>
+          <td class="concept">
+            Overlapping layers, prism, or Swiss Army knife — range and adaptability
+          </td>
+        </tr>
+      </table>
+
+      <div class="specs-box">
+        <h3>Rarity Tiers</h3>
+        <table>
+          <tr>
+            <th>Tier</th>
+            <th>Badges</th>
+            <th>Frame Treatment</th>
+          </tr>
+          <tr>
+            <td><strong>Common</strong></td>
+            <td>#1–8 (Pioneer → Community Star)</td>
+            <td>Simple border, muted glow</td>
+          </tr>
+          <tr>
+            <td><strong>Rare</strong></td>
+            <td>#9–10 (Goal Setter, Streak Master)</td>
+            <td>Double border, subtle glow</td>
+          </tr>
+          <tr>
+            <td><strong>Epic</strong></td>
+            <td>#11–16 (Duelist → Crowd Favorite)</td>
+            <td>Angular frame, animated pulse</td>
+          </tr>
+          <tr>
+            <td><strong>Legendary</strong></td>
+            <td>#17–18 (High Roller, Versatile)</td>
+            <td>Ornate frame, shimmer effect</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="footer">
+        <p>BlockchainClub FUTMinna — Federal University of Technology, Minna</p>
+        <p>
+          Contract deployed on Sui Testnet:
+          <code style="color: rgba(192, 132, 252, 0.5)"
+            >0xd4632758a5cf176469ef34d71808aeccbf3b30aea3bab18509e2a89930426d4a</code
+          >
+        </p>
+      </div>
+    </div>
+  </body>
 </html>

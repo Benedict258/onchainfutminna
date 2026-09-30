@@ -21,7 +21,7 @@ function ProfileLayout() {
               "px-4 py-2 rounded-md text-sm font-medium transition-colors",
               !isDevlog
                 ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                : "bg-muted text-muted-foreground hover:text-foreground",
             )}
           >
             My Profile
@@ -32,7 +32,7 @@ function ProfileLayout() {
               "px-4 py-2 rounded-md text-sm font-medium transition-colors",
               isDevlog
                 ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:text-foreground"
+                : "bg-muted text-muted-foreground hover:text-foreground",
             )}
           >
             My DEVLOG
@@ -43,5 +43,3 @@ function ProfileLayout() {
     </AuthGuard>
   );
 }
-
-

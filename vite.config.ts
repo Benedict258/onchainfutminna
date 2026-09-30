@@ -5,6 +5,7 @@ export default defineConfig({
     server: {
       port: 5179,
       host: "0.0.0.0",
+      allowedHosts: [".loca.lt"],
     },
     ssr: {
       noExternal: [],

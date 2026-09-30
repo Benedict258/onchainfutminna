@@ -240,7 +240,9 @@ function AdminMembers() {
                     <AlertTitle>Failed to load members</AlertTitle>
                     <AlertDescription className="flex items-center justify-between">
                       <span>Could not fetch members. Please try again.</span>
-                      <Button variant="outline" size="sm" onClick={() => refetch()}>Retry</Button>
+                      <Button variant="outline" size="sm" onClick={() => refetch()}>
+                        Retry
+                      </Button>
                     </AlertDescription>
                   </Alert>
                 </TableCell>
@@ -507,5 +509,3 @@ function AdminMembers() {
     </div>
   );
 }
-
-

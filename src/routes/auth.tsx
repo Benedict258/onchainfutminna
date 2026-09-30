@@ -108,7 +108,11 @@ function SignInPage() {
                       <FormItem>
                         <FormLabel>Email or Username</FormLabel>
                         <FormControl>
-                          <Input placeholder="you@futminna.edu.ng or yourusername" type="text" {...field} />
+                          <Input
+                            placeholder="you@futminna.edu.ng or yourusername"
+                            type="text"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -139,7 +143,9 @@ function SignInPage() {
                     {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
                   {form.formState.errors.root && (
-                    <p className="text-sm text-destructive text-center">{form.formState.errors.root.message}</p>
+                    <p className="text-sm text-destructive text-center">
+                      {form.formState.errors.root.message}
+                    </p>
                   )}
                 </form>
               </Form>
@@ -156,5 +162,3 @@ function SignInPage() {
     </div>
   );
 }
-
-

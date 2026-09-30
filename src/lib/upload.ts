@@ -8,7 +8,7 @@ function getPublicUrl(bucket: string, path: string): string {
 export async function uploadToSupabase(
   file: File,
   bucket: string,
-  folder: string
+  folder: string,
 ): Promise<{ url: string; path: string }> {
   const ext = file.name.split(".").pop() || "jpg";
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;

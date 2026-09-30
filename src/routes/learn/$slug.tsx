@@ -121,7 +121,11 @@ function TrackDetailPage() {
   const [activePhase, setActivePhase] = useState(0);
   const [completingModuleId, setCompletingModuleId] = useState<string | null>(null);
 
-  const { data: track, isLoading, error } = useQuery({
+  const {
+    data: track,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["track", slug],
     queryFn: () => fetchTrack({ data: { slug } }),
   });
@@ -160,7 +164,12 @@ function TrackDetailPage() {
         select: "id,gate_number,status,checked_at",
         order: { column: "gate_number", ascending: true },
       });
-      return (rows || []) as { id: string; gate_number: number; status: string; checked_at: string | null }[];
+      return (rows || []) as {
+        id: string;
+        gate_number: number;
+        status: string;
+        checked_at: string | null;
+      }[];
     },
     enabled: !!user?.id,
   });
@@ -188,7 +197,7 @@ function TrackDetailPage() {
   const totalModules = track.totalModules || 0;
 
   const completedCount = completedModuleIds.filter((id: string) =>
-    phases.some((p: any) => (p.modules || []).some((m: any) => m.id === id))
+    phases.some((p: any) => (p.modules || []).some((m: any) => m.id === id)),
   ).length;
   const progressPercent = totalModules > 0 ? Math.round((completedCount / totalModules) * 100) : 0;
 
@@ -197,9 +206,7 @@ function TrackDetailPage() {
     if (phaseIdx === 0) return false;
     const prevPhase = phases[phaseIdx - 1];
     if (!prevPhase || (prevPhase.modules || []).length === 0) return false;
-    return (prevPhase.modules || []).some(
-      (m: any) => !completedModuleIds.includes(m.id)
-    );
+    return (prevPhase.modules || []).some((m: any) => !completedModuleIds.includes(m.id));
   };
 
   function handleModuleExpand(moduleId: string) {
@@ -249,7 +256,10 @@ function TrackDetailPage() {
 
           <div className="mb-10">
             <div className="flex flex-wrap items-center gap-2 mb-3">
-              <Badge variant="outline" className={ECOSYSTEM_COLORS[track.ecosystem] || ECOSYSTEM_COLORS.GENERAL}>
+              <Badge
+                variant="outline"
+                className={ECOSYSTEM_COLORS[track.ecosystem] || ECOSYSTEM_COLORS.GENERAL}
+              >
                 {ECOSYSTEM_LABELS[track.ecosystem] || track.ecosystem}
               </Badge>
               {(track.category || track.difficulty) && (
@@ -266,7 +276,9 @@ function TrackDetailPage() {
               )}
             </div>
 
-            <h1 className="text-headline-xl md:text-display-md tracking-tight mb-4">{track.title}</h1>
+            <h1 className="text-headline-xl md:text-display-md tracking-tight mb-4">
+              {track.title}
+            </h1>
             {track.description && (
               <p className="text-body-lg text-muted-foreground max-w-3xl leading-relaxed">
                 {track.description}
@@ -297,7 +309,7 @@ function TrackDetailPage() {
 
           <div className="mb-12">
             <h2 className="text-headline-sm mb-4">Phases</h2>
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {phases.map((phase: any) => {
                 const locked = isPhaseLocked(phase.phase);
                 const isActive = activePhase === phase.phase;
@@ -308,11 +320,12 @@ function TrackDetailPage() {
                         onClick={() => handlePhaseClick(phase.phase)}
                         className={`
                           relative rounded-lg border p-4 text-left transition-all cursor-pointer
-                          ${isActive
-                            ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-                            : locked
-                              ? "border-border bg-muted/30 opacity-60 cursor-not-allowed"
-                              : "border-border bg-card hover:border-primary/40 hover:bg-surface-low"
+                          ${
+                            isActive
+                              ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                              : locked
+                                ? "border-border bg-muted/30 opacity-60 cursor-not-allowed"
+                                : "border-border bg-card hover:border-primary/40 hover:bg-surface-low"
                           }
                         `}
                       >
@@ -344,7 +357,7 @@ function TrackDetailPage() {
           <div className="grid lg:grid-cols-[1fr_280px] gap-8">
             <div id={`phase-${activePhase}`}>
               <h2 className="text-headline-sm mb-4">
-                {PHASE_NAMES[activePhase] || `Phase ${activePhase}`}  Modules
+                {PHASE_NAMES[activePhase] || `Phase ${activePhase}`} Modules
               </h2>
 
               {currentPhaseModules.length === 0 ? (
@@ -381,7 +394,10 @@ function TrackDetailPage() {
                             <div className="flex items-center gap-2 mb-1">
                               <h3 className="text-sm font-semibold text-foreground">{mod.title}</h3>
                               {isCompleted && (
-                                <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                                <Badge
+                                  variant="outline"
+                                  className="text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                                >
                                   Completed
                                 </Badge>
                               )}
@@ -393,7 +409,8 @@ function TrackDetailPage() {
                             )}
                             <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground/60">
                               <span className="inline-flex items-center gap-1">
-                                <Clock className="h-3 w-3" />~5 min read
+                                <Clock className="h-3 w-3" />
+                                ~5 min read
                               </span>
                             </div>
                           </div>
@@ -462,7 +479,9 @@ function TrackDetailPage() {
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">Modules Done</span>
                         <span className="font-semibold text-foreground">
-                          {isAuthenticated ? `${completedCount} / ${totalModules}` : `\u2014 / ${totalModules}`}
+                          {isAuthenticated
+                            ? `${completedCount} / ${totalModules}`
+                            : `\u2014 / ${totalModules}`}
                         </span>
                       </div>
                     </>
@@ -576,5 +595,3 @@ function TrackDetailPage() {
     </TooltipProvider>
   );
 }
-
-

@@ -12,7 +12,12 @@ interface PhaseBarProps {
   size?: "sm" | "md";
 }
 
-export function PhaseBar({ phaseCount, modulesPerPhase, currentPhase, size = "md" }: PhaseBarProps) {
+export function PhaseBar({
+  phaseCount,
+  modulesPerPhase,
+  currentPhase,
+  size = "md",
+}: PhaseBarProps) {
   const dotSize = size === "sm" ? "h-2 w-2" : "h-2.5 w-2.5";
   const labelClass = size === "sm" ? "text-[10px]" : "text-xs";
 
@@ -35,12 +40,14 @@ export function PhaseBar({ phaseCount, modulesPerPhase, currentPhase, size = "md
                       dotSize,
                       isCurrent && "border-primary bg-primary ring-1 ring-primary/30",
                       !isCurrent && hasModules && "border-primary bg-primary",
-                      !isCurrent && !hasModules && "border-border bg-transparent"
+                      !isCurrent && !hasModules && "border-border bg-transparent",
                     )}
                   />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{name} &mdash; {count} module{count !== 1 ? "s" : ""}</p>
+                  <p>
+                    {name} &mdash; {count} module{count !== 1 ? "s" : ""}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             );
@@ -57,5 +64,3 @@ export function PhaseBar({ phaseCount, modulesPerPhase, currentPhase, size = "md
     </TooltipProvider>
   );
 }
-
-

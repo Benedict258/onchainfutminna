@@ -1,8 +1,8 @@
-﻿import { createFileRoute } from '@tanstack/react-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState, useMemo } from 'react';
-import { useAuthStore } from '@/stores/auth-store';
-import { apiQuery, apiInsert } from '@/lib/api-client';
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
+import { useAuthStore } from "@/stores/auth-store";
+import { apiQuery, apiInsert } from "@/lib/api-client";
 import {
   Table,
   TableBody,
@@ -10,28 +10,28 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+} from "@/components/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   Pagination,
   PaginationContent,
@@ -39,8 +39,8 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+} from "@/components/ui/pagination";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Command,
   CommandEmpty,
@@ -48,28 +48,28 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
-import { Plus, ExternalLink, FileText, AlertCircle, Check, ChevronsUpDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
+} from "@/components/ui/command";
+import { Plus, ExternalLink, FileText, AlertCircle, Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-export const Route = createFileRoute('/admin/certifications')({
+export const Route = createFileRoute("/admin/certifications")({
   component: AdminCertifications,
 });
 
 const TIER_LABELS: Record<number, string> = {
-  1: 'Foundation',
-  2: 'Builder',
-  3: 'Track',
+  1: "Foundation",
+  2: "Builder",
+  3: "Track",
 };
 
 const TIER_BADGES: Record<number, string> = {
-  1: 'bg-blue-500/20 text-blue-400',
-  2: 'bg-purple-500/20 text-purple-400',
-  3: 'bg-amber-500/20 text-amber-400',
+  1: "bg-blue-500/20 text-blue-400",
+  2: "bg-purple-500/20 text-purple-400",
+  3: "bg-amber-500/20 text-amber-400",
 };
 
-const TRACKS = ['Security Auditor', 'Protocol Developer', 'Full-Stack dApp'] as const;
+const TRACKS = ["Security Auditor", "Protocol Developer", "Full-Stack dApp"] as const;
 const PAGE_SIZE = 20;
 
 interface StudentOption {
@@ -97,9 +97,9 @@ interface CertRow {
 
 function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase()
     .slice(0, 2);
 }
@@ -111,39 +111,44 @@ function AdminCertifications() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentOption | null>(null);
   const [studentSearchOpen, setStudentSearchOpen] = useState(false);
-  const [tier, setTier] = useState<string>('');
-  const [track, setTrack] = useState<string>('');
+  const [tier, setTier] = useState<string>("");
+  const [track, setTrack] = useState<string>("");
   const [cohortYear, setCohortYear] = useState(new Date().getFullYear().toString());
-  const [portfolioUrl, setPortfolioUrl] = useState('');
+  const [portfolioUrl, setPortfolioUrl] = useState("");
 
   const currentTier = tier ? parseInt(tier) : 0;
 
-  const { data: certsData, isLoading, isError, refetch } = useQuery({
-    queryKey: ['admin-certifications'],
+  const {
+    data: certsData,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["admin-certifications"],
     queryFn: async () => {
-      const res = await apiQuery('certifications', {
-        select: '*',
-        order: { column: 'issued_at', ascending: false },
+      const res = await apiQuery("certifications", {
+        select: "*",
+        order: { column: "issued_at", ascending: false },
       });
       return (res.data || []) as Record<string, unknown>[];
     },
   });
 
   const { data: usersData } = useQuery({
-    queryKey: ['admin-certifications-users'],
+    queryKey: ["admin-certifications-users"],
     queryFn: async () => {
-      const res = await apiQuery('users', {
-        select: 'id,email,profiles(full_name,avatar_url)',
+      const res = await apiQuery("users", {
+        select: "id,email,profiles(full_name,avatar_url)",
       });
       return (res.data || []) as Record<string, unknown>[];
     },
   });
 
   const { data: gateChecksData } = useQuery({
-    queryKey: ['admin-certifications-gate-checks'],
+    queryKey: ["admin-certifications-gate-checks"],
     queryFn: async () => {
-      const res = await apiQuery('gate_checks', {
-        select: 'user_id,gate,status',
+      const res = await apiQuery("gate_checks", {
+        select: "user_id,gate,status",
       });
       return (res.data || []) as Record<string, unknown>[];
     },
@@ -151,10 +156,10 @@ function AdminCertifications() {
   });
 
   const { data: allStudentsData } = useQuery({
-    queryKey: ['admin-certifications-all-students'],
+    queryKey: ["admin-certifications-all-students"],
     queryFn: async () => {
-      const res = await apiQuery('users', {
-        select: 'id,email,role,profiles(full_name,avatar_url)',
+      const res = await apiQuery("users", {
+        select: "id,email,role,profiles(full_name,avatar_url)",
         filters: { is_active: true },
       });
       return (res.data || []) as Record<string, unknown>[];
@@ -167,15 +172,15 @@ function AdminCertifications() {
 
     const studentMap = new Map<string, StudentOption>();
     for (const u of allStudentsData) {
-      const role = (u.role as string) || '';
-      if (role === 'ADMIN' || role === 'SUPER_ADMIN') continue;
+      const role = (u.role as string) || "";
+      if (role === "ADMIN" || role === "SUPER_ADMIN") continue;
       const profiles = (u.profiles as any[]) || [];
       const profile = profiles[0] as Record<string, unknown> | undefined;
       studentMap.set(u.id as string, {
         userId: u.id as string,
-        email: (u.email as string) || '',
-        fullName: (profile?.full_name as string) || (u.email as string) || 'Unknown',
-        avatarUrl: (profile?.avatar_url as string) || '',
+        email: (u.email as string) || "",
+        fullName: (profile?.full_name as string) || (u.email as string) || "Unknown",
+        avatarUrl: (profile?.avatar_url as string) || "",
       });
     }
 
@@ -184,7 +189,7 @@ function AdminCertifications() {
       const uid = gc.user_id as string;
       const g = gc.gate as number;
       const status = gc.status as string;
-      if (status !== 'passed') continue;
+      if (status !== "passed") continue;
       if (!passedGates.has(uid)) passedGates.set(uid, new Set());
       passedGates.get(uid)!.add(g);
     }
@@ -231,9 +236,9 @@ function AdminCertifications() {
         cohortYear: (c.cohort_year as number) || null,
         issuedAt: c.issued_at as string,
         issuedBy: (c.issued_by as string) || null,
-        studentName: (profile?.full_name as string) || (certUser.email as string) || 'Unknown',
-        studentEmail: (certUser.email as string) || '',
-        studentAvatar: (profile?.avatar_url as string) || '',
+        studentName: (profile?.full_name as string) || (certUser.email as string) || "Unknown",
+        studentEmail: (certUser.email as string) || "",
+        studentAvatar: (profile?.avatar_url as string) || "",
       };
     });
   }, [certsData, userMap]);
@@ -243,7 +248,7 @@ function AdminCertifications() {
 
   const issueMutation = useMutation({
     mutationFn: async () => {
-      if (!selectedStudent) throw new Error('No student selected');
+      if (!selectedStudent) throw new Error("No student selected");
       const payload: Record<string, unknown> = {
         user_id: selectedStudent.userId,
         tier: currentTier,
@@ -254,24 +259,24 @@ function AdminCertifications() {
       if (currentTier === 3 && track) {
         payload.track = track;
       }
-      payload.pdf_url = 'https://placeholder.local/cert.pdf';
-      return apiInsert('certifications', payload);
+      payload.pdf_url = "https://placeholder.local/cert.pdf";
+      return apiInsert("certifications", payload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-certifications'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-certifications"] });
       setDialogOpen(false);
       resetForm();
-      toast.success('Certificate issued');
+      toast.success("Certificate issued");
     },
-    onError: () => toast.error('Failed to issue certificate'),
+    onError: () => toast.error("Failed to issue certificate"),
   });
 
   function resetForm() {
     setSelectedStudent(null);
-    setTier('');
-    setTrack('');
+    setTier("");
+    setTrack("");
     setCohortYear(new Date().getFullYear().toString());
-    setPortfolioUrl('');
+    setPortfolioUrl("");
   }
 
   function openIssueDialog() {
@@ -326,7 +331,9 @@ function AdminCertifications() {
                     <AlertTitle>Failed to load certifications</AlertTitle>
                     <AlertDescription className="flex items-center justify-between">
                       <span>Could not fetch data. Please try again.</span>
-                      <Button variant="outline" size="sm" onClick={() => refetch()}>Retry</Button>
+                      <Button variant="outline" size="sm" onClick={() => refetch()}>
+                        Retry
+                      </Button>
                     </AlertDescription>
                   </Alert>
                 </TableCell>
@@ -349,8 +356,8 @@ function AdminCertifications() {
                     {cert.studentEmail}
                   </TableCell>
                   <TableCell>
-                    <Badge className={TIER_BADGES[cert.tier] || 'bg-muted text-muted-foreground'}>
-                      Tier {cert.tier} &middot; {TIER_LABELS[cert.tier] || ''}
+                    <Badge className={TIER_BADGES[cert.tier] || "bg-muted text-muted-foreground"}>
+                      Tier {cert.tier} &middot; {TIER_LABELS[cert.tier] || ""}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-sm">
@@ -408,7 +415,7 @@ function AdminCertifications() {
             <PaginationItem>
               <PaginationPrevious
                 onClick={() => setPage(Math.max(1, page - 1))}
-                className={page === 1 ? 'pointer-events-none opacity-50' : ''}
+                className={page === 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
             {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
@@ -425,7 +432,7 @@ function AdminCertifications() {
             <PaginationItem>
               <PaginationNext
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
-                className={page === totalPages ? 'pointer-events-none opacity-50' : ''}
+                className={page === totalPages ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
           </PaginationContent>
@@ -436,14 +443,19 @@ function AdminCertifications() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Issue Certificate</DialogTitle>
-            <DialogDescription>
-              Issue a blockchain certificate to a student
-            </DialogDescription>
+            <DialogDescription>Issue a blockchain certificate to a student</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
               <Label>Select Tier</Label>
-              <Select value={tier} onValueChange={(v) => { setTier(v); setSelectedStudent(null); setTrack(''); }}>
+              <Select
+                value={tier}
+                onValueChange={(v) => {
+                  setTier(v);
+                  setSelectedStudent(null);
+                  setTrack("");
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Choose a tier" />
                 </SelectTrigger>
@@ -469,8 +481,8 @@ function AdminCertifications() {
                     {selectedStudent
                       ? selectedStudent.fullName
                       : tier
-                        ? 'Search students...'
-                        : 'Select a tier first'}
+                        ? "Search students..."
+                        : "Select a tier first"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -479,7 +491,7 @@ function AdminCertifications() {
                     <CommandInput placeholder="Search by name or email..." />
                     <CommandList>
                       <CommandEmpty>
-                        {tier ? 'No eligible students found' : 'No students'}
+                        {tier ? "No eligible students found" : "No students"}
                       </CommandEmpty>
                       <CommandGroup>
                         {eligibleStudents.map((s) => (
@@ -493,8 +505,8 @@ function AdminCertifications() {
                           >
                             <Check
                               className={cn(
-                                'h-4 w-4',
-                                selectedStudent?.userId === s.userId ? 'opacity-100' : 'opacity-0',
+                                "h-4 w-4",
+                                selectedStudent?.userId === s.userId ? "opacity-100" : "opacity-0",
                               )}
                             />
                             <div className="flex items-center gap-2">
@@ -572,5 +584,3 @@ function AdminCertifications() {
     </div>
   );
 }
-
-

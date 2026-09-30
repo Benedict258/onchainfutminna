@@ -1,4 +1,5 @@
 # Dev3pack Rust Scholarship — Blockchain Club FUTMinna
+
 ### Kit: (1) Website page content · (2) Screening questions + selection rubric · (3) opencode prompt for Supabase
 
 ---
@@ -7,14 +8,14 @@
 
 Public sources confirm the bootcamp itself. They do **not** document the club's 15-seat scholarship allocation, so anything marked `[CONFIRM]` below must come from your Dev3pack contact.
 
-| # | Item | What public sources say | What you need to confirm |
-|---|---|---|---|
-| 1 | Bootcamp dates | Dev3pack's hackathon page lists a free Solana + Rust bootcamp **2–27 Nov** (English and Spanish). An older X post mentioned 6–30 Oct, likely a previous edition. | Which dates apply to your 15 seats |
-| 2 | Hackathon dates | Hackathon page says **27–29 Nov 2026**, hybrid. Earlier in this project the Dev3pack Global Hackathon was described as **30 Oct – 1 Nov**. | Whether these are two different events, or the dates moved |
-| 3 | Eligibility | Dev3pack's main site says its *program* is open to women and non-binary people, and IRL events are open to everyone. | Whether the 15 club seats carry any eligibility rule. If they do, state it on the page and add an eligibility confirmation checkbox |
-| 4 | What the scholarship covers | Not public. The bootcamp is described as free. | What "scholarship" means here (seat only? mentorship? hackathon perks?) |
-| 5 | Obligations | Not public. | Any completion, attendance, or reporting requirement Dev3pack places on scholars |
-| 6 | Announcement date | Deadline is 10 Oct. I suggested 16 Oct for results. | Confirm the announcement date, and that Dev3pack does not need your 15 names before 10 Oct |
+| #   | Item                        | What public sources say                                                                                                                                          | What you need to confirm                                                                                                            |
+| --- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Bootcamp dates              | Dev3pack's hackathon page lists a free Solana + Rust bootcamp **2–27 Nov** (English and Spanish). An older X post mentioned 6–30 Oct, likely a previous edition. | Which dates apply to your 15 seats                                                                                                  |
+| 2   | Hackathon dates             | Hackathon page says **27–29 Nov 2026**, hybrid. Earlier in this project the Dev3pack Global Hackathon was described as **30 Oct – 1 Nov**.                       | Whether these are two different events, or the dates moved                                                                          |
+| 3   | Eligibility                 | Dev3pack's main site says its _program_ is open to women and non-binary people, and IRL events are open to everyone.                                             | Whether the 15 club seats carry any eligibility rule. If they do, state it on the page and add an eligibility confirmation checkbox |
+| 4   | What the scholarship covers | Not public. The bootcamp is described as free.                                                                                                                   | What "scholarship" means here (seat only? mentorship? hackathon perks?)                                                             |
+| 5   | Obligations                 | Not public.                                                                                                                                                      | Any completion, attendance, or reporting requirement Dev3pack places on scholars                                                    |
+| 6   | Announcement date           | Deadline is 10 Oct. I suggested 16 Oct for results.                                                                                                              | Confirm the announcement date, and that Dev3pack does not need your 15 names before 10 Oct                                          |
 
 ---
 
@@ -33,15 +34,15 @@ Public sources confirm the bootcamp itself. They do **not** document the club's 
 
 ## Key facts strip
 
-| | |
-|---|---|
-| **Seats** | 15 |
-| **Format** | Online bootcamp `[CONFIRM: cohort format]` |
-| **Bootcamp dates** | 2–27 November 2026 `[CONFIRM]` |
-| **Languages** | English (Spanish track also available) |
-| **Cost to you** | Free `[CONFIRM what the scholarship includes]` |
-| **Applications close** | 10 October 2026, 11:59 PM WAT `[CONFIRM time]` |
-| **Results announced** | 16 October 2026 `[SUGGESTED, adjust if needed]` |
+|                        |                                                 |
+| ---------------------- | ----------------------------------------------- |
+| **Seats**              | 15                                              |
+| **Format**             | Online bootcamp `[CONFIRM: cohort format]`      |
+| **Bootcamp dates**     | 2–27 November 2026 `[CONFIRM]`                  |
+| **Languages**          | English (Spanish track also available)          |
+| **Cost to you**        | Free `[CONFIRM what the scholarship includes]`  |
+| **Applications close** | 10 October 2026, 11:59 PM WAT `[CONFIRM time]`  |
+| **Results announced**  | 16 October 2026 `[SUGGESTED, adjust if needed]` |
 
 ## What is this?
 
@@ -89,15 +90,15 @@ We read every application. Specific, honest answers beat polished, generic ones.
 
 ## Timeline
 
-| Date | Milestone |
-|---|---|
-| `[DATE: page go-live]` | Applications open |
-| 10 Oct | Applications close |
-| 11–14 Oct `[SUGGESTED]` | Shortlist conversations |
-| 16 Oct `[SUGGESTED]` | Scholars announced |
-| 2 Nov | Bootcamp begins `[CONFIRM]` |
-| 27 Nov | Bootcamp ends `[CONFIRM]` |
-| 27–29 Nov | Dev3pack global hackathon `[CONFIRM]` |
+| Date                    | Milestone                             |
+| ----------------------- | ------------------------------------- |
+| `[DATE: page go-live]`  | Applications open                     |
+| 10 Oct                  | Applications close                    |
+| 11–14 Oct `[SUGGESTED]` | Shortlist conversations               |
+| 16 Oct `[SUGGESTED]`    | Scholars announced                    |
+| 2 Nov                   | Bootcamp begins `[CONFIRM]`           |
+| 27 Nov                  | Bootcamp ends `[CONFIRM]`             |
+| 27–29 Nov               | Dev3pack global hackathon `[CONFIRM]` |
 
 ## FAQ
 
@@ -129,73 +130,73 @@ The goal is to separate people who are **ready, committed, and likely to finish 
 
 ## Section A — Basics (not scored)
 
-| # | Field | Type | Required |
-|---|---|---|---|
-| 1 | Full name | Text | Yes |
-| 2 | Email | Email | Yes |
-| 3 | WhatsApp number | Phone | Yes |
-| 4 | Telegram handle | Text | No |
-| 5 | Department | Text | Yes |
-| 6 | Level | Select (100–500, Postgraduate, Graduate) | Yes |
-| 7 | GitHub profile | URL | No |
-| 8 | LinkedIn or X profile | URL | No |
-| 9 | Eligibility confirmation `[only if Dev3pack sets a rule]` | Checkbox | Conditional |
+| #   | Field                                                     | Type                                     | Required    |
+| --- | --------------------------------------------------------- | ---------------------------------------- | ----------- |
+| 1   | Full name                                                 | Text                                     | Yes         |
+| 2   | Email                                                     | Email                                    | Yes         |
+| 3   | WhatsApp number                                           | Phone                                    | Yes         |
+| 4   | Telegram handle                                           | Text                                     | No          |
+| 5   | Department                                                | Text                                     | Yes         |
+| 6   | Level                                                     | Select (100–500, Postgraduate, Graduate) | Yes         |
+| 7   | GitHub profile                                            | URL                                      | No          |
+| 8   | LinkedIn or X profile                                     | URL                                      | No          |
+| 9   | Eligibility confirmation `[only if Dev3pack sets a rule]` | Checkbox                                 | Conditional |
 
 ## Section B — Background (scored: Evidence and Community)
 
 **10. Are you a member of Blockchain Club FUTMinna?** (Yes, No)
-*Why:* Context for community involvement. Keep it as context, not an automatic advantage, unless you decide seats are club-only.
+_Why:_ Context for community involvement. Keep it as context, not an automatic advantage, unless you decide seats are club-only.
 
 **11. If yes, what have you done in the club so far?** (Textarea, max 600 characters)
-*Why:* Attended sessions, completed challenges, helped others. Looks for participation beyond signing up.
+_Why:_ Attended sessions, completed challenges, helped others. Looks for participation beyond signing up.
 
 **12. What is your programming experience?** (Select: Never coded, Beginner, Intermediate, Advanced)
-*Why:* Calibrates the answers below. Beginners can still score well if they show effort.
+_Why:_ Calibrates the answers below. Beginners can still score well if they show effort.
 
 **13. Which languages or tools have you used?** (Multi-select plus "Other")
 
 **14. Have you written any Rust before?** (None, A little, Comfortable)
-*Why:* Not a filter. Useful for planning how much support scholars will need.
+_Why:_ Not a filter. Useful for planning how much support scholars will need.
 
 **15. Describe something you have built, fixed, or shipped. Include a link if you have one.** (Textarea, max 800 characters, plus link field)
-*Why:* The strongest signal of effort. Ask what they **personally** did, what broke, and how they fixed it. Generic answers are easy to spot.
+_Why:_ The strongest signal of effort. Ask what they **personally** did, what broke, and how they fixed it. Generic answers are easy to spot.
 
 ## Section C — Motivation and thinking (scored: Motivation and Potential)
 
 **16. Why do you want this scholarship? What will you do with it that you could not do without it?** (Textarea, max 800 characters)
-*Why:* Looks for a specific reason and a plan, not "I want to learn blockchain."
+_Why:_ Looks for a specific reason and a plan, not "I want to learn blockchain."
 
 **17. In your own words, why do you think Rust is used for blockchain programs?** (Textarea, max 500 characters)
-*Why:* A small reasoning question. There is no single right answer. Reviewers look for honest curiosity and any real thought, and it also shows who used a tool to write everything. Tell applicants "a wrong but honest attempt is fine".
+_Why:_ A small reasoning question. There is no single right answer. Reviewers look for honest curiosity and any real thought, and it also shows who used a tool to write everything. Tell applicants "a wrong but honest attempt is fine".
 
 **18. Tell us about a time you learned something hard on your own. What did you do when you got stuck?** (Textarea, max 600 characters)
-*Why:* Bootcamps are finished by people who push through being stuck.
+_Why:_ Bootcamps are finished by people who push through being stuck.
 
 **19. What do you want to build or achieve by the end of November?** (Textarea, max 500 characters)
-*Why:* Checks that they have a concrete goal and understand the hackathon timeline.
+_Why:_ Checks that they have a concrete goal and understand the hackathon timeline.
 
 ## Section D — Commitment (scored: Commitment, plus hard filters)
 
 **20. Can you attend the full bootcamp (2–27 November) `[CONFIRM]`?** (Yes, Mostly, No)
-*Why:* Hard filter. Anyone who answers No is not shortlisted.
+_Why:_ Hard filter. Anyone who answers No is not shortlisted.
 
 **21. How many hours per week can you realistically give?** (Select: under 5, 5–10, 10–15, 15+)
-*Why:* Compare with the bootcamp workload once you know it. Look for honest numbers, not the biggest number.
+_Why:_ Compare with the bootcamp workload once you know it. Look for honest numbers, not the biggest number.
 
 **22. Do you have any known clashes between 2 and 29 November (exams, SIWES, travel)?** (Textarea, max 300 characters)
-*Why:* Prevents scholars dropping mid-way. Seats are scarce.
+_Why:_ Prevents scholars dropping mid-way. Seats are scarce.
 
 **23. Do you have a laptop you can use daily?** (Yes, Shared, No)
 **24. How reliable is your internet?** (Reliable, Sometimes, Poor)
-*Why:* Practical readiness. If access is a real barrier, use Q25 to understand it and consider support, not rejection.
+_Why:_ Practical readiness. If access is a real barrier, use Q25 to understand it and consider support, not rejection.
 
 **25. Optional: Is there anything that would make it hard for you to take part without support?** (Textarea, max 400 characters, optional)
-*Why:* Lets you weigh genuine need without forcing anyone to disclose it. Never make this compulsory.
+_Why:_ Lets you weigh genuine need without forcing anyone to disclose it. Never make this compulsory.
 
 ## Section E — Give-back (scored: Give-back)
 
 **26. How will you share what you learn with the club?** (Textarea, max 500 characters)
-*Why:* Fits the club's TEACH → DISCOVER loop. Prefer specific commitments (a session, a guide, a study group) over vague ones.
+_Why:_ Fits the club's TEACH → DISCOVER loop. Prefer specific commitments (a session, a guide, a study group) over vague ones.
 
 **27. How did you hear about this scholarship?** (Select)
 
@@ -207,14 +208,14 @@ The goal is to separate people who are **ready, committed, and likely to finish 
 
 ## Scoring rubric (0–5 each, two reviewers, average the scores)
 
-| Criterion | Weight | Source questions | What a 5 looks like |
-|---|---|---|---|
-| Commitment | 25% | 20–22, 24 | Full availability, honest hours, no clashes, or a clear plan for them |
-| Motivation | 20% | 16, 19 | Specific reason, concrete goal, understands what the bootcamp is |
-| Evidence of effort | 20% | 11, 15, 18 | Real projects or persistent effort, with personal detail |
-| Community involvement | 15% | 10, 11 | Has shown up and helped others, not just joined |
-| Potential to learn | 10% | 12, 14, 17 | Curious, honest, reasons even when unsure |
-| Give-back plan | 10% | 26 | Specific and realistic |
+| Criterion             | Weight | Source questions | What a 5 looks like                                                   |
+| --------------------- | ------ | ---------------- | --------------------------------------------------------------------- |
+| Commitment            | 25%    | 20–22, 24        | Full availability, honest hours, no clashes, or a clear plan for them |
+| Motivation            | 20%    | 16, 19           | Specific reason, concrete goal, understands what the bootcamp is      |
+| Evidence of effort    | 20%    | 11, 15, 18       | Real projects or persistent effort, with personal detail              |
+| Community involvement | 15%    | 10, 11           | Has shown up and helped others, not just joined                       |
+| Potential to learn    | 10%    | 12, 14, 17       | Curious, honest, reasons even when unsure                             |
+| Give-back plan        | 10%    | 26               | Specific and realistic                                                |
 
 **Process notes**
 

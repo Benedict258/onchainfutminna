@@ -24,21 +24,10 @@ import {
 import { getTracks, getResources } from "@/lib/api/learn.server";
 import { useAuthStore } from "@/stores/auth-store";
 
-type EcosystemFilter =
-  | "all"
-  | "EVM"
-  | "SUI_MOVE"
-  | "APTOS_MOVE"
-  | "SOLANA_RUST";
+type EcosystemFilter = "all" | "EVM" | "SUI_MOVE" | "APTOS_MOVE" | "SOLANA_RUST";
 
 type CategoryFilter =
-  | "All"
-  | "Technical"
-  | "Design"
-  | "Marketing"
-  | "Community"
-  | "Content"
-  | "Research";
+  "All" | "Technical" | "Design" | "Marketing" | "Community" | "Content" | "Research";
 
 const CATEGORIES: CategoryFilter[] = [
   "All",
@@ -115,10 +104,7 @@ function LearnSkeleton() {
   return (
     <div className="grid gap-5 md:grid-cols-2">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-lg border border-border bg-card p-6 space-y-4"
-        >
+        <div key={i} className="rounded-lg border border-border bg-card p-6 space-y-4">
           <Skeleton className="h-10 w-10 rounded-md" />
           <Skeleton className="h-6 w-1/2" />
           <Skeleton className="h-4 w-full" />
@@ -131,11 +117,9 @@ function LearnSkeleton() {
 }
 
 function LearnPage() {
-  const [ecosystemFilter, setEcosystemFilter] =
-    useState<EcosystemFilter>("all");
+  const [ecosystemFilter, setEcosystemFilter] = useState<EcosystemFilter>("all");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("All");
-  const [resourceEcosystemFilter, setResourceEcosystemFilter] =
-    useState<EcosystemFilter>("all");
+  const [resourceEcosystemFilter, setResourceEcosystemFilter] = useState<EcosystemFilter>("all");
   const [resourceType, setResourceType] = useState<string>("all");
   const { isAuthenticated } = useAuthStore();
 
@@ -152,10 +136,7 @@ function LearnPage() {
     queryFn: () =>
       fetchResources({
         data: {
-          ecosystem:
-            resourceEcosystemFilter === "all"
-              ? undefined
-              : resourceEcosystemFilter,
+          ecosystem: resourceEcosystemFilter === "all" ? undefined : resourceEcosystemFilter,
           type: resourceType === "all" ? undefined : resourceType,
         },
       }),
@@ -166,10 +147,8 @@ function LearnPage() {
 
   const filteredTracks = useMemo(() => {
     return trackList.filter((track: any) => {
-      const ecosystemMatch =
-        ecosystemFilter === "all" || track.ecosystem === ecosystemFilter;
-      const categoryMatch =
-        categoryFilter === "All" || track.category === categoryFilter;
+      const ecosystemMatch = ecosystemFilter === "all" || track.ecosystem === ecosystemFilter;
+      const categoryMatch = categoryFilter === "All" || track.category === categoryFilter;
       return ecosystemMatch && categoryMatch;
     });
   }, [trackList, ecosystemFilter, categoryFilter]);
@@ -188,9 +167,8 @@ function LearnPage() {
             Development
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground">
-            Comprehensive learning tracks designed for the next generation of
-            blockchain developers. From Solidity fundamentals to advanced Move
-            programming.
+            Comprehensive learning tracks designed for the next generation of blockchain developers.
+            From Solidity fundamentals to advanced Move programming.
           </p>
         </div>
       </section>
@@ -203,9 +181,7 @@ function LearnPage() {
               <Layers className="h-5 w-5 text-primary" />
               <div>
                 <div className="text-headline-sm">{trackList.length}</div>
-                <div className="text-xs text-muted-foreground">
-                  Learning Tracks
-                </div>
+                <div className="text-xs text-muted-foreground">Learning Tracks</div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-3">
@@ -215,7 +191,7 @@ function LearnPage() {
                   {trackList.reduce(
                     (acc: number, t: { _count?: { modules?: number } }) =>
                       acc + (t._count?.modules ?? 0),
-                    0
+                    0,
                   )}
                 </div>
                 <div className="text-xs text-muted-foreground">Modules</div>
@@ -224,12 +200,8 @@ function LearnPage() {
             <div className="flex items-center justify-center gap-3">
               <GraduationCap className="h-5 w-5 text-primary" />
               <div>
-                <div className="text-headline-sm">
-                  {isAuthenticated ? "" : ""}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  Quizzes Completed
-                </div>
+                <div className="text-headline-sm">{isAuthenticated ? "" : ""}</div>
+                <div className="text-xs text-muted-foreground">Quizzes Completed</div>
               </div>
             </div>
           </div>
@@ -277,9 +249,7 @@ function LearnPage() {
         ) : filteredTracks.length === 0 ? (
           <div className="text-center py-16">
             <BookOpen className="mx-auto h-12 w-12 text-muted-foreground/40" />
-            <p className="mt-4 text-lg text-muted-foreground">
-              No tracks found for this filter
-            </p>
+            <p className="mt-4 text-lg text-muted-foreground">No tracks found for this filter</p>
             <p className="mt-2 text-sm text-muted-foreground/60">
               Try adjusting your ecosystem or category selection.
             </p>
@@ -349,8 +319,7 @@ function LearnPage() {
                     className="mt-5 w-full font-semibold tracking-wide text-xs group-hover:border-primary/40"
                   >
                     <Link to="/learn/$slug" params={{ slug: track.slug }}>
-                      Start Learning{" "}
-                      <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                      Start Learning <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                     </Link>
                   </Button>
                 </div>
@@ -392,10 +361,7 @@ function LearnPage() {
               {resourcesLoading ? (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="rounded-lg border border-border bg-card p-5 space-y-3"
-                    >
+                    <div key={i} className="rounded-lg border border-border bg-card p-5 space-y-3">
                       <Skeleton className="h-8 w-8 rounded" />
                       <Skeleton className="h-5 w-3/4" />
                       <Skeleton className="h-4 w-full" />
@@ -405,15 +371,12 @@ function LearnPage() {
               ) : resourceList.length === 0 ? (
                 <div className="text-center py-12">
                   <FileText className="mx-auto h-10 w-10 text-muted-foreground/40" />
-                  <p className="mt-3 text-muted-foreground">
-                    No resources found.
-                  </p>
+                  <p className="mt-3 text-muted-foreground">No resources found.</p>
                 </div>
               ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {resourceList.map((resource) => {
-                    const IconComp =
-                      RESOURCE_TYPE_ICONS[resource.type || ""] || FileText;
+                    const IconComp = RESOURCE_TYPE_ICONS[resource.type || ""] || FileText;
                     return (
                       <a
                         key={resource.id}
@@ -432,8 +395,7 @@ function LearnPage() {
                             </p>
                             <p className="mt-1 text-xs text-muted-foreground">
                               {resource.type || "Resource"} ·{" "}
-                              {ECOSYSTEM_LABELS[resource.ecosystem] ||
-                                resource.ecosystem}
+                              {ECOSYSTEM_LABELS[resource.ecosystem] || resource.ecosystem}
                             </p>
                           </div>
                         </div>
@@ -458,19 +420,14 @@ function LearnPage() {
             WEB3 JOURNEY?
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Join the community and get access to all learning tracks, mentorship,
-            and project opportunities.
+            Join the community and get access to all learning tracks, mentorship, and project
+            opportunities.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" className="font-semibold tracking-wide">
               <Link to="/join">Join BlockchainClub FUTMinna</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="font-semibold tracking-wide"
-            >
+            <Button asChild size="lg" variant="outline" className="font-semibold tracking-wide">
               <Link to="/about">Learn More</Link>
             </Button>
           </div>
@@ -479,5 +436,3 @@ function LearnPage() {
     </div>
   );
 }
-
-
