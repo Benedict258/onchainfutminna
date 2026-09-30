@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { GlobalLoader } from "@/components/ui/GlobalLoader";
@@ -14,7 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+
+const TOTAL_STEPS = 5;
 
 const initialForm = {
   level: "",
@@ -32,9 +35,123 @@ const initialForm = {
   rust_reasoning: "",
 };
 
+type Rule = { key: string; message: string; test?: (v: any) => boolean };
+
+const filled = (v: any) => (typeof v === "string" ? v.trim().length > 0 : !!v);
+
+// Required fields per step. Anything not listed here is optional.
+const STEP_RULES: Record<number, Rule[]> = {
+  1: [
+    {
+      key: "full_name",
+      message: "Enter your full name.",
+      test: (v) => (v?.trim().length ?? 0) >= 2,
+    },
+    {
+      key: "email",
+      message: "Enter a valid email address.",
+      test: (v) => /^\S+@\S+\.\S+$/.test(v?.trim() ?? ""),
+    },
+    {
+      key: "phone_whatsapp",
+      message: "Enter a valid phone number (7–20 characters).",
+      test: (v) => {
+        const n = v?.trim().length ?? 0;
+        return n >= 7 && n <= 20;
+      },
+    },
+    { key: "department", message: "Enter your department." },
+    { key: "level", message: "Select your level." },
+    { key: "gender", message: "Select your gender." },
+  ],
+  2: [
+    { key: "club_member", message: "Tell us if you are a club member." },
+    { key: "programming_experience", message: "Select your programming experience." },
+    { key: "rust_experience", message: "Select your Rust experience." },
+  ],
+  3: [
+    { key: "motivation", message: "Tell us why you want this scholarship." },
+    { key: "hard_learning", message: "Tell us about something hard you learned." },
+    { key: "goal_by_end_nov", message: "Tell us your goal for the end of November." },
+  ],
+  4: [
+    { key: "can_attend_full", message: "Select whether you can attend." },
+    { key: "weekly_hours", message: "Select your weekly hours." },
+    { key: "has_laptop", message: "Select your laptop availability." },
+    { key: "internet_quality", message: "Select your internet quality." },
+  ],
+  5: [
+    { key: "giveback_plan", message: "Tell us how you will give back." },
+    { key: "accuracy_confirmed", message: "Please tick this declaration." },
+    { key: "seat_forfeit_ack", message: "Please tick this declaration." },
+    { key: "data_consent", message: "Please tick this declaration." },
+  ],
+};
+
+function validateStep(form: any, step: number) {
+  const errors: Record<string, string> = {};
+  for (const rule of STEP_RULES[step] ?? []) {
+    const ok = rule.test ? rule.test(form[rule.key]) : filled(form[rule.key]);
+    if (!ok) errors[rule.key] = rule.message;
+  }
+  return errors;
+}
+
+function Field({
+  label,
+  required,
+  hint,
+  error,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  hint?: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label className="text-sm font-medium">
+        {label}
+        {required ? (
+          <span className="ml-0.5 text-red-500" aria-hidden="true">
+            *
+          </span>
+        ) : (
+          <span className="ml-1 text-xs font-normal text-muted-foreground">(optional)</span>
+        )}
+      </label>
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {children}
+      {error && (
+        <p className="text-xs text-red-500" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function CharCount({ value, max }: { value: string; max: number }) {
+  const len = value.length;
+  return (
+    <p
+      className={cn(
+        "text-right text-xs",
+        len >= max ? "text-red-500" : len >= max * 0.9 ? "text-amber-600" : "text-muted-foreground",
+      )}
+      aria-live="polite"
+    >
+      {len}/{max} characters
+    </p>
+  );
+}
+
 export function Dev3packScholarshipForm() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<any>(initialForm);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [applicationsOpen, setApplicationsOpen] = useState<boolean | null>(null);
 
@@ -75,9 +192,7 @@ export function Dev3packScholarshipForm() {
       setSubmitted(true);
       setForm(initialForm);
       setStep(1);
-      document
-        .getElementById("scholarship-form")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      scrollToForm();
     },
     onError: (err: any) => {
       toast.error(err.message || "Submission failed");
@@ -93,7 +208,15 @@ export function Dev3packScholarshipForm() {
   }
   if (applicationsOpen === null) return <GlobalLoader inline />;
 
-  const update = (k: string, v: any) => setForm((f: any) => ({ ...f, [k]: v }));
+  const update = (k: string, v: any) => {
+    setForm((f: any) => ({ ...f, [k]: v }));
+    if (errors[k])
+      setErrors((e) => {
+        const next = { ...e };
+        delete next[k];
+        return next;
+      });
+  };
 
   if (submitted) {
     return (
@@ -117,80 +240,27 @@ export function Dev3packScholarshipForm() {
     );
   }
 
+  const showErrors = (stepErrors: Record<string, string>) => {
+    setErrors(stepErrors);
+    toast.error("Please fill in the required fields marked *");
+  };
+
+  const goNext = () => {
+    const stepErrors = validateStep(form, step);
+    if (Object.keys(stepErrors).length) return showErrors(stepErrors);
+    setErrors({});
+    setStep((s) => s + 1);
+    scrollToForm();
+  };
+
   const handleSubmit = () => {
-    // client‑side validation
-    if ((form.full_name?.trim().length ?? 0) < 2) {
-      toast.error("Full name is required.");
-      return;
-    }
-    if (!/^\S+@\S+\.\S+$/.test(form.email?.trim() ?? "")) {
-      toast.error("Enter a valid email.");
-      return;
-    }
-    const phoneLen = form.phone_whatsapp?.trim().length ?? 0;
-    if (phoneLen < 7 || phoneLen > 20) {
-      toast.error("Enter a valid phone number.");
-      return;
-    }
-    if (!form.department?.trim()) {
-      toast.error("Department is required.");
-      return;
-    }
-    if (!form.level) {
-      toast.error("Select your level.");
-      return;
-    }
-    if (!form.gender) {
-      toast.error("Select gender.");
-      return;
-    }
-    if (!form.club_member) {
-      toast.error("Indicate club membership.");
-      return;
-    }
-    if (!form.programming_experience) {
-      toast.error("Select programming experience.");
-      return;
-    }
-    if (!form.rust_experience) {
-      toast.error("Select Rust experience.");
-      return;
-    }
-    if (!form.motivation?.trim()) {
-      toast.error("Motivation is required.");
-      return;
-    }
-    if (!form.hard_learning?.trim()) {
-      toast.error("Hard learning experience is required.");
-      return;
-    }
-    if (!form.goal_by_end_nov?.trim()) {
-      toast.error("Goal by end of November is required.");
-      return;
-    }
-    if (!form.can_attend_full) {
-      toast.error("Select attendance option.");
-      return;
-    }
-    if (!form.weekly_hours) {
-      toast.error("Select weekly hours.");
-      return;
-    }
-    if (!form.has_laptop) {
-      toast.error("Select laptop availability.");
-      return;
-    }
-    if (!form.internet_quality) {
-      toast.error("Select internet quality.");
-      return;
-    }
-    if (!form.giveback_plan?.trim()) {
-      toast.error("Giveback plan is required.");
-      return;
-    }
-    if (!form.accuracy_confirmed || !form.seat_forfeit_ack || !form.data_consent) {
-      toast.error("Please confirm all declarations.");
-      return;
+    // Re-check every step; send the applicant back to the first one with a problem.
+    for (let s = 1; s <= TOTAL_STEPS; s++) {
+      const stepErrors = validateStep(form, s);
+      if (Object.keys(stepErrors).length) {
+        setStep(s);
+        return showErrors(stepErrors);
+      }
     }
 
     // normalize usernames to URLs
@@ -225,308 +295,297 @@ export function Dev3packScholarshipForm() {
     mutation.mutate(payload);
   };
 
+  const text = (key: string, props: React.ComponentProps<typeof Input> = {}) => (
+    <Input
+      value={form[key] || ""}
+      onChange={(e) => update(key, e.target.value)}
+      aria-invalid={!!errors[key]}
+      className={cn(errors[key] && "border-red-500")}
+      {...props}
+    />
+  );
+
+  const longText = (key: string, max: number) => (
+    <>
+      <Textarea
+        maxLength={max}
+        value={form[key] || ""}
+        onChange={(e) => update(key, e.target.value)}
+        aria-invalid={!!errors[key]}
+        className={cn(errors[key] && "border-red-500")}
+      />
+      <CharCount value={form[key] || ""} max={max} />
+    </>
+  );
+
+  const choice = (
+    key: string,
+    options: { value: string; label: string }[],
+    placeholder = "Select",
+  ) => (
+    <Select value={form[key]} onValueChange={(v) => update(key, v)}>
+      <SelectTrigger aria-invalid={!!errors[key]} className={cn(errors[key] && "border-red-500")}>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((o) => (
+          <SelectItem key={o.value} value={o.value}>
+            {o.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+
+  const declaration = (key: string, label: string) => (
+    <div>
+      <label className="flex items-start gap-2 text-sm">
+        <Checkbox
+          checked={!!form[key]}
+          onCheckedChange={(v) => update(key, !!v)}
+          aria-invalid={!!errors[key]}
+          className={cn("mt-0.5", errors[key] && "border-red-500")}
+        />
+        <span>
+          {label}
+          <span className="ml-0.5 text-red-500" aria-hidden="true">
+            *
+          </span>
+        </span>
+      </label>
+      {errors[key] && <p className="mt-1 text-xs text-red-500">{errors[key]}</p>}
+    </div>
+  );
+
+  const yesNo = [
+    { value: "yes", label: "Yes" },
+    { value: "no", label: "No" },
+  ];
+
   return (
     <div id="scholarship-form" className="rounded-xl border p-6 space-y-6 max-w-3xl mx-auto">
-      <h2 className="text-2xl font-semibold">Apply for a seat</h2>
-      <p className="text-sm text-muted-foreground">
-        Applications close {scholarshipConfig.applicationClose}
-      </p>
+      <div className="space-y-1">
+        <h2 className="text-2xl font-semibold">Apply for a seat</h2>
+        <p className="text-sm text-muted-foreground">
+          Applications close {scholarshipConfig.applicationClose}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Step {step} of {TOTAL_STEPS} · Fields marked <span className="text-red-500">*</span> are
+          required
+        </p>
+      </div>
 
       {step === 1 && (
         <div className="space-y-4">
-          <label>Full name</label>
-          <p className="text-xs text-muted-foreground mb-1">As on your student ID</p>
-          <Input
-            value={form.full_name || ""}
-            onChange={(e) => update("full_name", e.target.value)}
-          />
-          <label>Email</label>
-          <Input
-            type="email"
-            value={form.email || ""}
-            onChange={(e) => update("email", e.target.value)}
-          />
-          <label>Phone Number (WhatsApp Preferred)</label>
-          <Input
-            value={form.phone_whatsapp || ""}
-            onChange={(e) => update("phone_whatsapp", e.target.value)}
-          />
-          <label>Telegram handle</label>
-          <p className="text-xs text-muted-foreground mb-1">Username without @</p>
-          <Input
-            value={form.telegram_handle || ""}
-            onChange={(e) => update("telegram_handle", e.target.value)}
-          />
-          <label>Department</label>
-          <Input
-            value={form.department || ""}
-            onChange={(e) => update("department", e.target.value)}
-          />
-          <label>Level</label>
-          <Select value={form.level} onValueChange={(v) => update("level", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select level" />
-            </SelectTrigger>
-            <SelectContent>
-              {["100", "200", "300", "400", "500", "Postgraduate", "Graduate"].map((l) => (
-                <SelectItem key={l} value={l}>
-                  {l}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <label>Gender</label>
-          <Select value={form.gender} onValueChange={(v) => update("gender", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select gender" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="male">Male</SelectItem>
-              <SelectItem value="female">Female</SelectItem>
-            </SelectContent>
-          </Select>
+          <Field label="Full name" required hint="As on your student ID" error={errors.full_name}>
+            {text("full_name")}
+          </Field>
+          <Field label="Email" required error={errors.email}>
+            {text("email", { type: "email" })}
+          </Field>
+          <Field label="Phone Number (WhatsApp Preferred)" required error={errors.phone_whatsapp}>
+            {text("phone_whatsapp", { type: "tel" })}
+          </Field>
+          <Field label="Telegram handle" hint="Username without @">
+            {text("telegram_handle")}
+          </Field>
+          <Field label="Department" required error={errors.department}>
+            {text("department")}
+          </Field>
+          <Field label="Level" required error={errors.level}>
+            {choice(
+              "level",
+              ["100", "200", "300", "400", "500", "Postgraduate", "Graduate"].map((l) => ({
+                value: l,
+                label: l,
+              })),
+              "Select level",
+            )}
+          </Field>
+          <Field label="Gender" required error={errors.gender}>
+            {choice(
+              "gender",
+              [
+                { value: "male", label: "Male" },
+                { value: "female", label: "Female" },
+              ],
+              "Select gender",
+            )}
+          </Field>
         </div>
       )}
 
       {step === 2 && (
         <div className="space-y-4">
-          <label>GitHub username</label>
-          <p className="text-xs text-muted-foreground mb-1">Your GitHub handle without @</p>
-          <Input
-            placeholder="username"
-            value={form.github_url || ""}
-            onChange={(e) => update("github_url", e.target.value)}
-          />
-          <label>X / Twitter username</label>
-          <p className="text-xs text-muted-foreground mb-1">Your X handle without @</p>
-          <Input
-            placeholder="username"
-            value={form.social_url || ""}
-            onChange={(e) => update("social_url", e.target.value)}
-          />
-          <label>Club member?</label>
-          <p className="text-xs text-muted-foreground mb-1">
-            Are you a member of Blockchain Club FUTMinna?
-          </p>
-          <Select value={form.club_member} onValueChange={(v) => update("club_member", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="yes">Yes</SelectItem>
-              <SelectItem value="no">No</SelectItem>
-            </SelectContent>
-          </Select>
-          <label>Programming experience</label>
-          <p className="text-xs text-muted-foreground mb-1">Overall coding experience</p>
-          <Select
-            value={form.programming_experience}
-            onValueChange={(v) => update("programming_experience", v)}
+          <Field label="GitHub username" hint="Your GitHub handle without @">
+            {text("github_url", { placeholder: "username" })}
+          </Field>
+          <Field label="X / Twitter username" hint="Your X handle without @">
+            {text("social_url", { placeholder: "username" })}
+          </Field>
+          <Field
+            label="Club member?"
+            required
+            hint="Are you a member of Blockchain Club FUTMinna?"
+            error={errors.club_member}
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              {[
-                { value: "never", label: "Never" },
-                { value: "beginner", label: "Beginner" },
-                { value: "intermediate", label: "Intermediate" },
-                { value: "advanced", label: "Advanced" },
-              ].map((o) => (
-                <SelectItem key={o.value} value={o.value}>
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <label>Rust experience</label>
-          <p className="text-xs text-muted-foreground mb-1">How familiar are you with Rust?</p>
-          <Select value={form.rust_experience} onValueChange={(v) => update("rust_experience", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              {[
-                { value: "none", label: "None" },
-                { value: "a_little", label: "A little" },
-                { value: "comfortable", label: "Comfortable" },
-              ].map((o) => (
-                <SelectItem key={o.value} value={o.value}>
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {choice("club_member", yesNo)}
+          </Field>
+          <Field
+            label="Programming experience"
+            required
+            hint="Overall coding experience"
+            error={errors.programming_experience}
+          >
+            {choice("programming_experience", [
+              { value: "never", label: "Never" },
+              { value: "beginner", label: "Beginner" },
+              { value: "intermediate", label: "Intermediate" },
+              { value: "advanced", label: "Advanced" },
+            ])}
+          </Field>
+          <Field
+            label="Rust experience"
+            required
+            hint="How familiar are you with Rust?"
+            error={errors.rust_experience}
+          >
+            {choice("rust_experience", [
+              { value: "none", label: "None" },
+              { value: "a_little", label: "A little" },
+              { value: "comfortable", label: "Comfortable" },
+            ])}
+          </Field>
         </div>
       )}
 
       {step === 3 && (
         <div className="space-y-4">
-          <label>
-            Motivation <span className="text-xs text-muted-foreground">max 800</span>
-          </label>
-          <p className="text-xs text-muted-foreground mb-1">
-            Why do you want this scholarship and what will you do with it?
-          </p>
-          <Textarea
-            maxLength={800}
-            value={form.motivation || ""}
-            onChange={(e) => update("motivation", e.target.value)}
-          />
-          <label>
-            Hard learning experience <span className="text-xs">max 600</span>
-          </label>
-          <p className="text-xs text-muted-foreground mb-1">
-            Describe a time you learned something difficult independently.
-          </p>
-          <Textarea
-            maxLength={600}
-            value={form.hard_learning || ""}
-            onChange={(e) => update("hard_learning", e.target.value)}
-          />
-          <label>
-            Goal by end Nov <span className="text-xs">max 500</span>
-          </label>
-          <p className="text-xs text-muted-foreground mb-1">
-            What do you want to be able to build by 27 November 2026?
-          </p>
-          <Textarea
-            maxLength={500}
-            value={form.goal_by_end_nov || ""}
-            onChange={(e) => update("goal_by_end_nov", e.target.value)}
-          />
+          <Field
+            label="Motivation"
+            required
+            hint="Why do you want this scholarship and what will you do with it?"
+            error={errors.motivation}
+          >
+            {longText("motivation", 800)}
+          </Field>
+          <Field
+            label="Hard learning experience"
+            required
+            hint="Describe a time you learned something difficult independently."
+            error={errors.hard_learning}
+          >
+            {longText("hard_learning", 600)}
+          </Field>
+          <Field
+            label="Goal by end of November"
+            required
+            hint="What do you want to be able to build by 27 November 2026?"
+            error={errors.goal_by_end_nov}
+          >
+            {longText("goal_by_end_nov", 500)}
+          </Field>
         </div>
       )}
 
       {step === 4 && (
         <div className="space-y-4">
-          <label>Can attend full bootcamp?</label>
-          <p className="text-xs text-muted-foreground mb-1">Commitment from 2–27 November 2026</p>
-          <Select value={form.can_attend_full} onValueChange={(v) => update("can_attend_full", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="yes">Yes</SelectItem>
-              <SelectItem value="mostly">Mostly</SelectItem>
-              <SelectItem value="no">No</SelectItem>
-            </SelectContent>
-          </Select>
-          <label>Weekly hours</label>
-          <p className="text-xs text-muted-foreground mb-1">
-            How many hours can you dedicate weekly?
-          </p>
-          <Select value={form.weekly_hours} onValueChange={(v) => update("weekly_hours", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              {[
-                { value: "under_5", label: "Under 5 hrs" },
-                { value: "5_10", label: "5–10 hrs" },
-                { value: "10_15", label: "10–15 hrs" },
-                { value: "15_plus", label: "15+ hrs" },
-              ].map((o) => (
-                <SelectItem key={o.value} value={o.value}>
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <label>Has laptop</label>
-          <p className="text-xs text-muted-foreground mb-1">
-            Do you have a laptop for development?
-          </p>
-          <Select value={form.has_laptop} onValueChange={(v) => update("has_laptop", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              {[
-                { value: "yes", label: "Yes" },
-                { value: "shared", label: "Shared" },
-                { value: "no", label: "No" },
-              ].map((o) => (
-                <SelectItem key={o.value} value={o.value}>
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <label>Internet quality</label>
-          <p className="text-xs text-muted-foreground mb-1">Typical internet reliability</p>
-          <Select
-            value={form.internet_quality}
-            onValueChange={(v) => update("internet_quality", v)}
+          <Field
+            label="Can attend full bootcamp?"
+            required
+            hint="Commitment from 2–27 November 2026"
+            error={errors.can_attend_full}
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              {[
-                { value: "reliable", label: "Reliable" },
-                { value: "sometimes", label: "Sometimes" },
-                { value: "poor", label: "Poor" },
-              ].map((o) => (
-                <SelectItem key={o.value} value={o.value}>
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {choice("can_attend_full", [
+              { value: "yes", label: "Yes" },
+              { value: "mostly", label: "Mostly" },
+              { value: "no", label: "No" },
+            ])}
+          </Field>
+          <Field
+            label="Weekly hours"
+            required
+            hint="How many hours can you dedicate weekly?"
+            error={errors.weekly_hours}
+          >
+            {choice("weekly_hours", [
+              { value: "under_5", label: "Under 5 hrs" },
+              { value: "5_10", label: "5–10 hrs" },
+              { value: "10_15", label: "10–15 hrs" },
+              { value: "15_plus", label: "15+ hrs" },
+            ])}
+          </Field>
+          <Field
+            label="Has laptop"
+            required
+            hint="Do you have a laptop for development?"
+            error={errors.has_laptop}
+          >
+            {choice("has_laptop", [
+              { value: "yes", label: "Yes" },
+              { value: "shared", label: "Shared" },
+              { value: "no", label: "No" },
+            ])}
+          </Field>
+          <Field
+            label="Internet quality"
+            required
+            hint="Typical internet reliability"
+            error={errors.internet_quality}
+          >
+            {choice("internet_quality", [
+              { value: "reliable", label: "Reliable" },
+              { value: "sometimes", label: "Sometimes" },
+              { value: "poor", label: "Poor" },
+            ])}
+          </Field>
         </div>
       )}
 
       {step === 5 && (
         <div className="space-y-4">
-          <label>
-            Giveback plan <span className="text-xs">max 500</span>
-          </label>
-          <p className="text-xs text-muted-foreground mb-1">
-            How will you give back to the community after the bootcamp?
-          </p>
-          <Textarea
-            maxLength={500}
-            value={form.giveback_plan || ""}
-            onChange={(e) => update("giveback_plan", e.target.value)}
-          />
-          <label>Declarations</label>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={!!form.accuracy_confirmed}
-              onCheckedChange={(v) => update("accuracy_confirmed", !!v)}
-            />
-            <span>I confirm info is accurate</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={!!form.seat_forfeit_ack}
-              onCheckedChange={(v) => update("seat_forfeit_ack", !!v)}
-            />
-            <span>I understand seat may be forfeited for inactivity</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={!!form.data_consent}
-              onCheckedChange={(v) => update("data_consent", !!v)}
-            />
-            <span>Consent to store/share with Dev3pack if selected</span>
+          <Field
+            label="Giveback plan"
+            required
+            hint="How will you give back to the community after the bootcamp?"
+            error={errors.giveback_plan}
+          >
+            {longText("giveback_plan", 500)}
+          </Field>
+          <div className="space-y-3">
+            <p className="text-sm font-medium">Declarations</p>
+            {declaration("accuracy_confirmed", "I confirm info is accurate")}
+            {declaration("seat_forfeit_ack", "I understand seat may be forfeited for inactivity")}
+            {declaration("data_consent", "Consent to store/share with Dev3pack if selected")}
           </div>
         </div>
       )}
 
       <div className="flex justify-between">
-        <Button variant="secondary" disabled={step === 1} onClick={() => setStep((s) => s - 1)}>
+        <Button
+          variant="secondary"
+          disabled={step === 1}
+          onClick={() => {
+            setErrors({});
+            setStep((s) => s - 1);
+          }}
+        >
           Back
         </Button>
-        {step < 5 ? (
-          <Button onClick={() => setStep((s) => s + 1)}>Next</Button>
+        {step < TOTAL_STEPS ? (
+          <Button onClick={goNext}>Next</Button>
         ) : (
           <Button onClick={handleSubmit} disabled={mutation.isPending}>
-            Submit
+            {mutation.isPending ? "Submitting…" : "Submit"}
           </Button>
         )}
       </div>
     </div>
   );
+}
+
+function scrollToForm() {
+  document
+    .getElementById("scholarship-form")
+    ?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
