@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabase, query } from "@/lib/supabase";
+import { requireAdmin } from "@/lib/api/guard.server";
 
 export const getPartners = createServerFn({ method: "GET" })
   .inputValidator(
@@ -37,6 +38,7 @@ export const createPartner = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, ...partnerData } = data;
 
     const { data: inserted, error } = await supabase.from("partners").insert({
@@ -69,6 +71,7 @@ export const updatePartner = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, id, ...updateData } = data;
 
     const processed: Record<string, unknown> = {};
@@ -95,6 +98,7 @@ export const deletePartner = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { error } = await supabase.from("partners").delete({ id: data.id });
 
     if (error) throw error;

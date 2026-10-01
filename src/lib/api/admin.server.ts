@@ -1,10 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabase, query } from "@/lib/supabase";
+import { requireAdmin } from "@/lib/api/guard.server";
 
 export const getAnalytics = createServerFn({ method: "GET" })
   .inputValidator(z.object({ accessToken: z.string() }))
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const now = new Date().toISOString();
 
     const [
@@ -111,6 +113,7 @@ export const getAdminMembers = createServerFn({ method: "GET" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { page, limit, search, role, isActive, isApproved } = data;
     const from = (page - 1) * limit;
     const to = from + limit - 1;
@@ -164,6 +167,7 @@ export const assignRole = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, userId, role } = data;
 
     const { data: users, error } = await supabase.from("users").update({ role }, { id: userId });
@@ -182,6 +186,7 @@ export const approveMember = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, userId, isApproved } = data;
 
     const { data: users, error } = await supabase
@@ -196,6 +201,7 @@ export const approveMember = createServerFn({ method: "POST" })
 export const getSiteSettings = createServerFn({ method: "GET" })
   .inputValidator(z.object({ accessToken: z.string() }))
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { data: settings, error } = await query("site_settings", { select: "*" });
 
     if (error) throw error;
@@ -216,6 +222,7 @@ export const updateSiteSettings = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, settings } = data;
 
     const results = [];

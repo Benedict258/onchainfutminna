@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabase, query } from "@/lib/supabase";
+import { requireAdmin } from "@/lib/api/guard.server";
 
 export const getLeaderboard = createServerFn({ method: "GET" })
   .inputValidator(
@@ -17,7 +18,7 @@ export const getLeaderboard = createServerFn({ method: "GET" })
 
     const { data: entries, error } = await query("leaderboard_entries", {
       select:
-        "*, users(id, email, profiles(full_name, nickname, avatar_url, department, level)), user_badges(badges(name, label, description, icon, color, bg_color))",
+        "*, users(id, profiles(full_name, nickname, avatar_url, department, level)), user_badges(badges(name, label, description, icon, color, bg_color))",
       filters,
       order: { column: "total_points", ascending: false },
       limit,
@@ -36,7 +37,7 @@ export const getLeaderboardEntry = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const { data: entry, error } = await query("leaderboard_entries", {
       select:
-        "*, users(id, email, profiles(full_name, nickname, avatar_url, department, level)), user_badges(badges(name, label, description, icon, color, bg_color))",
+        "*, users(id, profiles(full_name, nickname, avatar_url, department, level)), user_badges(badges(name, label, description, icon, color, bg_color))",
       filters: { user_id: data.userId },
       single: true,
     });
@@ -72,6 +73,7 @@ export const adjustPoints = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, userId, ...pointsData } = data;
 
     const { data: existingEntry } = await query("leaderboard_entries", {

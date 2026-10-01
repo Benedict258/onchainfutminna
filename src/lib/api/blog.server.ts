@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabase, query } from "@/lib/supabase";
+import { requireAdmin } from "@/lib/api/guard.server";
 
 export const getBlogPosts = createServerFn({ method: "GET" })
   .inputValidator(
@@ -76,6 +77,7 @@ export const createBlogPost = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, tagIds, ...postData } = data;
 
     const { data: existingSlug } = await query("blog_posts", {
@@ -137,6 +139,7 @@ export const updateBlogPost = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, id, tagIds, ...updateData } = data;
 
     const { data: existing } = await query("blog_posts", {
@@ -204,6 +207,7 @@ export const publishBlogPost = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, id, publish } = data;
 
     const { data: existing } = await query("blog_posts", {
@@ -238,6 +242,7 @@ export const deleteBlogPost = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { error } = await supabase.from("blog_posts").delete({ id: data.id });
 
     if (error) throw error;

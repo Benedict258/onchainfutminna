@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabase, query } from "@/lib/supabase";
+import { requireAdmin, requireUser } from "@/lib/api/guard.server";
 
 export const getEvents = createServerFn({ method: "GET" })
   .inputValidator(
@@ -77,6 +78,8 @@ export const rsvpToEvent = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    // Only the signed-in user's own RSVP.
+    if (requireUser(data.accessToken).userId !== data.userId) throw new Error("Forbidden");
     const { eventId, userId } = data;
 
     const { data: existing } = await query("event_rsvps", {
@@ -107,6 +110,8 @@ export const cancelRsvp = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    // Only the signed-in user's own RSVP.
+    if (requireUser(data.accessToken).userId !== data.userId) throw new Error("Forbidden");
     const { eventId, userId } = data;
 
     const { data: existing } = await query("event_rsvps", {
@@ -148,6 +153,7 @@ export const createEvent = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, ...eventData } = data;
 
     const { data: inserted, error } = await supabase.from("events").insert({
@@ -188,6 +194,7 @@ export const updateEvent = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, id, ...updateData } = data;
 
     const processed: Record<string, unknown> = {};
@@ -218,6 +225,7 @@ export const deleteEvent = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { error } = await supabase.from("events").delete({ id: data.id });
 
     if (error) throw error;
@@ -235,6 +243,7 @@ export const markAttendance = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, eventId, userId, attended } = data;
 
     const { data: updatedRows, error } = await supabase
@@ -256,6 +265,7 @@ export const markAttendanceAndAward = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, eventId, userId, attended } = data;
 
     const { data: updatedRows, error } = await supabase
@@ -283,16 +293,15 @@ export const addEventResource = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, eventId, ...resourceData } = data;
 
-    const { data: inserted, error } = await supabase
-      .from("event_resources")
-      .insert({
-        event_id: eventId,
-        title: resourceData.title,
-        url: resourceData.url,
-        type: resourceData.type,
-      });
+    const { data: inserted, error } = await supabase.from("event_resources").insert({
+      event_id: eventId,
+      title: resourceData.title,
+      url: resourceData.url,
+      type: resourceData.type,
+    });
 
     if (error) throw error;
 

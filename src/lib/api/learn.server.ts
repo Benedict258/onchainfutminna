@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabase, query } from "@/lib/supabase";
+import { requireAdmin } from "@/lib/api/guard.server";
 
 function slugify(text: string): string {
   return text
@@ -94,6 +95,7 @@ export const getTrackProgress = createServerFn({ method: "GET" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { trackId, userId } = data;
 
     const { data: progress, error: progressError } = await query("course_progress", {
@@ -148,6 +150,7 @@ export const completeModule = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { moduleId, userId } = data;
 
     const { data: existing } = await query("course_progress", {
@@ -166,14 +169,12 @@ export const completeModule = createServerFn({ method: "POST" })
       if (error) throw error;
       result = updated?.[0];
     } else {
-      const { data: created, error } = await supabase
-        .from("course_progress")
-        .insert({
-          user_id: userId,
-          module_id: moduleId,
-          completed: true,
-          completed_at: new Date().toISOString(),
-        });
+      const { data: created, error } = await supabase.from("course_progress").insert({
+        user_id: userId,
+        module_id: moduleId,
+        completed: true,
+        completed_at: new Date().toISOString(),
+      });
 
       if (error) throw error;
       result = created?.[0];
@@ -212,6 +213,7 @@ export const submitQuizAttempt = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { quizId, userId, answers } = data;
 
     const { data: quiz, error: quizError } = await query("quizzes", {
@@ -294,6 +296,7 @@ export const createTrack = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, ...trackData } = data;
 
     const { data: track, error } = await supabase.from("tracks").insert({
@@ -326,6 +329,7 @@ export const updateTrack = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, id, ...updateData } = data;
 
     const processed: Record<string, unknown> = {};
@@ -357,6 +361,7 @@ export const createModule = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, ...moduleData } = data;
 
     const { data: mod, error } = await supabase.from("modules").insert({
@@ -386,6 +391,7 @@ export const updateModule = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, id, ...updateData } = data;
 
     const processed: Record<string, unknown> = {};
@@ -423,6 +429,7 @@ export const createQuiz = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, moduleId, passMark, questions } = data;
 
     const { data: existingQuiz } = await query("quizzes", {
@@ -488,6 +495,7 @@ export const addResource = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, ...resourceData } = data;
 
     const { data: resource, error } = await supabase.from("resources").insert({
@@ -577,6 +585,7 @@ export const deleteResource = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { error } = await supabase.from("resources").delete({ id: data.id });
 
     if (error) throw error;

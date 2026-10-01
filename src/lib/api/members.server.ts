@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabase, query } from "@/lib/supabase";
+import { requireAdmin } from "@/lib/api/guard.server";
 
 export const getMembers = createServerFn({ method: "GET" })
   .inputValidator(
@@ -25,7 +26,8 @@ export const getMembers = createServerFn({ method: "GET" })
       count,
       error,
     } = await query("profiles", {
-      select: "*, users(id, email, role), profile_skills(*, skills(*))",
+      select:
+        "id, user_id, full_name, nickname, username, avatar_url, department, level, experience_level, fun_fact, bio, x_link, github_link, portfolio_link, created_at, users(id, role), profile_skills(*, skills(*))",
       filters,
       order: { column: "created_at", ascending: false },
       range: [from, to],
@@ -47,7 +49,8 @@ export const getMemberById = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
     const { data: member, error } = await query("profiles", {
-      select: "*, users(id, email, role), profile_skills(*, skills(*)), leaderboard_entries(*)",
+      select:
+        "id, user_id, full_name, nickname, username, avatar_url, department, level, experience_level, fun_fact, bio, x_link, github_link, portfolio_link, created_at, users(id, role), profile_skills(*, skills(*)), leaderboard_entries(*)",
       filters: { user_id: data.id },
       single: true,
     });
@@ -79,6 +82,7 @@ export const updateMember = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { id, accessToken, skillIds, ...profileData } = data;
 
     const updateData: Record<string, unknown> = {};
@@ -113,13 +117,11 @@ export const updateMember = createServerFn({ method: "POST" })
       if (error) throw error;
       profileId = updated.id;
     } else {
-      const { data: created, error } = await supabase
-        .from("profiles")
-        .insert({
-          user_id: id,
-          full_name: (profileData.fullName as string) || "New Member",
-          ...updateData,
-        });
+      const { data: created, error } = await supabase.from("profiles").insert({
+        user_id: id,
+        full_name: (profileData.fullName as string) || "New Member",
+        ...updateData,
+      });
 
       if (error) throw error;
       profileId = created.id;

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabase, query } from "@/lib/supabase";
+import { requireAdmin } from "@/lib/api/guard.server";
 
 export const getProjects = createServerFn({ method: "GET" })
   .inputValidator(
@@ -50,7 +51,7 @@ export const getProjectById = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const { data: project, error } = await query("projects", {
       select:
-        "*, project_members(*, users(id, email, profiles(full_name, avatar_url, department, level))), project_tags(*, tags(id, name))",
+        "*, project_members(*, users(id, profiles(full_name, avatar_url, department, level))), project_tags(*, tags(id, name))",
       filters: { id: data.id },
       single: true,
     });
@@ -84,6 +85,7 @@ export const submitProject = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { accessToken, tagIds, memberIds, ...projectData } = data;
 
     const { data: insertedProjects, error: projectError } = await supabase.from("projects").insert({
@@ -139,6 +141,7 @@ export const approveProject = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { data: updatedProjects, error } = await supabase
       .from("projects")
       .update({ status: "APPROVED" }, { id: data.id });
@@ -156,6 +159,7 @@ export const rejectProject = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { data: updatedProjects, error } = await supabase
       .from("projects")
       .update({ status: "REJECTED" }, { id: data.id });
@@ -174,6 +178,7 @@ export const featureProject = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { data: updatedProjects, error } = await supabase
       .from("projects")
       .update({ is_featured: data.isFeatured }, { id: data.id });
@@ -191,6 +196,7 @@ export const deleteProject = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    requireAdmin(data.accessToken);
     const { error } = await supabase.from("projects").delete({ id: data.id });
 
     if (error) throw error;
