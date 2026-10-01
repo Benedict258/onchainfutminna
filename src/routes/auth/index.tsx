@@ -18,7 +18,7 @@ import { loginSchema, type LoginInput } from "@/lib/validators/auth";
 import { useAuthStore } from "@/stores/auth-store";
 import { safeRedirect, takeReturnTo } from "@/lib/auth-redirect";
 
-export const Route = createFileRoute("/auth")({
+export const Route = createFileRoute("/auth/")({
   validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
     redirect: safeRedirect(search.redirect),
   }),

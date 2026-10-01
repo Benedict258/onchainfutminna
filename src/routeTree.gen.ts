@@ -14,7 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AlumniRouteImport } from './routes/alumni'
 import { Route as ArenaRouteImport } from './routes/arena'
-import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as Dev3packScholarshipRouteImport } from './routes/dev3pack-scholarship'
 import { Route as EventsRouteImport } from './routes/events'
@@ -48,6 +48,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminStudentsRouteImport } from './routes/admin/students'
 import { Route as ArenaChallengeIdRouteImport } from './routes/arena/$challengeId'
 import { Route as ArenaCreateRouteImport } from './routes/arena/create'
+import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AuthVerifyRouteImport } from './routes/auth/verify'
@@ -99,7 +100,7 @@ const ArenaRoute = ArenaRouteImport.update({
   path: '/arena',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
+const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
@@ -269,20 +270,25 @@ const ArenaCreateRoute = ArenaCreateRouteImport.update({
   path: '/create',
   getParentRoute: () => ArenaRoute,
 } as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthVerifyRoute = AuthVerifyRouteImport.update({
   id: '/verify',
   path: '/verify',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
@@ -400,11 +406,11 @@ const MembersMemberIdDevlogRoute = MembersMemberIdDevlogRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/alumni': typeof AlumniRoute
   '/arena': typeof ArenaRouteWithChildren
-  '/auth': typeof AuthRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/dev3pack-scholarship': typeof Dev3packScholarshipRoute
   '/events': typeof EventsRouteWithChildren
@@ -456,6 +462,7 @@ export interface FileRoutesByFullPath {
   '/scholarships/dev3pack-rust': typeof ScholarshipsDev3packRustRoute
   '/squads/$squadId': typeof SquadsSquadIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/admin/cohorts/$id': typeof AdminCohortsIdRoute
@@ -469,7 +476,6 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/alumni': typeof AlumniRoute
   '/arena': typeof ArenaRouteWithChildren
-  '/auth': typeof AuthRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/dev3pack-scholarship': typeof Dev3packScholarshipRoute
   '/events': typeof EventsRouteWithChildren
@@ -519,6 +525,7 @@ export interface FileRoutesByTo {
   '/scholarships/dev3pack-rust': typeof ScholarshipsDev3packRustRoute
   '/squads/$squadId': typeof SquadsSquadIdRoute
   '/admin': typeof AdminIndexRoute
+  '/auth': typeof AuthIndexRoute
   '/learn': typeof LearnIndexRoute
   '/profile': typeof ProfileIndexRoute
   '/admin/cohorts/$id': typeof AdminCohortsIdRoute
@@ -530,11 +537,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/alumni': typeof AlumniRoute
   '/arena': typeof ArenaRouteWithChildren
-  '/auth': typeof AuthRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/dev3pack-scholarship': typeof Dev3packScholarshipRoute
   '/events': typeof EventsRouteWithChildren
@@ -586,6 +593,7 @@ export interface FileRoutesById {
   '/scholarships/dev3pack-rust': typeof ScholarshipsDev3packRustRoute
   '/squads/$squadId': typeof SquadsSquadIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/admin/cohorts/$id': typeof AdminCohortsIdRoute
@@ -598,11 +606,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/about'
     | '/admin'
     | '/alumni'
     | '/arena'
-    | '/auth'
     | '/blog'
     | '/dev3pack-scholarship'
     | '/events'
@@ -654,6 +662,7 @@ export interface FileRouteTypes {
     | '/scholarships/dev3pack-rust'
     | '/squads/$squadId'
     | '/admin/'
+    | '/auth/'
     | '/learn/'
     | '/profile/'
     | '/admin/cohorts/$id'
@@ -667,7 +676,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/alumni'
     | '/arena'
-    | '/auth'
     | '/blog'
     | '/dev3pack-scholarship'
     | '/events'
@@ -717,6 +725,7 @@ export interface FileRouteTypes {
     | '/scholarships/dev3pack-rust'
     | '/squads/$squadId'
     | '/admin'
+    | '/auth'
     | '/learn'
     | '/profile'
     | '/admin/cohorts/$id'
@@ -727,11 +736,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/about'
     | '/admin'
     | '/alumni'
     | '/arena'
-    | '/auth'
     | '/blog'
     | '/dev3pack-scholarship'
     | '/events'
@@ -783,6 +792,7 @@ export interface FileRouteTypes {
     | '/scholarships/dev3pack-rust'
     | '/squads/$squadId'
     | '/admin/'
+    | '/auth/'
     | '/learn/'
     | '/profile/'
     | '/admin/cohorts/$id'
@@ -794,11 +804,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AlumniRoute: typeof AlumniRoute
   ArenaRoute: typeof ArenaRouteWithChildren
-  AuthRoute: typeof AuthRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
   Dev3packScholarshipRoute: typeof Dev3packScholarshipRoute
   EventsRoute: typeof EventsRouteWithChildren
@@ -859,7 +869,7 @@ declare module '@tanstack/react-router' {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -1093,26 +1103,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArenaCreateRouteImport
       parentRoute: typeof ArenaRoute
     }
+    '/auth/': {
+      id: '/auth/'
+      path: '/'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/auth/forgot-password': {
       id: '/auth/forgot-password'
       path: '/forgot-password'
       fullPath: '/auth/forgot-password'
       preLoaderRoute: typeof AuthForgotPasswordRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/reset-password': {
       id: '/auth/reset-password'
       path: '/reset-password'
       fullPath: '/auth/reset-password'
       preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/verify': {
       id: '/auth/verify'
       path: '/verify'
       fullPath: '/auth/verify'
       preLoaderRoute: typeof AuthVerifyRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/blog/$slug': {
       id: '/blog/$slug'
@@ -1271,6 +1288,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthRouteRouteChildren {
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthVerifyRoute: typeof AuthVerifyRoute
+  AuthIndexRoute: typeof AuthIndexRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthVerifyRoute: AuthVerifyRoute,
+  AuthIndexRoute: AuthIndexRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
 interface AdminCohortsRouteChildren {
   AdminCohortsIdRoute: typeof AdminCohortsIdRoute
 }
@@ -1350,20 +1385,6 @@ const ArenaRouteChildren: ArenaRouteChildren = {
 }
 
 const ArenaRouteWithChildren = ArenaRoute._addFileChildren(ArenaRouteChildren)
-
-interface AuthRouteChildren {
-  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
-  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
-  AuthVerifyRoute: typeof AuthVerifyRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
-  AuthResetPasswordRoute: AuthResetPasswordRoute,
-  AuthVerifyRoute: AuthVerifyRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
@@ -1462,11 +1483,11 @@ const SquadsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AlumniRoute: AlumniRoute,
   ArenaRoute: ArenaRouteWithChildren,
-  AuthRoute: AuthRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
   Dev3packScholarshipRoute: Dev3packScholarshipRoute,
   EventsRoute: EventsRouteWithChildren,
