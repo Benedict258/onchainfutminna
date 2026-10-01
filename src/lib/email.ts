@@ -3,7 +3,7 @@ import { Resend } from "resend";
 // Must be an address on a domain verified in Resend (onchainfutminna.xyz is verified;
 // a gmail.com sender is rejected with 403).
 const FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL || "Blockchain Club FUTMinna <noreply@onchainfutminna.xyz>";
+  process.env.RESEND_FROM_EMAIL || "Blockchain Club FUTMinna <hello@onchainfutminna.xyz>";
 const SITE_URL = (process.env.SITE_URL || "https://onchainfutminna.xyz").replace(/\/$/, "");
 
 let client: Resend | null = null;
