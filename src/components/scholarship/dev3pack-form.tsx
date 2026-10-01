@@ -13,26 +13,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 3;
 
 const initialForm = {
   level: "",
-  gender: "",
   club_member: "",
   programming_experience: "",
   rust_experience: "",
   can_attend_full: "",
   weekly_hours: "",
   has_laptop: "",
-  internet_quality: "",
-  accuracy_confirmed: false,
-  seat_forfeit_ack: false,
-  data_consent: false,
-  rust_reasoning: "",
 };
 
 type Rule = { key: string; message: string; test?: (v: any) => boolean };
@@ -73,29 +66,18 @@ const STEP_RULES: Record<number, Rule[]> = {
     },
     { key: "department", message: "Enter your department." },
     { key: "level", message: "Select your level." },
-    { key: "gender", message: "Select your gender." },
+    { key: "club_member", message: "Tell us if you are a club member." },
   ],
   2: [
-    { key: "club_member", message: "Tell us if you are a club member." },
     { key: "programming_experience", message: "Select your programming experience." },
     { key: "rust_experience", message: "Select your Rust experience." },
-  ],
-  3: [
-    { key: "motivation", message: "Tell us why you want this scholarship." },
-    { key: "hard_learning", message: "Tell us about something hard you learned." },
-    { key: "goal_by_end_nov", message: "Tell us what you want to build." },
-  ],
-  4: [
     { key: "can_attend_full", message: "Select whether you can attend." },
     { key: "weekly_hours", message: "Select your weekly hours." },
     { key: "has_laptop", message: "Select your laptop availability." },
-    { key: "internet_quality", message: "Select your internet quality." },
   ],
-  5: [
-    { key: "giveback_plan", message: "Tell us how you will give back." },
-    { key: "accuracy_confirmed", message: "Please tick this declaration." },
-    { key: "seat_forfeit_ack", message: "Please tick this declaration." },
-    { key: "data_consent", message: "Please tick this declaration." },
+  3: [
+    { key: "motivation", message: "Tell us why you want this scholarship." },
+    { key: "goal_by_end_nov", message: "Tell us what you want to build." },
   ],
 };
 
@@ -276,19 +258,17 @@ export function Dev3packScholarshipForm() {
       : form.github_url
         ? `https://github.com/${form.github_url}`
         : null;
-    const social = form.social_url?.startsWith("http")
-      ? form.social_url
-      : form.social_url
-        ? `https://x.com/${form.social_url}`
-        : null;
     const payload = {
       ...form,
       full_name: form.full_name.trim(),
       email: form.email.trim().toLowerCase(),
       phone_whatsapp: form.phone_whatsapp.trim(),
       github_url: github,
-      social_url: social,
       club_member: form.club_member === "yes",
+      // Agreed to by submitting (see the note above the Submit button).
+      accuracy_confirmed: true,
+      seat_forfeit_ack: true,
+      data_consent: true,
       languages_tools: form.languages_tools || [],
       built_description: form.built_description?.trim() || "",
       built_link: firstLink(form.built_description),
@@ -344,26 +324,6 @@ export function Dev3packScholarshipForm() {
     </Select>
   );
 
-  const declaration = (key: string, label: string) => (
-    <div>
-      <label className="flex items-start gap-2 text-sm">
-        <Checkbox
-          checked={!!form[key]}
-          onCheckedChange={(v) => update(key, !!v)}
-          aria-invalid={!!errors[key]}
-          className={cn("mt-0.5", errors[key] && "border-red-500")}
-        />
-        <span>
-          {label}
-          <span className="ml-0.5 text-red-500" aria-hidden="true">
-            *
-          </span>
-        </span>
-      </label>
-      {errors[key] && <p className="mt-1 text-xs text-red-500">{errors[key]}</p>}
-    </div>
-  );
-
   const yesNo = [
     { value: "yes", label: "Yes" },
     { value: "no", label: "No" },
@@ -384,6 +344,7 @@ export function Dev3packScholarshipForm() {
 
       {step === 1 && (
         <div className="space-y-4">
+          <h3 className="text-lg font-medium">About you</h3>
           <Field label="Full name" required hint="As on your student ID" error={errors.full_name}>
             {text("full_name")}
           </Field>
@@ -392,9 +353,6 @@ export function Dev3packScholarshipForm() {
           </Field>
           <Field label="Phone Number (WhatsApp Preferred)" required error={errors.phone_whatsapp}>
             {text("phone_whatsapp", { type: "tel" })}
-          </Field>
-          <Field label="Telegram handle" hint="Username without @">
-            {text("telegram_handle")}
           </Field>
           <Field label="Department" required error={errors.department}>
             {text("department")}
@@ -409,27 +367,6 @@ export function Dev3packScholarshipForm() {
               "Select level",
             )}
           </Field>
-          <Field label="Gender" required error={errors.gender}>
-            {choice(
-              "gender",
-              [
-                { value: "male", label: "Male" },
-                { value: "female", label: "Female" },
-              ],
-              "Select gender",
-            )}
-          </Field>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div className="space-y-4">
-          <Field label="GitHub username" hint="Your GitHub handle without @">
-            {text("github_url", { placeholder: "username" })}
-          </Field>
-          <Field label="X / Twitter username" hint="Your X handle without @">
-            {text("social_url", { placeholder: "username" })}
-          </Field>
           <Field
             label="Club member?"
             required
@@ -438,6 +375,12 @@ export function Dev3packScholarshipForm() {
           >
             {choice("club_member", yesNo)}
           </Field>
+        </div>
+      )}
+
+      {step === 2 && (
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">Experience & availability</h3>
           <Field
             label="Programming experience"
             required
@@ -463,46 +406,9 @@ export function Dev3packScholarshipForm() {
               { value: "comfortable", label: "Comfortable" },
             ])}
           </Field>
-          <Field
-            label="Something you have built"
-            hint="Anything you have built, fixed, or shipped: code, a website, a design, a bot. Include a link (GitHub, live site, demo) if you have one. Skip this if you are just starting out."
-          >
-            {longText("built_description", 800)}
+          <Field label="GitHub username" hint="Your GitHub handle without @">
+            {text("github_url", { placeholder: "username" })}
           </Field>
-        </div>
-      )}
-
-      {step === 3 && (
-        <div className="space-y-4">
-          <Field
-            label="Motivation"
-            required
-            hint="Why do you want this scholarship and what will you do with it?"
-            error={errors.motivation}
-          >
-            {longText("motivation", 800)}
-          </Field>
-          <Field
-            label="Hard learning experience"
-            required
-            hint="Describe a time you learned something difficult independently."
-            error={errors.hard_learning}
-          >
-            {longText("hard_learning", 600)}
-          </Field>
-          <Field
-            label="What do you want to build?"
-            required
-            hint="What you want to be able to build by 27 November 2026, and any bigger project you would love to build someday."
-            error={errors.goal_by_end_nov}
-          >
-            {longText("goal_by_end_nov", 500)}
-          </Field>
-        </div>
-      )}
-
-      {step === 4 && (
-        <div className="space-y-4">
           <Field
             label="Can attend full bootcamp?"
             required
@@ -540,37 +446,40 @@ export function Dev3packScholarshipForm() {
               { value: "no", label: "No" },
             ])}
           </Field>
-          <Field
-            label="Internet quality"
-            required
-            hint="Typical internet reliability"
-            error={errors.internet_quality}
-          >
-            {choice("internet_quality", [
-              { value: "reliable", label: "Reliable" },
-              { value: "sometimes", label: "Sometimes" },
-              { value: "poor", label: "Poor" },
-            ])}
-          </Field>
         </div>
       )}
 
-      {step === 5 && (
+      {step === 3 && (
         <div className="space-y-4">
+          <h3 className="text-lg font-medium">Your goals</h3>
           <Field
-            label="Giveback plan"
+            label="Why do you want this scholarship?"
             required
-            hint="How will you give back to the community after the bootcamp?"
-            error={errors.giveback_plan}
+            hint="What will you do with it, and how will you share what you learn with the club?"
+            error={errors.motivation}
           >
-            {longText("giveback_plan", 500)}
+            {longText("motivation", 800)}
           </Field>
-          <div className="space-y-3">
-            <p className="text-sm font-medium">Declarations</p>
-            {declaration("accuracy_confirmed", "I confirm info is accurate")}
-            {declaration("seat_forfeit_ack", "I understand seat may be forfeited for inactivity")}
-            {declaration("data_consent", "Consent to store/share with Dev3pack if selected")}
-          </div>
+          <Field
+            label="What do you want to build?"
+            required
+            hint="What you want to be able to build by 27 November 2026, and any bigger project you would love to build someday."
+            error={errors.goal_by_end_nov}
+          >
+            {longText("goal_by_end_nov", 500)}
+          </Field>
+          <Field
+            label="Something you have built"
+            hint="Anything you have built, fixed, or shipped: code, a website, a design, a bot. Include a link (GitHub, live site, demo) if you have one. Skip this if you are just starting out."
+          >
+            {longText("built_description", 800)}
+          </Field>
+          <p className="text-xs text-muted-foreground">
+            By submitting, you confirm your answers are accurate and your own, understand your seat
+            may be given to someone on the waitlist if you stop participating without notice, and
+            agree to Blockchain Club FUTMinna storing your details for this selection and sharing
+            them with Dev3pack only if you are selected.
+          </p>
         </div>
       )}
 

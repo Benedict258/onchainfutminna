@@ -81,9 +81,9 @@ const SECTIONS: { title: string; fields: [key: string, label: string][] }[] = [
     title: "Give back & declarations",
     fields: [
       ["giveback_plan", "Give-back plan"],
-      ["accuracy_confirmed", "Info is accurate"],
-      ["seat_forfeit_ack", "Understands seat forfeit"],
-      ["data_consent", "Data consent"],
+      ["accuracy_confirmed", "Confirmed info is accurate"],
+      ["seat_forfeit_ack", "Accepted seat forfeit terms"],
+      ["data_consent", "Agreed to data use"],
       ["created_at", "Submitted"],
     ],
   },
@@ -106,6 +106,17 @@ function formatValue(key: string, v: unknown) {
   if (key === "created_at") return new Date(String(v)).toLocaleString();
   return ENUM_KEYS.has(key) ? String(v).replace(/_/g, " ") : String(v);
 }
+
+// Questions the form no longer asks (shortened 2026-10-01). Shown only for older
+// applications that answered them.
+const RETIRED_KEYS = new Set([
+  "telegram_handle",
+  "gender",
+  "social_url",
+  "hard_learning",
+  "internet_quality",
+  "giveback_plan",
+]);
 
 // Dropdown answers stored as snake_case values ("a_little", "15_plus").
 const ENUM_KEYS = new Set([
@@ -160,6 +171,7 @@ function ApplicationSheet({
               <dl className="space-y-3">
                 {section.fields.map(([key, label]) => {
                   const value = formatValue(key, app[key]);
+                  if (value == null && RETIRED_KEYS.has(key)) return null;
                   const isLink = typeof app[key] === "string" && /^https?:\/\//.test(app[key]);
                   return (
                     <div key={key}>
