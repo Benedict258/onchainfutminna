@@ -426,6 +426,7 @@ function AlumniPage() {
       if (userIds.length === 0) return [];
       try {
         return await apiQueryAll("profiles", {
+          select: "id,user_id,full_name,avatar_url,nickname,department,github_link,portfolio_link",
           filters: undefined,
         });
       } catch {

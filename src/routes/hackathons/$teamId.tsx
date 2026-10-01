@@ -159,6 +159,7 @@ function TeamDetailContent({ userId }: { userId: string }) {
     setInviting(true);
     try {
       const users = await apiQueryAll("profiles", {
+        select: "id,user_id,full_name,username,avatar_url",
         filters: { username: inviteUsername.trim() },
         single: true,
       });

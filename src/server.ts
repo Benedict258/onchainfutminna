@@ -102,6 +102,41 @@ async function handleAuthLogin(request: Request): Promise<Response> {
   }
 }
 
+// Tables only admins may read through the generic query route.
+const ADMIN_ONLY_TABLES = [
+  "users",
+  "refresh_tokens",
+  "verification_codes",
+  "rust_scholarship_applications",
+  "scholarship_admins",
+  "whatsapp_interactions",
+];
+// Credentials: never readable through the generic route, not even by admins.
+const SECRET_FIELDS = /password|\btoken\b|refresh_tokens|verification_codes/i;
+// Personal data members and visitors must not pull for other people.
+const PRIVATE_FIELDS = /\b(phone|phone_whatsapp|date_of_birth|email)\b/i;
+const ADMIN_ONLY_REF = new RegExp(`\\b(${ADMIN_ONLY_TABLES.join("|")})\\b`, "i");
+
+/** Returns an error message if this generic read must be refused, else null. */
+function checkQueryAccess(table: string, body: any, isAdmin: boolean): string | null {
+  if (!/^[a-z_]+$/.test(table ?? "")) return "Invalid table";
+  const select = String(body?.select ?? "*");
+  // Everything a caller can name: selected/embedded columns, filter columns, sort column.
+  const referenced = [
+    select,
+    ...Object.keys(body?.filters ?? {}),
+    String(body?.order?.column ?? ""),
+  ].join(" ");
+  if (SECRET_FIELDS.test(referenced)) return "Forbidden";
+  if (isAdmin) return null;
+  if (ADMIN_ONLY_TABLES.includes(table) || ADMIN_ONLY_REF.test(referenced)) return "Forbidden";
+  if (PRIVATE_FIELDS.test(referenced)) return "Forbidden";
+  // "*" on profiles (directly or embedded) would include phone and date of birth.
+  if ((table === "profiles" && select.includes("*")) || /profiles\s*\(\s*\*/.test(select))
+    return "Forbidden";
+  return null;
+}
+
 // Generic Supabase REST API — replaces all createServerFn calls
 async function handleSupabaseApi(request: Request, pathname: string): Promise<Response> {
   try {
@@ -156,6 +191,26 @@ async function handleSupabaseApi(request: Request, pathname: string): Promise<Re
     const op = parts[0];
     const table = parts[1];
     const fn = parts[1];
+
+    // This route runs with the service-role key, so it must enforce access itself.
+    if (op === "query" || op === "analytics") {
+      const caller = authHeader?.startsWith("Bearer ")
+        ? verifyAccessToken(authHeader.slice(7))
+        : null;
+      const isAdmin = caller?.role === "ADMIN" || caller?.role === "SUPER_ADMIN";
+      const denied =
+        op === "analytics"
+          ? isAdmin
+            ? null
+            : "Forbidden"
+          : checkQueryAccess(table, body, isAdmin);
+      if (denied) {
+        return new Response(JSON.stringify({ error: denied }), {
+          status: 403,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    }
 
     let result;
 
