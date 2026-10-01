@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { supabase, query } from "@/lib/supabase";
-import { randomUUID } from "crypto";
+import { createHash, randomInt, randomUUID } from "crypto";
 
 export function getAuthSecret(): string {
   return process.env.JWT_SECRET || "bcf-futminna-jwt-secret-fallback";
@@ -45,7 +45,13 @@ export async function storeRefreshToken(token: string, userId: string): Promise<
 
 export function verifyAccessToken(token: string): { userId: string; role: string } | null {
   try {
-    const decoded = jwt.verify(token, getAuthSecret()) as { userId: string; role: string };
+    const decoded = jwt.verify(token, getAuthSecret()) as {
+      userId: string;
+      role: string;
+      type?: string;
+    };
+    // Reset and verification tokens share the secret; only real access tokens count here.
+    if (decoded.type || !decoded.role) return null;
     return decoded;
   } catch {
     return null;
@@ -101,7 +107,7 @@ export function verifyVerificationToken(token: string): { userId: string } | nul
 }
 
 export function generateVerificationCode(): string {
-  return String(Math.floor(100000 + Math.random() * 900000));
+  return String(randomInt(100000, 1000000));
 }
 
 export async function storeVerificationCode(userId: string, code: string): Promise<void> {
@@ -120,9 +126,10 @@ export async function storeVerificationCode(userId: string, code: string): Promi
 }
 
 export async function verifyCode(userId: string, code: string): Promise<boolean> {
+  // String() so a {__op} object can never reach the filter as an operator.
   const { data } = await query("verification_codes", {
     select: "*",
-    filters: { user_id: userId, code },
+    filters: { user_id: String(userId), code: String(code) },
     single: true,
   });
 
@@ -137,15 +144,30 @@ export async function verifyCode(userId: string, code: string): Promise<boolean>
   return true;
 }
 
-export function generatePasswordResetToken(userId: string): string {
-  return jwt.sign({ userId, type: "password_reset" }, getAuthSecret(), { expiresIn: "1h" });
+/** Short digest of a password hash; changes whenever the password does. */
+export function passwordFingerprint(passwordHash: string): string {
+  return createHash("sha256").update(passwordHash).digest("hex").slice(0, 16);
 }
 
-export function verifyPasswordResetToken(token: string): { userId: string } | null {
+// The token embeds the current password fingerprint, which makes it single-use: after a
+// reset the stored hash changes and the old token no longer matches.
+export function generatePasswordResetToken(userId: string, passwordHash: string): string {
+  return jwt.sign(
+    { userId, type: "password_reset", pwd: passwordFingerprint(passwordHash) },
+    getAuthSecret(),
+    { expiresIn: "1h" },
+  );
+}
+
+export function verifyPasswordResetToken(token: string): { userId: string; pwd: string } | null {
   try {
-    const decoded = jwt.verify(token, getAuthSecret()) as { userId: string; type: string };
-    if (decoded.type !== "password_reset") return null;
-    return { userId: decoded.userId };
+    const decoded = jwt.verify(token, getAuthSecret()) as {
+      userId: string;
+      type: string;
+      pwd?: string;
+    };
+    if (decoded.type !== "password_reset" || !decoded.pwd) return null;
+    return { userId: decoded.userId, pwd: decoded.pwd };
   } catch {
     return null;
   }

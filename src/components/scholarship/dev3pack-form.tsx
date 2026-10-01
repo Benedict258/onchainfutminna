@@ -164,20 +164,18 @@ export function Dev3packScholarshipForm() {
   });
 
   const mutation = useMutation({
+    // The server validates, saves the application and emails a confirmation.
     mutationFn: async (payload: any) => {
-      // anon has no SELECT policy on this table, so duplicates can't be checked up front;
-      // the unique index on lower(email) rejects them and we translate the error here.
-      const { error } = await supabase
-        .from("rust_scholarship_applications")
-        .insert(payload, { returning: "minimal" });
-      if (error) {
-        if (error.pgCode === "23505" || error.code === 409)
-          throw new Error("An application with this email already exists.");
-        throw error;
-      }
+      const res = await fetch("/api/scholarship/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || "Submission failed");
     },
     onSuccess: () => {
-      toast.success("Application submitted.");
+      toast.success("Application submitted. Check your email for a confirmation.");
       setSubmitted(true);
       setForm(initialForm);
       setStep(1);
@@ -215,8 +213,8 @@ export function Dev3packScholarshipForm() {
       >
         <h2 className="text-2xl font-semibold">Application received</h2>
         <p className="text-muted-foreground">
-          Thanks for applying to the Dev3pack Rust Scholarship. Results will be announced on{" "}
-          {scholarshipConfig.resultsAnnounce}.
+          Thanks for applying to the Dev3pack Rust Scholarship. We have emailed you a confirmation.
+          Results will be announced on {scholarshipConfig.resultsAnnounce}.
         </p>
         <p className="text-sm text-muted-foreground">
           Questions? Email{" "}
@@ -259,24 +257,22 @@ export function Dev3packScholarshipForm() {
         ? `https://github.com/${form.github_url}`
         : null;
     const payload = {
-      ...form,
       full_name: form.full_name.trim(),
       email: form.email.trim().toLowerCase(),
       phone_whatsapp: form.phone_whatsapp.trim(),
-      github_url: github,
+      department: form.department.trim(),
+      level: form.level,
       club_member: form.club_member === "yes",
-      // Agreed to by submitting (see the note above the Submit button).
-      accuracy_confirmed: true,
-      seat_forfeit_ack: true,
-      data_consent: true,
-      languages_tools: form.languages_tools || [],
+      programming_experience: form.programming_experience,
+      rust_experience: form.rust_experience,
+      github_url: github,
+      can_attend_full: form.can_attend_full,
+      weekly_hours: form.weekly_hours,
+      has_laptop: form.has_laptop,
+      motivation: form.motivation.trim(),
+      goal_by_end_nov: form.goal_by_end_nov.trim(),
       built_description: form.built_description?.trim() || "",
       built_link: firstLink(form.built_description),
-      rust_reasoning: form.rust_reasoning || "",
-      club_activity: "",
-      clashes: "",
-      support_needed: "",
-      how_heard: "",
     };
 
     mutation.mutate(payload);

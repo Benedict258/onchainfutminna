@@ -384,16 +384,20 @@ async function handleSupabaseApi(request: Request, pathname: string): Promise<Re
           });
         }
 
-        const { moduleId, points } = body;
+        const moduleId = typeof body.moduleId === "string" ? body.moduleId : "";
+        const { data: moduleRow } = moduleId
+          ? await query("modules", { select: "id", filters: { id: moduleId }, single: true })
+          : { data: null };
 
-        if (!moduleId) {
-          return new Response(JSON.stringify({ error: "moduleId is required" }), {
+        if (!moduleRow) {
+          return new Response(JSON.stringify({ error: "A valid moduleId is required" }), {
             status: 400,
             headers: { "Content-Type": "application/json" },
           });
         }
 
-        const progressResult = await completeModule(payload.userId, moduleId, points);
+        // Points are fixed on the server; a client-supplied value is ignored.
+        const progressResult = await completeModule(payload.userId, moduleId);
         result = progressResult;
         break;
       }
@@ -491,8 +495,19 @@ async function handleEventAttend(request: Request): Promise<Response> {
         headers: { "Content-Type": "application/json" },
       });
     }
+    // Marking attendance awards points, so only admins may do it.
+    if (payload.role !== "ADMIN" && payload.role !== "SUPER_ADMIN") {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
-    if (!eventId || !userId || attended === undefined) {
+    if (
+      typeof eventId !== "string" ||
+      typeof userId !== "string" ||
+      typeof attended !== "boolean"
+    ) {
       return new Response(JSON.stringify({ error: "eventId, userId, and attended are required" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
@@ -522,6 +537,13 @@ async function handleEventAttend(request: Request): Promise<Response> {
   }
 }
 
+// Points for self-reported community activities, and how many count per day.
+const COMMUNITY_ACTIVITY_POINTS: Record<string, number> = {
+  pair_programming: 5,
+  review: 5,
+};
+const COMMUNITY_DAILY_LIMIT = 3;
+
 async function handleCommunityLog(request: Request): Promise<Response> {
   try {
     const { supabase, query } = await import("./lib/supabase");
@@ -543,11 +565,14 @@ async function handleCommunityLog(request: Request): Promise<Response> {
     }
 
     const body = await request.json();
-    const { activityType, description, points } = body;
+    const activityType = typeof body.activityType === "string" ? body.activityType : "";
+    const description = typeof body.description === "string" ? body.description.slice(0, 500) : "";
+    // Points are decided here, never by the client.
+    const points = COMMUNITY_ACTIVITY_POINTS[activityType];
 
-    if (!activityType || !description || points === undefined) {
+    if (!points || !description) {
       return new Response(
-        JSON.stringify({ error: "activityType, description, and points are required" }),
+        JSON.stringify({ error: "Unknown activity type or missing description" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
@@ -559,6 +584,25 @@ async function handleCommunityLog(request: Request): Promise<Response> {
 
     const { awardPoints } = await import("./lib/auto-awards");
     const now = new Date().toISOString();
+
+    const startOfDay = new Date();
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const { count: todayCount } = await query("community_activities", {
+      select: "id",
+      count: "exact",
+      head: true,
+      filters: {
+        user_id: userId,
+        activity_type: activityType,
+        created_at: { __op: "gte", value: startOfDay.toISOString() },
+      },
+    });
+    if ((todayCount ?? 0) >= COMMUNITY_DAILY_LIMIT) {
+      return new Response(
+        JSON.stringify({ error: "Daily limit reached for this activity. Try again tomorrow." }),
+        { status: 429, headers: { "Content-Type": "application/json" } },
+      );
+    }
 
     const { data: activity, error } = await supabase.from("community_activities").insert({
       user_id: userId,
@@ -597,8 +641,22 @@ async function handleAwards(request: Request): Promise<Response> {
       });
     }
 
+    // Only admin screens trigger awards; nobody else may hand out points or badges.
+    const { verifyAccessToken } = await import("./lib/auth");
+    const authHeader = request.headers.get("Authorization");
+    const caller = authHeader?.startsWith("Bearer ")
+      ? verifyAccessToken(authHeader.slice(7))
+      : null;
+    if (!caller || (caller.role !== "ADMIN" && caller.role !== "SUPER_ADMIN")) {
+      return new Response(JSON.stringify({ error: caller ? "Forbidden" : "Unauthorized" }), {
+        status: caller ? 403 : 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const body = await request.json();
-    const { action, targetId } = body;
+    const action = typeof body.action === "string" ? body.action : "";
+    const targetId = typeof body.targetId === "string" ? body.targetId : "";
 
     const {
       awardProjectPoints,
@@ -797,26 +855,53 @@ async function handleChallengeVote(request: Request): Promise<Response> {
   }
 }
 
+const MINUTE = 60 * 1000;
+
+const jsonResponse = (data: unknown, status = 200, headers: Record<string, string> = {}) =>
+  new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json", ...headers },
+  });
+
+// Request values used in filters must be plain strings: the query helper treats
+// {__op, value} objects as operators, which would let a caller rewrite the filter.
+const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+
+/** Counts this request against each [key, max, windowMs] limit; a 429 response if any is used up. */
+async function enforceLimits(limits: [string, number, number][]): Promise<Response | null> {
+  const { getRateLimitHeaders } = await import("./lib/rate-limit");
+  for (const [key, max, windowMs] of limits) {
+    const headers = getRateLimitHeaders(key, max, windowMs);
+    if (headers["Retry-After"]) {
+      return jsonResponse({ error: "Too many attempts. Please try again later." }, 429, headers);
+    }
+  }
+  return null;
+}
+
 async function handleVerifyEmail(request: Request): Promise<Response> {
   try {
-    const { supabase } = await import("./lib/supabase");
+    const { supabase, query } = await import("./lib/supabase");
     const { verifyCode } = await import("./lib/auth");
+    const { getClientIp } = await import("./lib/rate-limit");
     const body = await request.json();
-    const { userId, code } = body;
+    const userId = str(body.userId);
+    const code = str(body.code);
 
-    if (!userId || !code) {
-      return new Response(JSON.stringify({ error: "User ID and code required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+    if (!userId || !/^\d{6}$/.test(code)) {
+      return jsonResponse({ error: "User ID and a 6-digit code are required" }, 400);
     }
+
+    // 5 guesses per account per 15 minutes makes the 900,000-code space impractical to guess.
+    const limited = await enforceLimits([
+      [`verify-ip:${getClientIp(request)}`, 20, 15 * MINUTE],
+      [`verify-user:${userId}`, 5, 15 * MINUTE],
+    ]);
+    if (limited) return limited;
 
     const isValid = await verifyCode(userId, code);
     if (!isValid) {
-      return new Response(JSON.stringify({ error: "Invalid or expired code" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Invalid or expired code" }, 400);
     }
 
     const { error } = await supabase
@@ -828,15 +913,26 @@ async function handleVerifyEmail(request: Request): Promise<Response> {
 
     if (error) throw new Error(error.message);
 
-    return new Response(JSON.stringify({ message: "Email verified successfully" }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message || "Verification failed" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    // Best effort: a failed welcome email must not undo a successful verification.
+    try {
+      const { data: user } = await query("users", {
+        select: "email, profiles(full_name)",
+        filters: { id: userId },
+        single: true,
+      });
+      if (user?.email) {
+        const { sendWelcomeEmail } = await import("./lib/email");
+        const profile = Array.isArray(user.profiles) ? user.profiles[0] : user.profiles;
+        await sendWelcomeEmail(user.email, profile?.full_name || "builder");
+      }
+    } catch (e) {
+      console.error("[verify-email] welcome email failed:", (e as Error).message);
+    }
+
+    return jsonResponse({ message: "Email verified successfully" });
+  } catch (error) {
+    console.error("[verify-email]", error);
+    return jsonResponse({ error: "Verification failed" }, 500);
   }
 }
 
@@ -845,133 +941,126 @@ async function handleResendVerification(request: Request): Promise<Response> {
     const { query } = await import("./lib/supabase");
     const { generateVerificationCode, storeVerificationCode } = await import("./lib/auth");
     const { sendVerificationEmail } = await import("./lib/email");
+    const { getClientIp } = await import("./lib/rate-limit");
     const body = await request.json();
+    const userId = str(body.userId);
+    const emailInput = str(body.email);
 
-    let email: string;
-    let userId: string;
+    if (!userId && !emailInput) {
+      return jsonResponse({ error: "userId or email required" }, 400);
+    }
 
-    if (body.userId) {
-      const { data: user } = await query("users", {
-        select: "id, email, is_active",
-        filters: { id: body.userId },
-        single: true,
-      });
-      if (!user) throw new Error("User not found");
-      if (user.is_active) throw new Error("This account is already verified");
-      email = user.email;
-      userId = user.id;
-    } else if (body.email) {
-      const { data: user } = await query("users", {
-        select: "id, email, is_active",
-        filters: { email: body.email },
-        single: true,
-      });
-      if (!user) throw new Error("No account found with this email");
-      if (user.is_active) throw new Error("This account is already verified");
-      email = user.email;
-      userId = user.id;
-    } else {
-      throw new Error("userId or email required");
+    const limited = await enforceLimits([
+      [`resend-ip:${getClientIp(request)}`, 5, 15 * MINUTE],
+      [`resend-target:${userId || emailInput}`, 3, 15 * MINUTE],
+    ]);
+    if (limited) return limited;
+
+    const { data: user } = await query("users", {
+      select: "id, email, is_active",
+      filters: userId ? { id: userId } : { email: emailInput },
+      single: true,
+    });
+
+    // Looking up by email: answer the same way whether or not the account exists.
+    const generic = { message: "If an unverified account exists, a new code has been sent." };
+    if (!user)
+      return userId ? jsonResponse({ error: "User not found" }, 404) : jsonResponse(generic);
+    if (user.is_active) {
+      return userId
+        ? jsonResponse({ error: "This account is already verified" }, 400)
+        : jsonResponse(generic);
     }
 
     const code = generateVerificationCode();
-    await storeVerificationCode(userId, code);
-    await sendVerificationEmail(email, code);
+    await storeVerificationCode(user.id, code);
+    await sendVerificationEmail(user.email, code);
 
-    return new Response(
-      JSON.stringify({ message: "Verification code resent. Please check your inbox." }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
-  } catch (error: any) {
-    return new Response(
-      JSON.stringify({ error: error.message || "Failed to resend verification code" }),
-      {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return jsonResponse({ message: "Verification code resent. Please check your inbox." });
+  } catch (error) {
+    console.error("[resend-verification]", error);
+    return jsonResponse({ error: "Failed to resend verification code. Please try again." }, 500);
   }
 }
 
 async function handleForgotPassword(request: Request): Promise<Response> {
+  const generic = { message: "If an account exists, a reset email has been sent" };
   try {
     const { query } = await import("./lib/supabase");
     const { generatePasswordResetToken } = await import("./lib/auth");
     const { sendPasswordResetEmail } = await import("./lib/email");
+    const { getClientIp } = await import("./lib/rate-limit");
     const body = await request.json();
-    const { email } = body;
+    const email = str(body.email);
 
-    if (!email) {
-      return new Response(JSON.stringify({ error: "Email required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+    if (!email) return jsonResponse({ error: "Email required" }, 400);
+
+    const limited = await enforceLimits([
+      [`forgot-ip:${getClientIp(request)}`, 5, 15 * MINUTE],
+      [`forgot-email:${email}`, 3, 60 * MINUTE],
+    ]);
+    if (limited) return limited;
 
     const { data: user } = await query("users", {
-      select: "id, email",
+      select: "id, email, password_hash",
       filters: { email },
       single: true,
     });
 
-    if (!user) {
-      return new Response(
-        JSON.stringify({ message: "If an account exists, a reset email has been sent" }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+    if (user) {
+      const resetToken = generatePasswordResetToken(user.id, user.password_hash);
+      try {
+        await sendPasswordResetEmail(user.email, resetToken);
+      } catch (e) {
+        // Don't reveal (via a different response) that this email has an account.
+        console.error("[forgot-password] reset email failed:", (e as Error).message);
+      }
     }
 
-    const resetToken = generatePasswordResetToken(user.id);
-    await sendPasswordResetEmail(user.email, resetToken);
-
-    return new Response(
-      JSON.stringify({ message: "If an account exists, a reset email has been sent" }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message || "Failed to process request" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return jsonResponse(generic);
+  } catch (error) {
+    console.error("[forgot-password]", error);
+    return jsonResponse({ error: "Failed to process request" }, 500);
   }
 }
 
 async function handleResetPassword(request: Request): Promise<Response> {
   try {
-    const { supabase } = await import("./lib/supabase");
-    const { verifyPasswordResetToken, hashPassword } = await import("./lib/auth");
+    const { supabase, query } = await import("./lib/supabase");
+    const {
+      verifyPasswordResetToken,
+      passwordFingerprint,
+      hashPassword,
+      deleteAllUserRefreshTokens,
+    } = await import("./lib/auth");
+    const { getClientIp } = await import("./lib/rate-limit");
     const body = await request.json();
-    const { token, password } = body;
+    const token = str(body.token);
+    const password = typeof body.password === "string" ? body.password : "";
 
     if (!token || !password) {
-      return new Response(JSON.stringify({ error: "Token and password required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Token and password required" }, 400);
+    }
+    if (password.length < 8) {
+      return jsonResponse({ error: "Password must be at least 8 characters" }, 400);
     }
 
-    if (password.length < 8) {
-      return new Response(JSON.stringify({ error: "Password must be at least 8 characters" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+    const limited = await enforceLimits([[`reset-ip:${getClientIp(request)}`, 10, 15 * MINUTE]]);
+    if (limited) return limited;
 
     const payload = verifyPasswordResetToken(token);
-    if (!payload) {
-      return new Response(JSON.stringify({ error: "Invalid or expired token" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+    const { data: user } = payload
+      ? await query("users", {
+          select: "id, password_hash",
+          filters: { id: payload.userId },
+          single: true,
+        })
+      : { data: null };
+
+    // The token carries a fingerprint of the password hash at the time it was issued, so
+    // once the password changes (i.e. the link has been used) it no longer matches.
+    if (!payload || !user || passwordFingerprint(user.password_hash) !== payload.pwd) {
+      return jsonResponse({ error: "This reset link is invalid, expired or already used" }, 400);
     }
 
     const passwordHash = await hashPassword(password);
@@ -979,20 +1068,106 @@ async function handleResetPassword(request: Request): Promise<Response> {
       .from("users")
       .update(
         { password_hash: passwordHash, updated_at: new Date().toISOString() },
-        { id: payload.userId },
+        { id: user.id },
       );
 
     if (error) throw new Error(error.message);
 
-    return new Response(JSON.stringify({ message: "Password reset successfully" }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+    // Sign out every existing session for this account.
+    await deleteAllUserRefreshTokens(user.id);
+
+    return jsonResponse({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("[reset-password]", error);
+    return jsonResponse({ error: "Failed to reset password" }, 500);
+  }
+}
+
+async function handleScholarshipApply(request: Request): Promise<Response> {
+  try {
+    const { z } = await import("zod");
+    const { supabase, query } = await import("./lib/supabase");
+    const { getClientIp } = await import("./lib/rate-limit");
+    const { scholarshipConfig } = await import("./lib/config/scholarship");
+
+    const limited = await enforceLimits([
+      [`scholarship-ip:${getClientIp(request)}`, 5, 60 * MINUTE],
+    ]);
+    if (limited) return limited;
+
+    // Mirrors the table's constraints, so bad input gets a clear message instead of a DB error.
+    const schema = z.object({
+      full_name: z.string().trim().min(2).max(120),
+      email: z.string().trim().toLowerCase().email().max(254),
+      phone_whatsapp: z.string().trim().min(7).max(20),
+      department: z.string().trim().min(1).max(120),
+      level: z.enum(["100", "200", "300", "400", "500", "Postgraduate", "Graduate"]),
+      club_member: z.boolean(),
+      programming_experience: z.enum(["never", "beginner", "intermediate", "advanced"]),
+      rust_experience: z.enum(["none", "a_little", "comfortable"]),
+      github_url: z.string().url().max(300).nullable(),
+      can_attend_full: z.enum(["yes", "mostly", "no"]),
+      weekly_hours: z.enum(["under_5", "5_10", "10_15", "15_plus"]),
+      has_laptop: z.enum(["yes", "shared", "no"]),
+      motivation: z.string().trim().min(1).max(800),
+      goal_by_end_nov: z.string().trim().min(1).max(500),
+      built_description: z.string().trim().max(800),
+      built_link: z.string().url().max(500).nullable(),
     });
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message || "Failed to reset password" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
+    const parsed = schema.safeParse(await request.json());
+    if (!parsed.success) {
+      const field = parsed.error.issues[0]?.path.join(".") || "form";
+      return jsonResponse({ error: `Please check the "${field}" field.` }, 400);
+    }
+    const app = parsed.data;
+
+    const { data: settings } = await query("scholarship_settings", {
+      select: "opens_at,closes_at",
+      filters: { id: 1 },
+      single: true,
     });
+    const now = new Date();
+    if (settings && !(new Date(settings.opens_at) <= now && now <= new Date(settings.closes_at))) {
+      return jsonResponse({ error: "Applications for this scholarship are closed." }, 403);
+    }
+
+    // This route writes with the service key (RLS bypassed), so only known fields go in;
+    // status and review scores keep their table defaults.
+    const { error } = await supabase.from("rust_scholarship_applications").insert(
+      {
+        ...app,
+        // Agreed to by submitting (see the note above the form's Submit button).
+        accuracy_confirmed: true,
+        seat_forfeit_ack: true,
+        data_consent: true,
+        languages_tools: [],
+        rust_reasoning: "",
+      },
+      { returning: "minimal" },
+    );
+    if (error) {
+      if (error.pgCode === "23505" || error.code === 409) {
+        return jsonResponse({ error: "An application with this email already exists." }, 409);
+      }
+      throw new Error(error.message);
+    }
+
+    // Best effort: the application is saved even if the confirmation email fails.
+    try {
+      const { sendScholarshipConfirmationEmail } = await import("./lib/email");
+      await sendScholarshipConfirmationEmail(app.email, app.full_name, {
+        resultsAnnounce: scholarshipConfig.resultsAnnounce,
+        bootcampDates: scholarshipConfig.bootcampDates,
+        contactEmail: scholarshipConfig.contactEmail,
+      });
+    } catch (e) {
+      console.error("[scholarship-apply] confirmation email failed:", (e as Error).message);
+    }
+
+    return jsonResponse({ ok: true });
+  } catch (error) {
+    console.error("[scholarship-apply]", error);
+    return jsonResponse({ error: "Submission failed. Please try again." }, 500);
   }
 }
 
@@ -1274,13 +1449,10 @@ async function handleAvatarUpload(request: Request): Promise<Response> {
     });
   } catch (error: any) {
     console.error("Avatar upload error:", error.message, error.stack);
-    return new Response(
-      JSON.stringify({ error: error.message || "Upload failed", details: error.stack }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ error: "Upload failed. Please try again." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
 
@@ -1349,13 +1521,10 @@ async function handleProjectUpload(request: Request): Promise<Response> {
     });
   } catch (error: any) {
     console.error("Project upload error:", error.message, error.stack);
-    return new Response(
-      JSON.stringify({ error: error.message || "Upload failed", details: error.stack }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ error: "Upload failed. Please try again." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
 
@@ -1442,13 +1611,10 @@ async function handleProjectSubmit(request: Request): Promise<Response> {
     });
   } catch (error: any) {
     console.error("Project submit error:", error.message, error.stack);
-    return new Response(
-      JSON.stringify({ error: error.message || "Submit failed", details: error.stack }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ error: "Submit failed. Please try again." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
 
@@ -1748,99 +1914,141 @@ function getCacheHeader(pathname: string): string | null {
   return null;
 }
 
+// Inline scripts are needed for SSR hydration data and the theme script, so script-src
+// allows them; the policy still blocks third-party scripts, framing, and sending data
+// anywhere except this site and Supabase.
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com data:",
+  "img-src 'self' data: blob: https:",
+  "connect-src 'self' https://*.supabase.co",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "object-src 'none'",
+].join("; ");
+
+const SECURITY_HEADERS: Record<string, string> = {
+  "Content-Security-Policy": CONTENT_SECURITY_POLICY,
+  "X-Frame-Options": "DENY",
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+};
+
+function withSecurityHeaders(response: Response): Response {
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) headers.set(name, value);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
-    const url = new URL(request.url);
-
-    // Intercept direct API routes before TanStack Start handles them
-    if (url.pathname === "/api/auth/register" && request.method === "POST") {
-      return handleAuthRegister(request);
-    }
-    if (url.pathname === "/api/auth/login" && request.method === "POST") {
-      return handleAuthLogin(request);
-    }
-    if (url.pathname === "/api/auth/logout" && request.method === "POST") {
-      return handleAuthLogout(request);
-    }
-    if (url.pathname === "/api/auth/profile" && request.method === "POST") {
-      return handleProfileUpdate(request);
-    }
-    if (url.pathname === "/api/auth/profile" && request.method === "GET") {
-      return handleProfileFetch(request);
-    }
-    if (url.pathname === "/api/auth/avatar" && request.method === "POST") {
-      return handleAvatarUpload(request);
-    }
-    if (url.pathname === "/api/auth/verify-email" && request.method === "POST") {
-      return handleVerifyEmail(request);
-    }
-    if (url.pathname === "/api/auth/resend-verification" && request.method === "POST") {
-      return handleResendVerification(request);
-    }
-    if (url.pathname === "/api/auth/forgot-password" && request.method === "POST") {
-      return handleForgotPassword(request);
-    }
-    if (url.pathname === "/api/auth/reset-password" && request.method === "POST") {
-      return handleResetPassword(request);
-    }
-    if (url.pathname === "/api/whatsapp/webhook" && request.method === "POST") {
-      return handleWhatsAppWebhook(request);
-    }
-    if (url.pathname === "/api/whatsapp/stats" && request.method === "GET") {
-      return handleWhatsAppStats(request);
-    }
-    if (url.pathname === "/api/supabase/community-log" && request.method === "POST") {
-      return handleCommunityLog(request);
-    }
-    if (url.pathname === "/api/projects/upload" && request.method === "POST") {
-      return handleProjectUpload(request);
-    }
-    if (url.pathname === "/api/projects/submit" && request.method === "POST") {
-      return handleProjectSubmit(request);
-    }
-    if (url.pathname.startsWith("/api/supabase/")) {
-      return handleSupabaseApi(request, url.pathname);
-    }
-    if (url.pathname === "/api/awards" && request.method === "POST") {
-      return handleAwards(request);
-    }
-    if (url.pathname === "/api/events/attend" && request.method === "POST") {
-      return handleEventAttend(request);
-    }
-    if (url.pathname === "/api/challenges/vote" && request.method === "POST") {
-      return handleChallengeVote(request);
-    }
-    if (url.pathname === "/api/devlog" && request.method === "POST") {
-      return handleDevlogCreate(request);
-    }
-    if (url.pathname === "/api/intake/submit" && request.method === "POST") {
-      return handleIntakeSubmit(request);
-    }
-
-    try {
-      const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      let final = await normalizeCatastrophicSsrResponse(response);
-      if (request.method === "GET" && final.status >= 200 && final.status < 400) {
-        const cacheHeader = getCacheHeader(url.pathname);
-        if (cacheHeader) {
-          final = new Response(final.body, {
-            status: final.status,
-            statusText: final.statusText,
-            headers: {
-              ...Object.fromEntries(final.headers.entries()),
-              "Cache-Control": cacheHeader,
-            },
-          });
-        }
-      }
-      return final;
-    } catch (error) {
-      console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
-    }
+    return withSecurityHeaders(await route(request, env, ctx));
   },
 };
+
+async function route(request: Request, env: unknown, ctx: unknown): Promise<Response> {
+  const url = new URL(request.url);
+
+  // Intercept direct API routes before TanStack Start handles them
+  if (url.pathname === "/api/auth/register" && request.method === "POST") {
+    return handleAuthRegister(request);
+  }
+  if (url.pathname === "/api/auth/login" && request.method === "POST") {
+    return handleAuthLogin(request);
+  }
+  if (url.pathname === "/api/auth/logout" && request.method === "POST") {
+    return handleAuthLogout(request);
+  }
+  if (url.pathname === "/api/auth/profile" && request.method === "POST") {
+    return handleProfileUpdate(request);
+  }
+  if (url.pathname === "/api/auth/profile" && request.method === "GET") {
+    return handleProfileFetch(request);
+  }
+  if (url.pathname === "/api/auth/avatar" && request.method === "POST") {
+    return handleAvatarUpload(request);
+  }
+  if (url.pathname === "/api/auth/verify-email" && request.method === "POST") {
+    return handleVerifyEmail(request);
+  }
+  if (url.pathname === "/api/auth/resend-verification" && request.method === "POST") {
+    return handleResendVerification(request);
+  }
+  if (url.pathname === "/api/auth/forgot-password" && request.method === "POST") {
+    return handleForgotPassword(request);
+  }
+  if (url.pathname === "/api/auth/reset-password" && request.method === "POST") {
+    return handleResetPassword(request);
+  }
+  if (url.pathname === "/api/scholarship/apply" && request.method === "POST") {
+    return handleScholarshipApply(request);
+  }
+  if (url.pathname === "/api/whatsapp/webhook" && request.method === "POST") {
+    return handleWhatsAppWebhook(request);
+  }
+  if (url.pathname === "/api/whatsapp/stats" && request.method === "GET") {
+    return handleWhatsAppStats(request);
+  }
+  if (url.pathname === "/api/supabase/community-log" && request.method === "POST") {
+    return handleCommunityLog(request);
+  }
+  if (url.pathname === "/api/projects/upload" && request.method === "POST") {
+    return handleProjectUpload(request);
+  }
+  if (url.pathname === "/api/projects/submit" && request.method === "POST") {
+    return handleProjectSubmit(request);
+  }
+  if (url.pathname.startsWith("/api/supabase/")) {
+    return handleSupabaseApi(request, url.pathname);
+  }
+  if (url.pathname === "/api/awards" && request.method === "POST") {
+    return handleAwards(request);
+  }
+  if (url.pathname === "/api/events/attend" && request.method === "POST") {
+    return handleEventAttend(request);
+  }
+  if (url.pathname === "/api/challenges/vote" && request.method === "POST") {
+    return handleChallengeVote(request);
+  }
+  if (url.pathname === "/api/devlog" && request.method === "POST") {
+    return handleDevlogCreate(request);
+  }
+  if (url.pathname === "/api/intake/submit" && request.method === "POST") {
+    return handleIntakeSubmit(request);
+  }
+
+  try {
+    const handler = await getServerEntry();
+    const response = await handler.fetch(request, env, ctx);
+    let final = await normalizeCatastrophicSsrResponse(response);
+    if (request.method === "GET" && final.status >= 200 && final.status < 400) {
+      const cacheHeader = getCacheHeader(url.pathname);
+      if (cacheHeader) {
+        final = new Response(final.body, {
+          status: final.status,
+          statusText: final.statusText,
+          headers: {
+            ...Object.fromEntries(final.headers.entries()),
+            "Cache-Control": cacheHeader,
+          },
+        });
+      }
+    }
+    return final;
+  } catch (error) {
+    console.error(error);
+    return new Response(renderErrorPage(), {
+      status: 500,
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+  }
+}

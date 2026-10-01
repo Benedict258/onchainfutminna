@@ -36,6 +36,12 @@ export async function register(data: {
   githubLink?: string;
   portfolioLink?: string;
 }) {
+  // Plain strings only: a {__op} object would be read as a filter operator.
+  if (typeof data.email !== "string" || typeof data.password !== "string") {
+    throw new Error("Invalid registration details");
+  }
+  data.email = data.email.trim();
+  if (typeof data.username === "string") data.username = data.username.trim();
   if (data.password !== data.confirmPassword) {
     throw new Error("Passwords do not match");
   }
@@ -197,7 +203,13 @@ export async function register(data: {
   };
 }
 
-export async function login(data: { identifier: string; password: string }) {
+export async function login(input: { identifier: string; password: string }) {
+  // Plain strings only: a {__op} object would be read as a filter operator.
+  const data = {
+    identifier: typeof input.identifier === "string" ? input.identifier.trim() : "",
+    password: typeof input.password === "string" ? input.password : "",
+  };
+  if (!data.identifier || !data.password) throw new Error("Invalid email or password");
   const isEmail = data.identifier.includes("@");
 
   let userData;
