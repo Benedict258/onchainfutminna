@@ -1,3 +1,8 @@
+/** Parses Postgres-style "2026-10-10 23:59:00+01" (JS needs "…T23:59:00+01:00"). */
+function parseTimestamp(value: string) {
+  return new Date(value.replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"));
+}
+
 export const scholarshipConfig = {
   route: "/scholarships/dev3pack-rust",
   adminRoute: "/admin/scholarships/dev3pack-rust",
@@ -8,7 +13,7 @@ export const scholarshipConfig = {
   languages: "English",
   applicationClose: "2026-10-10 23:59:00+01",
   resultsAnnounce: "2026-10-16",
-  contactEmail: "onchainfutminna@gmail.com",
+  contactEmail: "blockchainclubfutminna@gmail.com",
   hero: {
     headline: "Learn Rust. Build on Solana. Fully sponsored.",
     subheadline:
@@ -20,3 +25,17 @@ export const scholarshipConfig = {
     "Your work becomes portfolio material for hackathons, grants, and internships",
   ],
 };
+
+/** When applications close, as a Date. */
+export const scholarshipClosesAt = parseTimestamp(scholarshipConfig.applicationClose);
+
+/** e.g. "10 October 2026 at 11:59 pm", in West Africa Time (the config's offset). */
+export const scholarshipClosesLabel = scholarshipClosesAt.toLocaleString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+  timeZone: "Africa/Lagos",
+});

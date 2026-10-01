@@ -1089,6 +1089,41 @@ async function handleResetPassword(request: Request): Promise<Response> {
   }
 }
 
+/** Whether the signed-in user has already applied (matched on their account email). */
+async function handleScholarshipStatus(request: Request): Promise<Response> {
+  try {
+    const { verifyAccessToken } = await import("./lib/auth");
+    const { query } = await import("./lib/supabase");
+    const authHeader = request.headers.get("Authorization");
+    const caller = authHeader?.startsWith("Bearer ")
+      ? verifyAccessToken(authHeader.slice(7))
+      : null;
+    if (!caller) return jsonResponse({ applied: false });
+
+    const { data: user } = await query("users", {
+      select: "email",
+      filters: { id: caller.userId },
+      single: true,
+    });
+    if (!user?.email) return jsonResponse({ applied: false });
+
+    // Applications are stored with lowercased emails.
+    const { data: application } = await query("rust_scholarship_applications", {
+      select: "created_at",
+      filters: { email: String(user.email).trim().toLowerCase() },
+      single: true,
+    });
+    return jsonResponse({
+      applied: !!application,
+      email: user.email,
+      submittedAt: application?.created_at ?? null,
+    });
+  } catch (error) {
+    console.error("[scholarship-status]", error);
+    return jsonResponse({ applied: false });
+  }
+}
+
 async function handleScholarshipApply(request: Request): Promise<Response> {
   try {
     const { z } = await import("zod");
@@ -1994,6 +2029,9 @@ async function route(request: Request, env: unknown, ctx: unknown): Promise<Resp
   }
   if (url.pathname === "/api/auth/reset-password" && request.method === "POST") {
     return handleResetPassword(request);
+  }
+  if (url.pathname === "/api/scholarship/status" && request.method === "GET") {
+    return handleScholarshipStatus(request);
   }
   if (url.pathname === "/api/scholarship/apply" && request.method === "POST") {
     return handleScholarshipApply(request);

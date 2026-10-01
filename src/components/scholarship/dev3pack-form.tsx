@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { GlobalLoader } from "@/components/ui/GlobalLoader";
-import { scholarshipConfig } from "@/lib/config/scholarship";
+import { scholarshipClosesLabel, scholarshipConfig } from "@/lib/config/scholarship";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/stores/auth-store";
 import { toast } from "sonner";
 
 const TOTAL_STEPS = 3;
@@ -146,6 +147,24 @@ export function Dev3packScholarshipForm() {
   const [form, setForm] = useState<any>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const authHydrated = useAuthStore((s) => s.isHydrated);
+
+  // Signed-in members who already applied see their confirmation instead of the form.
+  const { data: status, isLoading: statusLoading } = useQuery({
+    queryKey: ["scholarship-status", accessToken],
+    queryFn: async (): Promise<{
+      applied: boolean;
+      email?: string;
+      submittedAt?: string | null;
+    }> => {
+      const res = await fetch("/api/scholarship/status", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      return res.ok ? res.json() : { applied: false };
+    },
+    enabled: !!accessToken,
+  });
 
   // A react-query query, so the site-wide page loader waits for it.
   const { data: applicationsOpen } = useQuery({
@@ -193,7 +212,8 @@ export function Dev3packScholarshipForm() {
       </div>
     );
   }
-  if (applicationsOpen === undefined) return <GlobalLoader inline />;
+  if (applicationsOpen === undefined || !authHydrated || (accessToken && statusLoading))
+    return <GlobalLoader inline />;
 
   const update = (k: string, v: any) => {
     setForm((f: any) => ({ ...f, [k]: v }));
@@ -205,7 +225,12 @@ export function Dev3packScholarshipForm() {
       });
   };
 
-  if (submitted) {
+  const resultsDate = new Date(`${scholarshipConfig.resultsAnnounce}T12:00:00Z`).toLocaleDateString(
+    "en-GB",
+    { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" },
+  );
+
+  if (submitted || status?.applied) {
     return (
       <div
         id="scholarship-form"
@@ -213,8 +238,14 @@ export function Dev3packScholarshipForm() {
       >
         <h2 className="text-2xl font-semibold">Application received</h2>
         <p className="text-muted-foreground">
-          Thanks for applying to the Dev3pack Rust Scholarship. We have emailed you a confirmation.
-          Results will be announced on {scholarshipConfig.resultsAnnounce}.
+          {submitted
+            ? "Thanks for applying to the Dev3pack Rust Scholarship. We have emailed you a confirmation."
+            : `You have already applied${status?.email ? ` with ${status.email}` : ""}${
+                status?.submittedAt
+                  ? ` on ${new Date(status.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "long" })}`
+                  : ""
+              }. Only one application per person.`}{" "}
+          Results will be announced on {resultsDate}.
         </p>
         <p className="text-sm text-muted-foreground">
           Questions? Email{" "}
@@ -329,9 +360,7 @@ export function Dev3packScholarshipForm() {
     <div id="scholarship-form" className="rounded-xl border p-6 space-y-6 max-w-3xl mx-auto">
       <div className="space-y-1">
         <h2 className="text-2xl font-semibold">Apply for a seat</h2>
-        <p className="text-sm text-muted-foreground">
-          Applications close {scholarshipConfig.applicationClose}
-        </p>
+        <p className="text-sm text-muted-foreground">Applications close {scholarshipClosesLabel}</p>
         <p className="text-xs text-muted-foreground">
           Step {step} of {TOTAL_STEPS} · Fields marked <span className="text-red-500">*</span> are
           required

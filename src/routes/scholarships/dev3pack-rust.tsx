@@ -120,7 +120,18 @@ function Page() {
             least two reviewers on commitment, motivation, evidence of effort, community
             involvement, potential, and give-back plan. Top scorers may be invited to a short
             conversation. 15 scholars and a waitlist are announced on{" "}
-            <strong>{scholarshipConfig.resultsAnnounce}</strong>.
+            <strong>
+              {new Date(`${scholarshipConfig.resultsAnnounce}T12:00:00Z`).toLocaleDateString(
+                "en-GB",
+                {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  timeZone: "UTC",
+                },
+              )}
+            </strong>
+            .
           </p>
         </div>
       </section>

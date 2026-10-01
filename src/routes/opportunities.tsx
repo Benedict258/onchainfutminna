@@ -142,12 +142,12 @@ export const Route = createFileRoute("/opportunities")({
 
 function OpportunitiesPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  if (!isAuthenticated) return <LoginPrompt />;
-
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
 
   const fetchOpportunities = useServerFn(getOpportunities);
 
+  // Hooks must run on every render, so the sign-in check comes after them; the query
+  // simply waits until the user is signed in.
   const { data, isLoading } = useQuery({
     queryKey: ["opportunities", typeFilter],
     queryFn: () =>
@@ -158,7 +158,10 @@ function OpportunitiesPage() {
           type: typeFilter === "all" ? undefined : typeFilter,
         },
       }),
+    enabled: isAuthenticated,
   });
+
+  if (!isAuthenticated) return <LoginPrompt />;
 
   const opportunities = data?.opportunities ?? [];
 
@@ -288,7 +291,12 @@ function OpportunitiesPage() {
                           </span>
                         )}
                       </div>
-                      {opp.apply_url ? (
+                      {opp.apply_url?.startsWith("/") ? (
+                        // Pages on this site open in the same tab.
+                        <Button asChild size="sm" className="text-xs">
+                          <a href={opp.apply_url}>Apply</a>
+                        </Button>
+                      ) : opp.apply_url ? (
                         <Button asChild variant="outline" size="sm" className="text-xs">
                           <a href={opp.apply_url} target="_blank" rel="noopener noreferrer">
                             Apply <ExternalLink className="ml-1 h-3 w-3" />

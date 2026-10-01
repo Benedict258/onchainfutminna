@@ -23,6 +23,7 @@ import { getProjects } from "@/lib/api/projects.server";
 import { getBlogPosts } from "@/lib/api/blog.server";
 import { getEvents } from "@/lib/api/events.server";
 import { PageShell } from "@/components/layout/page-shell";
+import { ScholarshipHighlight } from "@/components/scholarship/highlight";
 
 const heroImages = [
   { src: slide1, alt: "Blockchain Club FUTMinna" },
@@ -248,6 +249,9 @@ function Home() {
             <br />
             DEPLOYMENTS
           </h2>
+          <div className="mt-8">
+            <ScholarshipHighlight />
+          </div>
           {events.length > 0 && (
             <div className="mt-8 grid gap-5 md:grid-cols-3">
               {events.slice(0, 3).map((event: any) => (

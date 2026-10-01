@@ -168,9 +168,10 @@ type ResourceFilter = "all" | "ARTICLE" | "VIDEO" | "TOOL";
 
 function MarketingPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  if (!isAuthenticated) return <LoginPrompt />;
 
   const [resourceFilter, setResourceFilter] = useState<ResourceFilter>("all");
+  // After the hooks: they must run on every render.
+  if (!isAuthenticated) return <LoginPrompt />;
 
   const filteredResources =
     resourceFilter === "all" ? RESOURCES : RESOURCES.filter((r) => r.type === resourceFilter);

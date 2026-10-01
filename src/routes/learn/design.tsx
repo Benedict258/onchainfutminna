@@ -183,10 +183,11 @@ export const Route = createFileRoute("/learn/design")({
 
 function DesignLearnPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  if (!isAuthenticated) return <LoginPrompt />;
 
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
   const [resourceType, setResourceType] = useState<string>("all");
+  // After the hooks: they must run on every render.
+  if (!isAuthenticated) return <LoginPrompt />;
 
   const filteredTracks =
     categoryFilter === "all"

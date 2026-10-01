@@ -180,9 +180,10 @@ export const Route = createFileRoute("/learn/content-creation")({
 
 function ContentCreationPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  if (!isAuthenticated) return <LoginPrompt />;
 
   const [resourceType, setResourceType] = useState<string>("all");
+  // After the hooks: they must run on every render.
+  if (!isAuthenticated) return <LoginPrompt />;
 
   const filteredResources =
     resourceType === "all" ? RESOURCES : RESOURCES.filter((r) => r.type === resourceType);
