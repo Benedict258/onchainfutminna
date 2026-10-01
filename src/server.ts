@@ -42,10 +42,11 @@ async function handleAuthRegister(request: Request): Promise<Response> {
   try {
     const { checkRateLimit, getClientIp, getRateLimitHeaders } = await import("./lib/rate-limit");
     const ip = getClientIp(request);
+    // Generous per IP: a whole campus can share one address on Wi-Fi.
     const rateLimitKey = `register:${ip}`;
-    const headers = getRateLimitHeaders(rateLimitKey, 5, 15 * 60 * 1000);
+    const headers = getRateLimitHeaders(rateLimitKey, 20, 15 * 60 * 1000);
 
-    if (headers["X-RateLimit-Remaining"] === "0") {
+    if (headers["Retry-After"]) {
       return new Response(
         JSON.stringify({ error: "Too many registration attempts. Please try again later." }),
         {
@@ -74,10 +75,11 @@ async function handleAuthLogin(request: Request): Promise<Response> {
   try {
     const { checkRateLimit, getClientIp, getRateLimitHeaders } = await import("./lib/rate-limit");
     const ip = getClientIp(request);
+    // Generous per IP (shared campus Wi-Fi); the per-account limit below stops guessing.
     const rateLimitKey = `login:${ip}`;
-    const headers = getRateLimitHeaders(rateLimitKey, 10, 15 * 60 * 1000);
+    const headers = getRateLimitHeaders(rateLimitKey, 60, 15 * 60 * 1000);
 
-    if (headers["X-RateLimit-Remaining"] === "0") {
+    if (headers["Retry-After"]) {
       return new Response(
         JSON.stringify({ error: "Too many login attempts. Please try again later." }),
         {
@@ -89,6 +91,10 @@ async function handleAuthLogin(request: Request): Promise<Response> {
 
     const { login } = await import("./lib/api/auth-direct");
     const body = await request.json();
+    const identifier =
+      typeof body?.identifier === "string" ? body.identifier.trim().toLowerCase() : "";
+    const perAccount = await enforceLimits([[`login-account:${identifier}`, 10, 15 * MINUTE]]);
+    if (perAccount) return perAccount;
     const result = await login(body);
     return new Response(JSON.stringify(result), {
       status: 200,
@@ -894,7 +900,7 @@ async function handleVerifyEmail(request: Request): Promise<Response> {
 
     // 5 guesses per account per 15 minutes makes the 900,000-code space impractical to guess.
     const limited = await enforceLimits([
-      [`verify-ip:${getClientIp(request)}`, 20, 15 * MINUTE],
+      [`verify-ip:${getClientIp(request)}`, 60, 15 * MINUTE],
       [`verify-user:${userId}`, 5, 15 * MINUTE],
     ]);
     if (limited) return limited;
@@ -951,7 +957,7 @@ async function handleResendVerification(request: Request): Promise<Response> {
     }
 
     const limited = await enforceLimits([
-      [`resend-ip:${getClientIp(request)}`, 5, 15 * MINUTE],
+      [`resend-ip:${getClientIp(request)}`, 15, 15 * MINUTE],
       [`resend-target:${userId || emailInput}`, 3, 15 * MINUTE],
     ]);
     if (limited) return limited;
@@ -996,7 +1002,7 @@ async function handleForgotPassword(request: Request): Promise<Response> {
     if (!email) return jsonResponse({ error: "Email required" }, 400);
 
     const limited = await enforceLimits([
-      [`forgot-ip:${getClientIp(request)}`, 5, 15 * MINUTE],
+      [`forgot-ip:${getClientIp(request)}`, 15, 15 * MINUTE],
       [`forgot-email:${email}`, 3, 60 * MINUTE],
     ]);
     if (limited) return limited;
@@ -1091,7 +1097,7 @@ async function handleScholarshipApply(request: Request): Promise<Response> {
     const { scholarshipConfig } = await import("./lib/config/scholarship");
 
     const limited = await enforceLimits([
-      [`scholarship-ip:${getClientIp(request)}`, 5, 60 * MINUTE],
+      [`scholarship-ip:${getClientIp(request)}`, 30, 60 * MINUTE],
     ]);
     if (limited) return limited;
 
