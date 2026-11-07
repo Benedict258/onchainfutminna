@@ -73,6 +73,11 @@ const CATEGORY_COLORS: Record<string, string> = {
   design: "bg-rose-500/10 text-rose-400 border-rose-500/20",
 };
 
+function getModuleQuizId(module: any): string | null {
+  const quiz = Array.isArray(module.quizzes) ? module.quizzes[0] : module.quizzes;
+  return typeof quiz?.id === "string" ? quiz.id : null;
+}
+
 function ModuleQuiz({ quizId }: { quizId: string }) {
   const { data: quiz, isLoading } = useQuery({
     queryKey: ["quiz", quizId],
@@ -97,10 +102,6 @@ function ModuleQuiz({ quizId }: { quizId: string }) {
       return;
     }
 
-    function getModuleQuizId(module: any): string | null {
-      const quiz = Array.isArray(module.quizzes) ? module.quizzes[0] : module.quizzes;
-      return typeof quiz?.id === "string" ? quiz.id : null;
-    }
     setSubmitting(true);
     try {
       const next = await apiSubmitQuiz(
