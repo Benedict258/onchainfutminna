@@ -558,6 +558,12 @@ export const getTrackBySlug = createServerFn({ method: "GET" })
       phases[p].push(mod);
     }
 
+    if (slugify(track.title) === "dev3pack-solana-rust-bootcamp") {
+      const phaseZero = phases[0];
+      phases[0] = phases[1];
+      phases[1] = phaseZero;
+    }
+
     return {
       id: track.id,
       title: track.title,

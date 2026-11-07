@@ -1965,6 +1965,7 @@ const CONTENT_SECURITY_POLICY = [
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob: https:",
   "connect-src 'self' https://*.supabase.co",
+  "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://docs.google.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

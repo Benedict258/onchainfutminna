@@ -96,6 +96,11 @@ function ModuleQuiz({ quizId }: { quizId: string }) {
       toast.error("Answer every question before submitting.");
       return;
     }
+
+    function getModuleQuizId(module: any): string | null {
+      const quiz = Array.isArray(module.quizzes) ? module.quizzes[0] : module.quizzes;
+      return typeof quiz?.id === "string" ? quiz.id : null;
+    }
     setSubmitting(true);
     try {
       const next = await apiSubmitQuiz(
@@ -481,6 +486,7 @@ function TrackDetailPage() {
                   {currentPhaseModules.map((mod: any) => {
                     const isCompleted = completedModuleIds.includes(mod.id);
                     const isExpanded = expandedModuleId === mod.id;
+                    const quizId = getModuleQuizId(mod);
 
                     return (
                       <Card
@@ -501,6 +507,11 @@ function TrackDetailPage() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <h3 className="text-sm font-semibold text-foreground">{mod.title}</h3>
+                              {requiresAuth && quizId && (
+                                <Badge variant="outline" className="text-[10px]">
+                                  Quiz
+                                </Badge>
+                              )}
                               {isCompleted && (
                                 <Badge
                                   variant="outline"
@@ -535,9 +546,7 @@ function TrackDetailPage() {
                           <div className="px-5 pb-5 border-t border-border">
                             <div className="pt-5">
                               <MarkdownContent content={mod.content || mod.description || ""} />
-                              {requiresAuth && mod.quizzes?.[0]?.id && (
-                                <ModuleQuiz quizId={mod.quizzes[0].id} />
-                              )}
+                              {requiresAuth && quizId && <ModuleQuiz quizId={quizId} />}
 
                               <div className="mt-6 pt-5 border-t border-border">
                                 {!isAuthenticated ? (

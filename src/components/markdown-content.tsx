@@ -19,7 +19,7 @@ function parseMarkdown(content: string) {
   let i = 0;
 
   while (i < lines.length) {
-    const line = lines[i];
+    const line = lines[i].trim();
 
     const youtubeMatch = line.match(
       /^\{\{youtube:(https:\/\/(?:www\.)?youtu\.be\/([^}?]+)|https:\/\/www\.youtube\.com\/watch\?v=([^&}]+))\}\}$/,
@@ -33,7 +33,9 @@ function parseMarkdown(content: string) {
       }
     }
 
-    const slidesMatch = line.match(/^\{\{slides:(https:\/\/docs\.google\.com\/presentation\/d\/[^}]+)\}\}$/);
+    const slidesMatch = line.match(
+      /^\{\{slides:(https:\/\/docs\.google\.com\/presentation\/d\/[^}]+)\}\}$/,
+    );
     if (slidesMatch) {
       const embedUrl = slidesMatch[1].replace(/\/(edit|present)(?:\?.*)?$/, "/embed");
       elements.push({ type: "slides", src: embedUrl });
