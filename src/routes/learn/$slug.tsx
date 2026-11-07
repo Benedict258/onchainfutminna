@@ -11,11 +11,13 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/comp
 import { MarkdownContent } from "@/components/markdown-content";
 import { LoginPrompt } from "@/components/login-prompt";
 import { getTrackBySlug } from "@/lib/api/learn.server";
-import { apiQueryAll, apiQuerySingle, apiCompleteModule, apiSubmitQuiz } from "@/lib/api-client";
+import { apiQueryAll, apiQuerySingle, apiCompleteModule } from "@/lib/api-client";
+import { getModuleQuizId, ModuleQuiz } from "@/components/learning/module-quiz";
 import { useAuthStore } from "@/stores/auth-store";
 import { toast } from "sonner";
 import {
   ArrowLeft,
+  ArrowRight,
   BookOpen,
   Lock,
   CheckCircle2,
@@ -73,116 +75,6 @@ const CATEGORY_COLORS: Record<string, string> = {
   design: "bg-rose-500/10 text-rose-400 border-rose-500/20",
 };
 
-function getModuleQuizId(module: any): string | null {
-  const quiz = Array.isArray(module.quizzes) ? module.quizzes[0] : module.quizzes;
-  return typeof quiz?.id === "string" ? quiz.id : null;
-}
-
-function ModuleQuiz({ quizId }: { quizId: string }) {
-  const { data: quiz, isLoading } = useQuery({
-    queryKey: ["quiz", quizId],
-    queryFn: () =>
-      apiQuerySingle("quizzes", {
-        filters: { id: quizId },
-        select: "id,pass_mark,quiz_questions(id,question_text,order,quiz_options(id,option_text))",
-      }),
-  });
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [result, setResult] = useState<any>(null);
-  const [showAnswers, setShowAnswers] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-
-  if (isLoading) return <p className="mt-6 text-sm text-muted-foreground">Loading quiz...</p>;
-  if (!quiz?.quiz_questions?.length) return null;
-
-  const questions = [...quiz.quiz_questions].sort((a: any, b: any) => a.order - b.order);
-  async function submit() {
-    if (Object.keys(answers).length !== questions.length) {
-      toast.error("Answer every question before submitting.");
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const next = await apiSubmitQuiz(
-        quizId,
-        Object.entries(answers).map(([questionId, optionId]) => ({ questionId, optionId })),
-      );
-      setResult(next);
-      setShowAnswers(false);
-      setAnswers({});
-      toast.success(
-        next.passed
-          ? `Quiz passed! +${next.attempt?.points_awarded || 0} points`
-          : `Score: ${next.score}%. Attempt ${next.attemptNumber} of 3.`,
-      );
-    } catch (error: any) {
-      if (error.exhausted) setResult(error);
-      else toast.error(error.message || "Quiz submission failed");
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  return (
-    <div className="mt-8 rounded-lg border border-border bg-surface-low p-5">
-      <div className="flex items-center justify-between gap-3">
-        <h3 className="text-headline-sm">Module quiz</h3>
-        <Badge variant="outline">Pass: {quiz.pass_mark}% · 3 attempts</Badge>
-      </div>
-      {result?.passed && (
-        <p className="mt-3 text-sm text-emerald-500">Passed with {result.score}%.</p>
-      )}
-      {!result?.passed && !result?.exhausted && (
-        <div className="mt-5 space-y-5">
-          {questions.map((question: any, index: number) => (
-            <fieldset key={question.id} className="space-y-2">
-              <legend className="text-sm font-medium">
-                {index + 1}. {question.question_text}
-              </legend>
-              {question.quiz_options.map((option: any) => (
-                <label key={option.id} className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <input
-                    type="radio"
-                    name={question.id}
-                    checked={answers[question.id] === option.id}
-                    onChange={() => setAnswers((current) => ({ ...current, [question.id]: option.id }))}
-                  />
-                  {option.option_text}
-                </label>
-              ))}
-            </fieldset>
-          ))}
-          <Button onClick={submit} disabled={submitting}>
-            {submitting ? "Submitting..." : "Submit quiz"}
-          </Button>
-        </div>
-      )}
-      {result?.exhausted && (
-        <div className="mt-5 space-y-4">
-          <p className="text-sm text-amber-600">
-            You have used all three attempts. You can now reveal the correct answers and explanations.
-          </p>
-          <Button variant="outline" onClick={() => setShowAnswers(true)} disabled={showAnswers}>
-            {showAnswers ? "Answers shown" : "Show answers"}
-          </Button>
-          {showAnswers && result.questions?.map((question: any, index: number) => (
-            <div key={question.id} className="border-t border-border pt-3 text-sm">
-              <p className="font-medium">{index + 1}. {question.question_text}</p>
-              <p className="mt-1 text-emerald-500">
-                Answer: {question.quiz_options?.find((option: any) => option.is_correct)?.option_text}
-              </p>
-              {question.explanation && (
-                <p className="mt-1 text-muted-foreground">{question.explanation}</p>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 export const Route = createFileRoute("/learn/$slug")({
   head: ({ params }) => ({
     meta: [
@@ -215,6 +107,61 @@ function TrackDetailSkeleton() {
         {Array.from({ length: 3 }).map((_, i) => (
           <Skeleton key={i} className="h-20 rounded-lg" />
         ))}
+      </div>
+    </div>
+  );
+}
+
+function Dev3PackOverview({
+  track,
+  completedCount,
+  totalModules,
+  progressPercent,
+}: {
+  track: any;
+  completedCount: number;
+  totalModules: number;
+  progressPercent: number;
+}) {
+  const sections = [
+    ["setup", "Setup", "Install Rust, Solana CLI, and Anchor on your machine."],
+    ["homework", "Homework", "Fork the exercises, solve them, and submit your pull request."],
+    ["week-1", "Week 1", "Watch Rust and blockchain sessions with the matching slide decks."],
+    ["week-2", "Week 2", "Continue with the next bootcamp sessions."],
+    ["week-3", "Week 3", "Build confidence through guided practice and review."],
+    ["resources", "Resources", "Revisit slides, videos, guides, and the Rust Book."],
+  ];
+  return (
+    <div className="bg-background">
+      <div className="mx-auto w-full max-w-screen-2xl px-4 py-8 sm:px-6 lg:px-10 lg:py-14">
+        <Link to="/learn" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Learn
+        </Link>
+        <div className="mt-8 max-w-4xl">
+          <Badge variant="outline" className="border-orange-500/20 bg-orange-500/10 text-orange-400">Solana / Rust</Badge>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">{track.title}</h1>
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">{track.description}</p>
+        </div>
+        <div className="mt-8 flex max-w-xl items-center gap-4">
+          <Progress value={progressPercent} className="h-2 flex-1" />
+          <span className="text-sm text-muted-foreground">{completedCount}/{totalModules} complete</span>
+        </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {sections.map(([key, title, description], index) => (
+            <Link
+              key={key}
+              to={`/learn/${track.slug}/${key}` as any}
+              className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/50 hover:bg-surface-low sm:p-6"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-primary">0{index + 1}</span>
+                <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+              </div>
+              <h2 className="mt-7 text-xl font-semibold">{title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -358,6 +305,17 @@ function TrackDetailPage() {
     }
   }
 
+  if (requiresAuth) {
+    return (
+      <Dev3PackOverview
+        track={track}
+        completedCount={completedCount}
+        totalModules={totalModules}
+        progressPercent={progressPercent}
+      />
+    );
+  }
+
   return (
     <TooltipProvider>
       <div className="bg-background">
@@ -384,6 +342,7 @@ function TrackDetailPage() {
                       ? CATEGORY_COLORS[track.category]
                       : DIFFICULTY_COLORS[track.difficulty] || ""
                   }
+
                 >
                   {track.category || track.difficulty}
                 </Badge>

@@ -72,6 +72,7 @@ import { Route as SquadsSquadIdRouteImport } from './routes/squads/$squadId'
 import { Route as AdminCohortsIdRouteImport } from './routes/admin/cohorts/$id'
 import { Route as AdminScholarshipsDev3packRustRouteImport } from './routes/admin/scholarships/dev3pack-rust'
 import { Route as AdminStudentsUserIdRouteImport } from './routes/admin/students/$userId'
+import { Route as LearnSlugSectionRouteImport } from './routes/learn/$slug/$section'
 import { Route as MembersMemberIdIndexRouteImport } from './routes/members/$memberId/index'
 import { Route as MembersMemberIdDevlogRouteImport } from './routes/members/$memberId/devlog'
 
@@ -393,6 +394,11 @@ const AdminStudentsUserIdRoute = AdminStudentsUserIdRouteImport.update({
   path: '/$userId',
   getParentRoute: () => AdminStudentsRoute,
 } as any)
+const LearnSlugSectionRoute = LearnSlugSectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => LearnSlugRoute,
+} as any)
 const MembersMemberIdIndexRoute = MembersMemberIdIndexRouteImport.update({
   id: '/members/$memberId/',
   path: '/members/$memberId/',
@@ -450,7 +456,7 @@ export interface FileRoutesByFullPath {
   '/events/$eventId': typeof EventsEventIdRoute
   '/events/request': typeof EventsRequestRoute
   '/hackathons/$teamId': typeof HackathonsTeamIdRoute
-  '/learn/$slug': typeof LearnSlugRoute
+  '/learn/$slug': typeof LearnSlugRouteWithChildren
   '/learn/community-management': typeof LearnCommunityManagementRoute
   '/learn/content-creation': typeof LearnContentCreationRoute
   '/learn/design': typeof LearnDesignRoute
@@ -468,6 +474,7 @@ export interface FileRoutesByFullPath {
   '/admin/cohorts/$id': typeof AdminCohortsIdRoute
   '/admin/scholarships/dev3pack-rust': typeof AdminScholarshipsDev3packRustRoute
   '/admin/students/$userId': typeof AdminStudentsUserIdRoute
+  '/learn/$slug/$section': typeof LearnSlugSectionRoute
   '/members/$memberId/devlog': typeof MembersMemberIdDevlogRoute
   '/members/$memberId/': typeof MembersMemberIdIndexRoute
 }
@@ -513,7 +520,7 @@ export interface FileRoutesByTo {
   '/events/$eventId': typeof EventsEventIdRoute
   '/events/request': typeof EventsRequestRoute
   '/hackathons/$teamId': typeof HackathonsTeamIdRoute
-  '/learn/$slug': typeof LearnSlugRoute
+  '/learn/$slug': typeof LearnSlugRouteWithChildren
   '/learn/community-management': typeof LearnCommunityManagementRoute
   '/learn/content-creation': typeof LearnContentCreationRoute
   '/learn/design': typeof LearnDesignRoute
@@ -531,6 +538,7 @@ export interface FileRoutesByTo {
   '/admin/cohorts/$id': typeof AdminCohortsIdRoute
   '/admin/scholarships/dev3pack-rust': typeof AdminScholarshipsDev3packRustRoute
   '/admin/students/$userId': typeof AdminStudentsUserIdRoute
+  '/learn/$slug/$section': typeof LearnSlugSectionRoute
   '/members/$memberId/devlog': typeof MembersMemberIdDevlogRoute
   '/members/$memberId': typeof MembersMemberIdIndexRoute
 }
@@ -581,7 +589,7 @@ export interface FileRoutesById {
   '/events/$eventId': typeof EventsEventIdRoute
   '/events/request': typeof EventsRequestRoute
   '/hackathons/$teamId': typeof HackathonsTeamIdRoute
-  '/learn/$slug': typeof LearnSlugRoute
+  '/learn/$slug': typeof LearnSlugRouteWithChildren
   '/learn/community-management': typeof LearnCommunityManagementRoute
   '/learn/content-creation': typeof LearnContentCreationRoute
   '/learn/design': typeof LearnDesignRoute
@@ -599,6 +607,7 @@ export interface FileRoutesById {
   '/admin/cohorts/$id': typeof AdminCohortsIdRoute
   '/admin/scholarships/dev3pack-rust': typeof AdminScholarshipsDev3packRustRoute
   '/admin/students/$userId': typeof AdminStudentsUserIdRoute
+  '/learn/$slug/$section': typeof LearnSlugSectionRoute
   '/members/$memberId/devlog': typeof MembersMemberIdDevlogRoute
   '/members/$memberId/': typeof MembersMemberIdIndexRoute
 }
@@ -668,6 +677,7 @@ export interface FileRouteTypes {
     | '/admin/cohorts/$id'
     | '/admin/scholarships/dev3pack-rust'
     | '/admin/students/$userId'
+    | '/learn/$slug/$section'
     | '/members/$memberId/devlog'
     | '/members/$memberId/'
   fileRoutesByTo: FileRoutesByTo
@@ -731,6 +741,7 @@ export interface FileRouteTypes {
     | '/admin/cohorts/$id'
     | '/admin/scholarships/dev3pack-rust'
     | '/admin/students/$userId'
+    | '/learn/$slug/$section'
     | '/members/$memberId/devlog'
     | '/members/$memberId'
   id:
@@ -798,6 +809,7 @@ export interface FileRouteTypes {
     | '/admin/cohorts/$id'
     | '/admin/scholarships/dev3pack-rust'
     | '/admin/students/$userId'
+    | '/learn/$slug/$section'
     | '/members/$memberId/devlog'
     | '/members/$memberId/'
   fileRoutesById: FileRoutesById
@@ -1271,6 +1283,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminStudentsUserIdRouteImport
       parentRoute: typeof AdminStudentsRoute
     }
+    '/learn/$slug/$section': {
+      id: '/learn/$slug/$section'
+      path: '/$section'
+      fullPath: '/learn/$slug/$section'
+      preLoaderRoute: typeof LearnSlugSectionRouteImport
+      parentRoute: typeof LearnSlugRoute
+    }
     '/members/$memberId/': {
       id: '/members/$memberId/'
       path: '/members/$memberId'
@@ -1421,8 +1440,20 @@ const HackathonsRouteWithChildren = HackathonsRoute._addFileChildren(
   HackathonsRouteChildren,
 )
 
+interface LearnSlugRouteChildren {
+  LearnSlugSectionRoute: typeof LearnSlugSectionRoute
+}
+
+const LearnSlugRouteChildren: LearnSlugRouteChildren = {
+  LearnSlugSectionRoute: LearnSlugSectionRoute,
+}
+
+const LearnSlugRouteWithChildren = LearnSlugRoute._addFileChildren(
+  LearnSlugRouteChildren,
+)
+
 interface LearnRouteChildren {
-  LearnSlugRoute: typeof LearnSlugRoute
+  LearnSlugRoute: typeof LearnSlugRouteWithChildren
   LearnCommunityManagementRoute: typeof LearnCommunityManagementRoute
   LearnContentCreationRoute: typeof LearnContentCreationRoute
   LearnDesignRoute: typeof LearnDesignRoute
@@ -1432,7 +1463,7 @@ interface LearnRouteChildren {
 }
 
 const LearnRouteChildren: LearnRouteChildren = {
-  LearnSlugRoute: LearnSlugRoute,
+  LearnSlugRoute: LearnSlugRouteWithChildren,
   LearnCommunityManagementRoute: LearnCommunityManagementRoute,
   LearnContentCreationRoute: LearnContentCreationRoute,
   LearnDesignRoute: LearnDesignRoute,

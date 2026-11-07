@@ -1,5 +1,5 @@
 ﻿import { Link, useRouter } from "@tanstack/react-router";
-import { Moon, Sun, Menu, X, LogOut, User } from "lucide-react";
+import { Moon, Sun, Menu, X, LogOut, User, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/auth-store";
 import {
@@ -49,6 +49,7 @@ function useTheme() {
 export function SiteHeader() {
   const { isDark, toggle } = useTheme();
   const [open, setOpen] = useState(false);
+  const [learnOpen, setLearnOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const { user, isAuthenticated, accessToken, logout: storeLogout } = useAuthStore();
@@ -242,23 +243,36 @@ export function SiteHeader() {
               </Link>
             ))}
             <div className="mt-1">
-              <p className="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <button
+                type="button"
+                aria-expanded={learnOpen}
+                onClick={() => setLearnOpen((value) => !value)}
+                className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-semibold text-foreground hover:bg-surface-high"
+              >
                 Learn
-              </p>
-              {LEARN_CATEGORIES.map((cat) => (
-                <Link
-                  key={cat.to}
-                  to={cat.to}
-                  onClick={() => setOpen(false)}
-                  className="flex items-center rounded-md px-3 py-2 text-sm font-medium text-on-surface-variant transition-colors hover:text-foreground hover:bg-surface-high"
-                  activeProps={{
-                    className:
-                      "flex items-center rounded-md px-3 py-2 text-sm font-medium text-primary bg-surface-high",
-                  }}
-                >
-                  {cat.label}
-                </Link>
-              ))}
+                <ChevronDown className={`h-4 w-4 transition-transform ${learnOpen ? "rotate-180" : ""}`} />
+              </button>
+              {learnOpen && (
+                <div className="mt-1 border-l border-border pl-2">
+                  {LEARN_CATEGORIES.map((cat) => (
+                    <Link
+                      key={cat.to}
+                      to={cat.to}
+                      onClick={() => {
+                        setOpen(false);
+                        setLearnOpen(false);
+                      }}
+                      className="flex items-center rounded-md px-3 py-2 text-sm font-medium text-on-surface-variant transition-colors hover:bg-surface-high hover:text-foreground"
+                      activeProps={{
+                        className:
+                          "flex items-center rounded-md px-3 py-2 text-sm font-medium text-primary bg-surface-high",
+                      }}
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
             {isAuthenticated ? (
               <>
