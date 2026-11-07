@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, BookOpen, CheckCircle2, Clock, ExternalLink } from "lucide-react";
@@ -37,6 +37,8 @@ export const Route = createFileRoute("/learn/$slug/$section")({
 
 function Dev3PackSectionPage() {
   const { slug, section } = Route.useParams();
+  const matchRoute = useMatchRoute();
+  const isWeekOneSession = !!matchRoute({ to: "/learn/$slug/$section/$session" });
   const { user, isAuthenticated } = useAuthStore();
   const fetchTrack = useServerFn(getTrackBySlug);
   const queryClient = useQueryClient();
@@ -66,6 +68,7 @@ function Dev3PackSectionPage() {
   if (!isAuthenticated) return <LoginPrompt />;
   if (isLoading) return <div className="mx-auto max-w-screen-2xl px-4 py-16 text-muted-foreground">Loading section...</div>;
   if (error || !track) return <NotFoundSection />;
+  if (section === "week-1" && isWeekOneSession) return <Outlet />;
 
   const modules = (track.phases || []).flatMap((phase: any) => phase.modules || [])
     .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
@@ -120,7 +123,9 @@ function Dev3PackSectionPage() {
                   : "Work through this section at your own pace and mark each module complete when you are done."}
               </p>
             </div>
-            {sectionModules.length === 0 ? (
+            {section === "week-1" ? (
+              <WeekOneSessionMenu />
+            ) : sectionModules.length === 0 ? (
               <div className="rounded-xl border border-dashed border-border p-8 text-center sm:p-12">
                 <Clock className="mx-auto h-10 w-10 text-muted-foreground/50" />
                 <h2 className="mt-4 text-xl font-semibold">{currentLabel} is coming soon</h2>
@@ -147,6 +152,39 @@ function Dev3PackSectionPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function WeekOneSessionMenu() {
+  const sessions = [
+    ["1", "Basics of Rust - 1", "Monday, November 2 · 3:00 PM · Deepesh"],
+    ["2", "Basics of Rust - 2", "Tuesday, November 3 · 3:00 PM · Deepesh"],
+    ["3", "Basics of Blockchain", "Wednesday, November 4 · 3:00 PM · Deepesh"],
+  ];
+  return (
+    <details className="group rounded-xl border border-border bg-card shadow-sm" open>
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-4 font-semibold sm:p-5 [&::-webkit-details-marker]:hidden">
+        <span>Choose a Week 1 session</span>
+        <span className="text-sm font-normal text-muted-foreground transition-transform group-open:rotate-180">⌄</span>
+      </summary>
+      <div className="border-t border-border p-3 sm:p-4">
+        <div className="space-y-2">
+          {sessions.map(([session, title, meta]) => (
+            <Link
+              key={session}
+              to={`/learn/dev3pack-solana-rust-bootcamp/week-1/${session}` as any}
+              className="flex items-center justify-between gap-4 rounded-lg border border-border p-4 transition-colors hover:border-primary/50 hover:bg-surface-low"
+            >
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold">{title}</span>
+                <span className="mt-1 block text-xs text-muted-foreground">{meta}</span>
+              </span>
+              <span className="shrink-0 text-sm text-primary">Open session →</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </details>
   );
 }
 

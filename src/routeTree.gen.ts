@@ -75,6 +75,7 @@ import { Route as AdminStudentsUserIdRouteImport } from './routes/admin/students
 import { Route as LearnSlugSectionRouteImport } from './routes/learn/$slug/$section'
 import { Route as MembersMemberIdIndexRouteImport } from './routes/members/$memberId/index'
 import { Route as MembersMemberIdDevlogRouteImport } from './routes/members/$memberId/devlog'
+import { Route as LearnSlugSectionSessionRouteImport } from './routes/learn/$slug/$section/$session'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -409,6 +410,11 @@ const MembersMemberIdDevlogRoute = MembersMemberIdDevlogRouteImport.update({
   path: '/members/$memberId/devlog',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnSlugSectionSessionRoute = LearnSlugSectionSessionRouteImport.update({
+  id: '/$session',
+  path: '/$session',
+  getParentRoute: () => LearnSlugSectionRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -474,9 +480,10 @@ export interface FileRoutesByFullPath {
   '/admin/cohorts/$id': typeof AdminCohortsIdRoute
   '/admin/scholarships/dev3pack-rust': typeof AdminScholarshipsDev3packRustRoute
   '/admin/students/$userId': typeof AdminStudentsUserIdRoute
-  '/learn/$slug/$section': typeof LearnSlugSectionRoute
+  '/learn/$slug/$section': typeof LearnSlugSectionRouteWithChildren
   '/members/$memberId/devlog': typeof MembersMemberIdDevlogRoute
   '/members/$memberId/': typeof MembersMemberIdIndexRoute
+  '/learn/$slug/$section/$session': typeof LearnSlugSectionSessionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -538,9 +545,10 @@ export interface FileRoutesByTo {
   '/admin/cohorts/$id': typeof AdminCohortsIdRoute
   '/admin/scholarships/dev3pack-rust': typeof AdminScholarshipsDev3packRustRoute
   '/admin/students/$userId': typeof AdminStudentsUserIdRoute
-  '/learn/$slug/$section': typeof LearnSlugSectionRoute
+  '/learn/$slug/$section': typeof LearnSlugSectionRouteWithChildren
   '/members/$memberId/devlog': typeof MembersMemberIdDevlogRoute
   '/members/$memberId': typeof MembersMemberIdIndexRoute
+  '/learn/$slug/$section/$session': typeof LearnSlugSectionSessionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -607,9 +615,10 @@ export interface FileRoutesById {
   '/admin/cohorts/$id': typeof AdminCohortsIdRoute
   '/admin/scholarships/dev3pack-rust': typeof AdminScholarshipsDev3packRustRoute
   '/admin/students/$userId': typeof AdminStudentsUserIdRoute
-  '/learn/$slug/$section': typeof LearnSlugSectionRoute
+  '/learn/$slug/$section': typeof LearnSlugSectionRouteWithChildren
   '/members/$memberId/devlog': typeof MembersMemberIdDevlogRoute
   '/members/$memberId/': typeof MembersMemberIdIndexRoute
+  '/learn/$slug/$section/$session': typeof LearnSlugSectionSessionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -680,6 +689,7 @@ export interface FileRouteTypes {
     | '/learn/$slug/$section'
     | '/members/$memberId/devlog'
     | '/members/$memberId/'
+    | '/learn/$slug/$section/$session'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -744,6 +754,7 @@ export interface FileRouteTypes {
     | '/learn/$slug/$section'
     | '/members/$memberId/devlog'
     | '/members/$memberId'
+    | '/learn/$slug/$section/$session'
   id:
     | '__root__'
     | '/'
@@ -812,6 +823,7 @@ export interface FileRouteTypes {
     | '/learn/$slug/$section'
     | '/members/$memberId/devlog'
     | '/members/$memberId/'
+    | '/learn/$slug/$section/$session'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1304,6 +1316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MembersMemberIdDevlogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/$slug/$section/$session': {
+      id: '/learn/$slug/$section/$session'
+      path: '/$session'
+      fullPath: '/learn/$slug/$section/$session'
+      preLoaderRoute: typeof LearnSlugSectionSessionRouteImport
+      parentRoute: typeof LearnSlugSectionRoute
+    }
   }
 }
 
@@ -1440,12 +1459,23 @@ const HackathonsRouteWithChildren = HackathonsRoute._addFileChildren(
   HackathonsRouteChildren,
 )
 
+interface LearnSlugSectionRouteChildren {
+  LearnSlugSectionSessionRoute: typeof LearnSlugSectionSessionRoute
+}
+
+const LearnSlugSectionRouteChildren: LearnSlugSectionRouteChildren = {
+  LearnSlugSectionSessionRoute: LearnSlugSectionSessionRoute,
+}
+
+const LearnSlugSectionRouteWithChildren =
+  LearnSlugSectionRoute._addFileChildren(LearnSlugSectionRouteChildren)
+
 interface LearnSlugRouteChildren {
-  LearnSlugSectionRoute: typeof LearnSlugSectionRoute
+  LearnSlugSectionRoute: typeof LearnSlugSectionRouteWithChildren
 }
 
 const LearnSlugRouteChildren: LearnSlugRouteChildren = {
-  LearnSlugSectionRoute: LearnSlugSectionRoute,
+  LearnSlugSectionRoute: LearnSlugSectionRouteWithChildren,
 }
 
 const LearnSlugRouteWithChildren = LearnSlugRoute._addFileChildren(
