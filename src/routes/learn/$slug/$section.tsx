@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, BookOpen, CheckCircle2, Clock, ExternalLink } from "lucide-react";
@@ -37,8 +37,8 @@ export const Route = createFileRoute("/learn/$slug/$section")({
 
 function Dev3PackSectionPage() {
   const { slug, section } = Route.useParams();
-  const matchRoute = useMatchRoute();
-  const isWeekOneSession = !!matchRoute({ to: "/learn/$slug/$section/$session" });
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const isWeekOneSession = pathname.startsWith(`/learn/${slug}/week-1/`);
   const { user, isAuthenticated } = useAuthStore();
   const fetchTrack = useServerFn(getTrackBySlug);
   const queryClient = useQueryClient();
