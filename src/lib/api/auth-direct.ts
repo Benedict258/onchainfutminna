@@ -30,7 +30,6 @@ export async function register(data: {
   department: string;
   level: string;
   skills: string[];
-  experienceLevel: string;
   funFact?: string;
   xLink?: string;
   githubLink?: string;
@@ -111,7 +110,6 @@ export async function register(data: {
     date_of_birth: dobIso,
     department: data.department,
     level: levelMap[data.level] || data.level,
-    experience_level: data.experienceLevel,
     fun_fact: data.funFact || null,
     x_link: normalizeSocial(data.xLink, "https://x.com/") || null,
     github_link: normalizeSocial(data.githubLink, "https://github.com/") || null,

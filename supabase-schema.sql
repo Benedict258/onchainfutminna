@@ -188,6 +188,8 @@ CREATE TABLE "quiz_questions" (
     "id" TEXT NOT NULL,
     "quiz_id" TEXT NOT NULL,
     "question_text" TEXT NOT NULL,
+    "explanation" TEXT,
+    "difficulty" TEXT NOT NULL DEFAULT 'AVERAGE',
     "order" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "quiz_questions_pkey" PRIMARY KEY ("id")
@@ -223,6 +225,7 @@ CREATE TABLE "quiz_attempts" (
     "quiz_id" TEXT NOT NULL,
     "score" INTEGER NOT NULL,
     "passed" BOOLEAN NOT NULL DEFAULT false,
+    "points_awarded" INTEGER NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -631,4 +634,3 @@ ALTER TABLE "gate_checks" ADD CONSTRAINT "gate_checks_user_id_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "certifications" ADD CONSTRAINT "certifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-

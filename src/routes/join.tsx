@@ -52,18 +52,12 @@ const SKILLS = [
 
 const LEVELS = ["100", "200", "300", "400", "500", "600"] as const;
 
-const EXPERIENCE_LEVELS = [
-  { value: "BEGINNER", label: "Beginner" },
-  { value: "INTERMEDIATE", label: "Intermediate" },
-  { value: "ADVANCED", label: "Advanced" },
-] as const;
-
 const STEPS = [
   {
     title: "Account",
     fields: ["fullName", "username", "email", "phone", "password", "confirmPassword"] as const,
   },
-  { title: "Academic", fields: ["dateOfBirth", "department", "level", "experienceLevel"] as const },
+  { title: "Academic", fields: ["dateOfBirth", "department", "level"] as const },
   {
     title: "Skills & Social",
     fields: ["skills", "funFact", "xLink", "githubLink", "portfolioLink"] as const,
@@ -134,7 +128,6 @@ function JoinPage() {
       department: "",
       level: undefined as any,
       skills: [],
-      experienceLevel: undefined as any,
       funFact: "",
       xLink: "",
       githubLink: "",
@@ -408,30 +401,6 @@ function JoinPage() {
                                       {LEVELS.map((level) => (
                                         <SelectItem key={level} value={level}>
                                           Level {level}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <FormField
-                              control={form.control}
-                              name="experienceLevel"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Experience Level</FormLabel>
-                                  <Select onValueChange={field.onChange} value={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Select experience" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {EXPERIENCE_LEVELS.map((exp) => (
-                                        <SelectItem key={exp.value} value={exp.value}>
-                                          {exp.label}
                                         </SelectItem>
                                       ))}
                                     </SelectContent>

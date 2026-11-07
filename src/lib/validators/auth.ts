@@ -42,9 +42,6 @@ export const registerSchema = z
     department: z.string().min(1, "Department is required"),
     level: z.enum(levels, { required_error: "Level is required" }),
     skills: z.array(z.enum(skills)).min(1, "Select at least one skill"),
-    experienceLevel: z.enum(experienceLevels, {
-      required_error: "Experience level is required",
-    }),
     funFact: z.string().optional(),
     xLink: z.string().optional().or(z.literal("")),
     githubLink: z.string().optional().or(z.literal("")),

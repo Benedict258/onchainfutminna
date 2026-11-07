@@ -14,11 +14,32 @@ function parseMarkdown(content: string) {
     language?: string;
     lines?: string[];
     href?: string;
+    src?: string;
   }> = [];
   let i = 0;
 
   while (i < lines.length) {
     const line = lines[i];
+
+    const youtubeMatch = line.match(
+      /^\{\{youtube:(https:\/\/(?:www\.)?youtu\.be\/([^}?]+)|https:\/\/www\.youtube\.com\/watch\?v=([^&}]+))\}\}$/,
+    );
+    if (youtubeMatch) {
+      const videoId = youtubeMatch[2] || youtubeMatch[3];
+      if (videoId) {
+        elements.push({ type: "youtube", src: `https://www.youtube.com/embed/${videoId}` });
+        i++;
+        continue;
+      }
+    }
+
+    const slidesMatch = line.match(/^\{\{slides:(https:\/\/docs\.google\.com\/presentation\/d\/[^}]+)\}\}$/);
+    if (slidesMatch) {
+      const embedUrl = slidesMatch[1].replace(/\/(edit|present)(?:\?.*)?$/, "/embed");
+      elements.push({ type: "slides", src: embedUrl });
+      i++;
+      continue;
+    }
 
     if (line.startsWith("```")) {
       const language = line.slice(3).trim();
@@ -243,6 +264,41 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
                   <div key={j}>{codeLine || " "}</div>
                 ))}
               </pre>
+            );
+          case "youtube":
+            return (
+              <div key={i} className="aspect-video overflow-hidden rounded-lg border border-border">
+                <iframe
+                  src={el.src}
+                  title="Bootcamp recording"
+                  className="h-full w-full"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            );
+          case "slides":
+            return (
+              <div key={i} className="space-y-2">
+                <div className="aspect-video overflow-hidden rounded-lg border border-border">
+                  <iframe
+                    src={el.src}
+                    title="Bootcamp slides"
+                    className="h-full w-full"
+                    loading="lazy"
+                    allowFullScreen
+                  />
+                </div>
+                <a
+                  href={el.src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-primary underline underline-offset-4"
+                >
+                  Open slides in a new tab
+                </a>
+              </div>
             );
           default:
             return null;

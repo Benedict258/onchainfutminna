@@ -273,6 +273,8 @@ model QuizQuestion {
   id           String @id @default(uuid())
   quizId       String @map("quiz_id")
   questionText String @map("question_text")
+  explanation  String?
+  difficulty   String   @default("AVERAGE")
   order        Int    @default(0)
 
   quiz    Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
@@ -314,6 +316,7 @@ model QuizAttempt {
   quizId    String   @map("quiz_id")
   score     Int
   passed    Boolean  @default(false)
+  pointsAwarded Int   @default(0) @map("points_awarded")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

@@ -147,6 +147,21 @@ export async function apiCompleteModule(moduleId: string, points?: number) {
   return json;
 }
 
+export async function apiSubmitQuiz(
+  quizId: string,
+  answers: { questionId: string; optionId: string }[],
+) {
+  const token = localStorage.getItem("bcf-token");
+  const res = await fetch("/api/learn/quiz/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ quizId, answers }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw Object.assign(new Error(json.error || "Quiz submission failed"), json);
+  return json;
+}
+
 export async function apiLogCommunityActivity(
   activityType: string,
   description: string,

@@ -1996,6 +1996,80 @@ export default {
   },
 };
 
+async function handleLearnQuizSubmit(request: Request): Promise<Response> {
+  try {
+    const { verifyAccessToken } = await import("./lib/auth");
+    const { supabase, query } = await import("./lib/supabase");
+    const { awardPoints } = await import("./lib/auto-awards");
+    const token = request.headers.get("Authorization")?.replace(/^Bearer\s+/, "");
+    const payload = token ? verifyAccessToken(token) : null;
+    if (!payload) return jsonResponse({ error: "Unauthorized" }, 401);
+
+    const body = await request.json();
+    const quizId = typeof body.quizId === "string" ? body.quizId : "";
+    const answers = Array.isArray(body.answers) ? body.answers : [];
+    const { data: quiz } = await query("quizzes", {
+      select:
+        "id,pass_mark,quiz_questions(id,question_text,explanation,quiz_options(id,option_text,is_correct))",
+      filters: { id: quizId },
+      single: true,
+    });
+    if (!quiz) return jsonResponse({ error: "Quiz not found" }, 404);
+
+    const { data: attempts } = await query("quiz_attempts", {
+      select: "score,passed,points_awarded",
+      filters: { user_id: payload.userId, quiz_id: quizId },
+      order: { column: "created_at", ascending: true },
+    });
+    if ((attempts || []).some((attempt: any) => attempt.passed)) {
+      return jsonResponse({ error: "Quiz already passed" }, 409);
+    }
+    if ((attempts?.length || 0) >= 3) {
+      return jsonResponse({ error: "No attempts remaining", exhausted: true, questions: quiz.quiz_questions }, 409);
+    }
+
+    const selected = new Map(answers.map((answer: any) => [answer.questionId, answer.optionId]));
+    let correctCount = 0;
+    for (const question of quiz.quiz_questions || []) {
+      const correct = (question.quiz_options || []).find((option: any) => option.is_correct);
+      if (correct && selected.get(question.id) === correct.id) correctCount++;
+    }
+    const totalQuestions = quiz.quiz_questions?.length || 0;
+    const score = totalQuestions ? Math.round((correctCount / totalQuestions) * 100) : 0;
+    const passed = score >= quiz.pass_mark;
+    const previouslyAwarded = (attempts || []).reduce(
+      (sum: number, item: any) => sum + (item.points_awarded || 0),
+      0,
+    );
+    const pointsAwarded = Math.max(0, Math.min(correctCount, 10 - previouslyAwarded));
+    const { data: attempt, error } = await supabase.from("quiz_attempts").insert({
+      user_id: payload.userId,
+      quiz_id: quizId,
+      score,
+      passed,
+      points_awarded: pointsAwarded,
+    });
+    if (error) throw error;
+    if (pointsAwarded > 0) await awardPoints(payload.userId, "learn", pointsAwarded);
+
+    const attemptNumber = (attempts?.length || 0) + 1;
+    return jsonResponse({
+      attempt: attempt?.[0],
+      attemptNumber,
+      score,
+      passed,
+      correctCount,
+      totalQuestions,
+      passMark: quiz.pass_mark,
+      exhausted: !passed && attemptNumber >= 3,
+      questions: !passed && attemptNumber >= 3 ? quiz.quiz_questions : undefined,
+    });
+  } catch (error) {
+    console.error("[learn-quiz-submit]", error);
+    return jsonResponse({ error: "Unable to submit quiz attempt" }, 500);
+  }
+}
+
 async function route(request: Request, env: unknown, ctx: unknown): Promise<Response> {
   const url = new URL(request.url);
 
@@ -2029,6 +2103,9 @@ async function route(request: Request, env: unknown, ctx: unknown): Promise<Resp
   }
   if (url.pathname === "/api/auth/reset-password" && request.method === "POST") {
     return handleResetPassword(request);
+  }
+  if (url.pathname === "/api/learn/quiz/submit" && request.method === "POST") {
+    return handleLearnQuizSubmit(request);
   }
   if (url.pathname === "/api/scholarship/status" && request.method === "GET") {
     return handleScholarshipStatus(request);
