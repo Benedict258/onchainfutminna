@@ -1,4 +1,4 @@
-﻿import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -170,8 +170,10 @@ function Dev3PackOverview({
 function TrackDetailPage() {
   const params = Route.useParams();
   const slug = params.slug;
+  const matchRoute = useMatchRoute();
   const { user, isAuthenticated } = useAuthStore();
   const requiresAuth = slug === "dev3pack-solana-rust-bootcamp";
+  const isDev3PackSection = !!matchRoute({ to: "/learn/$slug/$section" });
   const queryClient = useQueryClient();
   const fetchTrack = useServerFn(getTrackBySlug);
 
@@ -234,6 +236,8 @@ function TrackDetailPage() {
   });
 
   if (requiresAuth && !isAuthenticated) return <LoginPrompt />;
+
+  if (requiresAuth && isDev3PackSection) return <Outlet />;
 
   if (isLoading) return <TrackDetailSkeleton />;
 
